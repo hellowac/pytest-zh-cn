@@ -43,7 +43,7 @@
     :alt: Libera chat
 
 
-`中文 <README.CN>`__
+`中文 <https://github.com/hellowac/pytest-zh-cn/blob/sync-docs/README.CN.rst>`__
 
 
 The ``pytest`` framework makes it easy to write small tests, yet
