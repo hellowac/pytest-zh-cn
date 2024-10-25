@@ -1,0 +1,8 @@
+pluggy>=1.5.0
+pygements-pytest
+sphinx-removed-in
+sphinxcontrib-trio
+sphinxcontrib-towncrier
+sphinxcontrib-svg2pdfconverter
+furo
+sphinx-issues
