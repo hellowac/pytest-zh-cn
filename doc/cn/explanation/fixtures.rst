@@ -1,15 +1,35 @@
 .. _about-fixtures:
 
-About fixtures
+关于 fixtures
 ===============
+
+**About fixtures**
 
 .. seealso:: :ref:`how-to-fixtures`
 .. seealso:: :ref:`Fixtures reference <reference-fixtures>`
 
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
+
 pytest fixtures are designed to be explicit, modular and scalable.
 
-What fixtures are
+什么是 Fixture
 -----------------
+
+**What fixtures are**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 In testing, a `fixture <https://en.wikipedia.org/wiki/Test_fixture#Software>`_
 provides a defined, reliable and consistent context for the tests. This could
@@ -61,8 +81,18 @@ as many fixtures as you want, and fixtures can use other fixtures, as well. This
 is where pytest's fixture system really shines.
 
 
-Improvements over xUnit-style setup/teardown functions
+对 xUnit 样式的安装/拆卸函数的改进
 -----------------------------------------------------------
+
+**Improvements over xUnit-style setup/teardown functions**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 pytest fixtures offer dramatic improvements over the classic xUnit
 style of setup/teardown functions:
@@ -89,8 +119,18 @@ style <unittest.TestCase>`.
 
 
 
-Fixture errors
+Fixture 错误
 --------------
+
+**Fixture errors**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 pytest does its best to put all the fixtures for a given test in a linear order
 so that it can see which fixture happens first, second, third, and so on. If an
@@ -145,8 +185,18 @@ any more fixtures for ``test_order``, and it won't even try to run
 ``append_first``.
 
 
-Sharing test data
+共享测试数据
 -----------------
+
+**Sharing test data**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 If you want to make test data from files available to your tests, a good way
 to do this is by loading these data in a fixture for use by your tests.
@@ -158,8 +208,18 @@ testing, e.g. :pypi:`pytest-datadir` and :pypi:`pytest-datafiles`.
 
 .. _fixtures-signal-cleanup:
 
-A note about fixture cleanup
+关于 Fixture 清理的说明
 ----------------------------
+
+**A note about fixture cleanup**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 pytest does not do any special processing for :data:`SIGTERM <signal.SIGTERM>` and
 ``SIGQUIT`` signals (:data:`SIGINT <signal.SIGINT>` is handled naturally

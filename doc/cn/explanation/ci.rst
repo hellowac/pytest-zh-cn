@@ -3,8 +3,18 @@
 CI Pipelines
 ============
 
-Rationale
+原理
 ---------
+
+**Rationale**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 The goal of testing in a CI pipeline is different from testing locally. Indeed,
 you can quickly edit some code and run your tests again on your computer, but
@@ -14,8 +24,18 @@ triggered by specific actions.
 From that observation, pytest can detect when it is in a CI environment and
 adapt some of its behaviours.
 
-How CI is detected
+如何检测 CI
 ------------------
+
+**How CI is detected**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Pytest knows it is in a CI environment when either one of these environment variables are set,
 regardless of their value:
@@ -23,8 +43,18 @@ regardless of their value:
 * `CI`: used by many CI systems.
 * `BUILD_NUMBER`: used by Jenkins.
 
-Effects on CI
+对 CI 的影响
 -------------
+
+**Effects on CI**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 For now, the effects on pytest of being in a CI environment are limited.
 

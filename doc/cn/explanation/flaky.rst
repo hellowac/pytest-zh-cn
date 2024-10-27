@@ -1,20 +1,60 @@
 
-Flaky tests
+不稳定的测试
 -----------
+
+**Flaky tests**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 A "flaky" test is one that exhibits intermittent or sporadic failure, that seems to have non-deterministic behaviour. Sometimes it passes, sometimes it fails, and it's not clear why. This page discusses pytest features that can help and other general strategies for identifying, fixing or mitigating them.
 
-Why flaky tests are a problem
+不稳定的测试为何是个问题
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Why flaky tests are a problem**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Flaky tests are particularly troublesome when a continuous integration (CI) server is being used, so that all tests must pass before a new code change can be merged. If the test result is not a reliable signal -- that a test failure means the code change broke the test -- developers can become mistrustful of the test results, which can lead to overlooking genuine failures. It is also a source of wasted time as developers must re-run test suites and investigate spurious failures.
 
 
-Potential root causes
+潜在根本原因
 ^^^^^^^^^^^^^^^^^^^^^
 
-System state
+**Potential root causes**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
+
+系统状态
 ~~~~~~~~~~~~
+
+**System state**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Broadly speaking, a flaky test indicates that the test relies on some system state that is not being appropriately controlled - the test environment is not sufficiently isolated. Higher level tests are more likely to be flaky as they rely on more state.
 
@@ -25,13 +65,33 @@ Flaky tests sometimes appear when a test suite is run in parallel (such as use o
 - Tests that modify global state typically cannot be run in parallel.
 
 
-Overly strict assertion
+过于严格的断言
 ~~~~~~~~~~~~~~~~~~~~~~~
+
+**Overly strict assertion**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Overly strict assertions can cause problems with floating point comparison as well as timing issues. :func:`pytest.approx` is useful here.
 
-Thread safety
+线程安全
 ~~~~~~~~~~~~~
+
+**Thread safety**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 pytest is single-threaded, executing its tests always in the same thread, sequentially, never spawning any threads itself.
 
@@ -44,11 +104,31 @@ It is of course possible (and common) for tests and fixtures to spawn threads th
 
 If your test suite uses threads and your are seeing flaky test results, do not discount the possibility that the test is implicitly using global state in pytest itself.
 
-Related features
+相关功能
 ^^^^^^^^^^^^^^^^
+
+**Related features**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Xfail strict
 ~~~~~~~~~~~~
+
+**Xfail strict**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 :ref:`pytest.mark.xfail ref` with ``strict=False`` can be used to mark a test so that its failure does not cause the whole build to break. This could be considered like a manual quarantine, and is rather dangerous to use permanently.
 
@@ -60,8 +140,18 @@ PYTEST_CURRENT_TEST
 See :ref:`pytest current test env` for more details.
 
 
-Plugins
+插件
 ~~~~~~~
+
+**Plugins**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Rerunning any failed tests can mitigate the negative effects of flaky tests by giving them additional chances to pass, so that the overall build does not fail. Several pytest plugins support this:
 
@@ -75,43 +165,113 @@ Plugins to deliberately randomize tests can help expose tests with state problem
 * `pytest-randomly <https://github.com/pytest-dev/pytest-randomly>`_
 
 
-Other general strategies
+其他一般策略
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Split up test suites
+**Other general strategies**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
+
+拆分测试套件
 ~~~~~~~~~~~~~~~~~~~~
+
+**Split up test suites**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 It can be common to split a single test suite into two, such as unit vs integration, and only use the unit test suite as a CI gate. This also helps keep build times manageable as high level tests tend to be slower. However, it means it does become possible for code that breaks the build to be merged, so extra vigilance is needed for monitoring the integration test results.
 
 
-Video/screenshot on failure
+失败时的视频/屏幕截图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Video/screenshot on failure**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 For UI tests these are important for understanding what the state of the UI was when the test failed. pytest-splinter can be used with plugins like pytest-bdd and can `save a screenshot on test failure <https://pytest-splinter.readthedocs.io/en/latest/#automatic-screenshots-on-test-failure>`_, which can help to isolate the cause.
 
 
-Delete or rewrite the test
+删除或重写测试
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Delete or rewrite the test**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 If the functionality is covered by other tests, perhaps the test can be removed. If not, perhaps it can be rewritten at a lower level which will remove the flakiness or make its source more apparent.
 
 
-Quarantine
+隔离
 ~~~~~~~~~~
+
+**Quarantine**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Mark Lapierre discusses the `Pros and Cons of Quarantined Tests <https://dev.to/mlapierre/pros-and-cons-of-quarantined-tests-2emj>`_ in a post from 2018.
 
 
 
-CI tools that rerun on failure
+失败时重新运行的 CI 工具
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**CI tools that rerun on failure**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Azure Pipelines (the Azure cloud CI/CD tool, formerly Visual Studio Team Services or VSTS) has a feature to `identify flaky tests <https://docs.microsoft.com/en-us/previous-versions/azure/devops/2017/dec-11-vsts?view=tfs-2017#identify-flaky-tests>`_ and rerun failed tests.
 
 
 
-Research
+研究
 ^^^^^^^^
+
+**Research**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 This is a limited list, please submit an issue or pull request to expand it!
 
@@ -120,8 +280,18 @@ This is a limited list, please submit an issue or pull request to expand it!
 *  Bell, Jonathan, Owolabi Legunsen, Michael Hilton, Lamyaa Eloussi, Tifany Yung, and Darko Marinov. "DeFlaker: Automatically detecting flaky tests." In *Proceedings of the 2018 International Conference on Software Engineering*. 2018. `PDF <https://www.jonbell.net/icse18-deflaker.pdf>`__
 *  Dutta, Saikat and Shi, August and Choudhary, Rutvik and Zhang, Zhekun and Jain, Aryaman and Misailovic, Sasa. "Detecting flaky tests in probabilistic and machine learning applications." In *Proceedings of the 29th ACM SIGSOFT International Symposium on Software Testing and Analysis (ISSTA)*, pp. 211-224. ACM, 2020. `PDF <https://www.cs.cornell.edu/~saikatd/papers/flash-issta20.pdf>`__
 
-Resources
+资源
 ^^^^^^^^^
+
+**Resources**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 * `Eradicating Non-Determinism in Tests <https://martinfowler.com/articles/nonDeterminism.html>`_ by Martin Fowler, 2011
 * `No more flaky tests on the Go team <https://www.thoughtworks.com/insights/blog/no-more-flaky-tests-go-team>`_ by Pavan Sudarshan, 2012

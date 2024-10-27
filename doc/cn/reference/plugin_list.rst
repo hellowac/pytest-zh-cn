@@ -3,31 +3,58 @@
 
 .. _plugin-list:
 
-Pytest Plugin List
+Pytest 插件列表
 ==================
 
-Below is an automated compilation of ``pytest``` plugins available on `PyPI <https://pypi.org>`_.
-It includes PyPI projects whose names begin with ``pytest-`` or ``pytest_`` and a handful of manually selected projects.
-Packages classified as inactive are excluded.
+**Pytest Plugin List**
 
-For detailed insights into how this list is generated,
-please refer to `the update script <https://github.com/pytest-dev/pytest/blob/main/scripts/update-plugin-list.py>`_.
+.. tabs::
 
-.. warning::
+    .. tab:: 中文
 
-   Please be aware that this list is not a curated collection of projects
-   and does not undergo a systematic review process.
-   It serves purely as an informational resource to aid in the discovery of ``pytest`` plugins.
+      下面是可在 `PyPI <https://pypi.org>`_ 上找到的 ``pytest`` 插件的自动汇总。
+      它包括名称以 ``pytest-`` 或 ``pytest_`` 开头的 PyPI 项目，以及一些手动选择的项目。
+      被分类为非活动的包被排除在外。
 
-   Do not presume any endorsement from the ``pytest`` project or its developers,
-   and always conduct your own quality assessment before incorporating any of these plugins into your own projects.
+      有关此列表生成方式的详细信息，请参阅 `更新脚本 <https://github.com/pytest-dev/pytest/blob/main/scripts/update-plugin-list.py>`_。
+
+      .. warning::
+
+         请注意，此列表不是经过策划的项目集合，
+         也不经过系统审查过程。
+         它仅作为信息资源，帮助发现 ``pytest`` 插件。
+
+         不要假设 ``pytest`` 项目或其开发人员对这些插件的支持，
+         在将任何这些插件纳入您自己的项目之前，请始终进行质量评估。
+
+      .. 以下条件在创建 PDF 时使用不同的格式来列出此列表，因为否则表格会过于宽大。
+
+      此列表包含 1533 个插件。
+
+    .. tab:: 英文
+
+      Below is an automated compilation of ``pytest``` plugins available on `PyPI <https://pypi.org>`_.
+      It includes PyPI projects whose names begin with ``pytest-`` or ``pytest_`` and a handful of manually selected projects.
+      Packages classified as inactive are excluded.
+
+      For detailed insights into how this list is generated,
+      please refer to `the update script <https://github.com/pytest-dev/pytest/blob/main/scripts/update-plugin-list.py>`_.
+
+      .. warning::
+
+         Please be aware that this list is not a curated collection of projects
+         and does not undergo a systematic review process.
+         It serves purely as an informational resource to aid in the discovery of ``pytest`` plugins.
+
+         Do not presume any endorsement from the ``pytest`` project or its developers,
+         and always conduct your own quality assessment before incorporating any of these plugins into your own projects.
 
 
-.. The following conditional uses a different format for this list when
-   creating a PDF, because otherwise the table gets far too wide for the
-   page.
+      .. The following conditional uses a different format for this list when
+         creating a PDF, because otherwise the table gets far too wide for the
+         page.
 
-This list contains 1533 plugins.
+      This list contains 1533 plugins.
 
 .. only:: not latex
 

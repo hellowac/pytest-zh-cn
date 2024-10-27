@@ -2,8 +2,10 @@
 
 .. _reference:
 
-Reference guides
+参考指南
 ================
+
+**Reference guides**
 
 .. toctree::
    :maxdepth: 1

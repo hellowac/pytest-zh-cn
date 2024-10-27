@@ -1,12 +1,22 @@
 .. _pythonpath:
 
-pytest import mechanisms and ``sys.path``/``PYTHONPATH``
+pytest import mechanisms and ``sys.path`` / ``PYTHONPATH``
 ========================================================
 
 .. _`import-modes`:
 
-Import modes
+导入模式
 ------------
+
+**Import modes**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 pytest as a testing framework that needs to import test modules and ``conftest.py`` files for execution.
 
@@ -113,15 +123,35 @@ these values:
     :ref:`test layout`.
 
 
-``prepend`` and ``append`` import modes scenarios
+``prepend`` 和 ``append`` 导入模式场景
 -------------------------------------------------
+
+**``prepend`` and ``append`` import modes scenarios**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Here's a list of scenarios when using ``prepend`` or ``append`` import modes where pytest needs to
 change :py:data:`sys.path` in order to import test modules or ``conftest.py`` files, and the issues users
 might encounter because of that.
 
-Test modules / ``conftest.py`` files inside packages
+包内的测试模块/``conftest.py`` 文件
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Test modules / ``conftest.py`` files inside packages**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Consider this file and directory layout::
 
@@ -155,8 +185,18 @@ Preserving the full package name is important when tests live in a package to av
 and allow test modules to have duplicated names. This is also discussed in details in
 :ref:`test discovery`.
 
-Standalone test modules / ``conftest.py`` files
+独立测试模块/ ``conftest.py`` 文件
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Standalone test modules / ``conftest.py`` files**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Consider this file and directory layout::
 
@@ -186,8 +226,18 @@ This is also discussed in details in :ref:`test discovery`.
 
 .. _`pytest vs python -m pytest`:
 
-Invoking ``pytest`` versus ``python -m pytest``
+调用 ``pytest`` 与 ``python -m pytest``
 -----------------------------------------------
+
+**Invoking ``pytest`` versus ``python -m pytest``**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Running pytest with ``pytest [...]`` instead of ``python -m pytest [...]`` yields nearly
 equivalent behaviour, except that the latter will add the current directory to :py:data:`sys.path`, which

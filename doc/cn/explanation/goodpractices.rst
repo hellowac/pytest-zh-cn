@@ -4,8 +4,18 @@
 Good Integration Practices
 =================================================
 
-Install package with pip
+使用 pip 安装软件包
 -------------------------------------------------
+
+**Install package with pip**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 For development, we recommend you use :mod:`venv` for virtual environments and
 :doc:`pip:index` for installing your application and any dependencies,
@@ -39,8 +49,18 @@ which lets you change your source code (both tests and application) and rerun te
 .. _`test discovery`:
 .. _`Python test discovery`:
 
-Conventions for Python test discovery
+Python 测试发现的约定
 -------------------------------------------------
+
+**Conventions for Python test discovery**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 ``pytest`` implements the following standard test discovery:
 
@@ -62,13 +82,33 @@ Within Python modules, ``pytest`` also discovers tests using the standard
 
 .. _`test layout`:
 
-Choosing a test layout
+选择测试布局
 ----------------------
+
+**Choosing a test layout**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 ``pytest`` supports two common test layouts:
 
-Tests outside application code
+在应用程序代码之外进行测试
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Tests outside application code**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Putting tests into an extra directory outside your actual application code
 might be useful if you have many functional tests or for other reasons want
@@ -142,8 +182,18 @@ which are better explained in this excellent `blog post`_ by Ionel Cristian Măr
     See :ref:`pytest vs python -m pytest` for more information about the difference between calling ``pytest`` and
     ``python -m pytest``.
 
-Tests as part of application code
+作为应用程序代码的一部分进行测试
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Tests as part of application code**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Inlining test directories into your application package
 is useful if you have direct relation between tests and application modules and
@@ -216,8 +266,18 @@ Note that this layout also works in conjunction with the ``src`` layout mentione
 
 .. _which-import-mode:
 
-Choosing an import mode
+选择导入模式
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+**Choosing an import mode**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 For historical reasons, pytest defaults to the ``prepend`` :ref:`import mode <import-modes>`
 instead of the ``importlib`` import mode we recommend for new projects.
@@ -280,8 +340,18 @@ options.  It will run tests against the installed package and not
 against your source code checkout, helping to detect packaging
 glitches.
 
-Do not run via setuptools
+不要通过 setuptools 运行
 -------------------------
+
+**Do not run via setuptools**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Integration with setuptools is **not recommended**,
 i.e. you should not be using ``python setup.py test`` or ``pytest-runner``,
@@ -297,8 +367,18 @@ See also `pypa/setuptools#1684 <https://github.com/pypa/setuptools/issues/1684>`
 setuptools intends to
 `remove the test command <https://github.com/pypa/setuptools/issues/931>`_.
 
-Checking with flake8-pytest-style
+使用 flake8-pytest-style 进行检查
 ---------------------------------
+
+**Checking with flake8-pytest-style**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 In order to ensure that pytest is being used correctly in your project,
 it can be helpful to use the `flake8-pytest-style <https://github.com/m-burst/flake8-pytest-style>`_ flake8 plugin.

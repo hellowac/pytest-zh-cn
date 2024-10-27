@@ -2,8 +2,10 @@
 
 .. _explanation:
 
-Explanation
+解释
 ================
+
+**Explanation**
 
 .. toctree::
    :maxdepth: 1
