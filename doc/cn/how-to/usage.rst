@@ -25,6 +25,8 @@
 
 
 .. _select-tests:
+.. _nodeids:
+.. _args-from-file:
 
 指定要运行的测试
 ------------------------------
@@ -57,7 +59,6 @@
 
         这将运行包含与给定 *字符串表达式*（不区分大小写）匹配的名称的测试，其中可以包含使用文件名、类名和函数名作为变量的 Python 运算符。上述示例将运行 ``TestMyClass.test_something`` 但不运行 ``TestMyClass.test_method_simple``。在 Windows 上运行时，在表达式中使用 ``""`` 而不是 ``''``。
 
-        .. _nodeids:
 
         **通过集合参数运行测试**
 
@@ -111,7 +112,6 @@
 
         这将导入 ``pkg.testing`` 并使用其文件系统位置查找并运行测试。
 
-        .. _args-from-file:
 
         **从文件读取参数**
 
@@ -161,8 +161,6 @@
         which can include Python operators that use filenames, class names and function names as variables.
         The example above will run ``TestMyClass.test_something``  but not ``TestMyClass.test_method_simple``.
         Use ``""`` instead of ``''`` in expression when running this on Windows
-
-        .. _nodeids:
 
         **Run tests by collection arguments**
 
@@ -218,8 +216,6 @@
             pytest --pyargs pkg.testing
 
         This will import ``pkg.testing`` and use its filesystem location to find and run tests from.
-
-        .. _args-from-file:
 
         **Read arguments from file**
 

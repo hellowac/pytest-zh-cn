@@ -1,9 +1,19 @@
 .. _`tbreportdemo`:
 
-Demo of Python failure reports with pytest
+使用 pytest 的 Python 故障报告演示
 ==========================================
 
-Here is a nice run of several failures and how ``pytest`` presents things:
+**Demo of Python failure reports with pytest**
+
+.. tabs::
+
+    .. tab:: 中文
+
+        下面是几次失败的运行以及 ``pytest`` 的呈现方式：
+
+    .. tab:: 英文
+
+        Here is a nice run of several failures and how ``pytest`` presents things:
 
 .. code-block:: pytest
 

@@ -3,6 +3,14 @@
 Using a custom directory collector
 ====================================================
 
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
+
 By default, pytest collects directories using :class:`pytest.Package`, for directories with ``__init__.py`` files,
 and :class:`pytest.Dir` for other directories.
 If you want to customize how a directory is collected, you can write your own :class:`pytest.Directory` collector,

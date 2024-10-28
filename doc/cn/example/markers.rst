@@ -1,344 +1,691 @@
 
 .. _`mark examples`:
 
-Working with custom markers
+使用自定义标记
 =================================================
 
-Here are some examples using the :ref:`mark` mechanism.
+**Working with custom markers**
+
+.. tabs::
+
+    .. tab:: 中文
+
+        以下是一些使用 :ref:`mark` 机制的示例。
+
+    .. tab:: 英文
+
+        Here are some examples using the :ref:`mark` mechanism.
 
 .. _`mark run`:
 
-Marking test functions and selecting them for a run
+标记测试函数并选择它们进行运行
 ----------------------------------------------------
 
-You can "mark" a test function with custom metadata like this:
+**Marking test functions and selecting them for a run**
 
-.. code-block:: python
+.. tabs::
 
-    # content of test_server.py
+    .. tab:: 中文
 
-    import pytest
+        您可以像这样为测试函数标记自定义元数据：
 
+        .. code-block:: python
 
-    @pytest.mark.webtest
-    def test_send_http():
-        pass  # perform some webtest test for your app
+            # content of test_server.py
 
-
-    @pytest.mark.device(serial="123")
-    def test_something_quick():
-        pass
+            import pytest
 
 
-    @pytest.mark.device(serial="abc")
-    def test_another():
-        pass
+            @pytest.mark.webtest
+            def test_send_http():
+                pass  # 执行一些针对您的应用程序的 webtest 测试
 
 
-    class TestClass:
-        def test_method(self):
-            pass
+            @pytest.mark.device(serial="123")
+            def test_something_quick():
+                pass
+
+
+            @pytest.mark.device(serial="abc")
+            def test_another():
+                pass
+
+
+            class TestClass:
+                def test_method(self):
+                    pass
 
 
 
-You can then restrict a test run to only run tests marked with ``webtest``:
+        然后，您可以限制测试运行，仅运行带有 ``webtest`` 标记的测试：
 
-.. code-block:: pytest
+        .. code-block:: pytest
 
-    $ pytest -v -m webtest
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
-    cachedir: .pytest_cache
-    rootdir: /home/sweet/project
-    collecting ... collected 4 items / 3 deselected / 1 selected
+            $ pytest -v -m webtest
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 3 deselected / 1 selected
 
-    test_server.py::test_send_http PASSED                                [100%]
+            test_server.py::test_send_http PASSED                                [100%]
 
-    ===================== 1 passed, 3 deselected in 0.12s ======================
+            ===================== 1 passed, 3 deselected in 0.12s ======================
 
-Or the inverse, running all tests except the webtest ones:
+        或者反向运行，运行所有测试，除了 webtest 测试：
 
-.. code-block:: pytest
+        .. code-block:: pytest
 
-    $ pytest -v -m "not webtest"
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
-    cachedir: .pytest_cache
-    rootdir: /home/sweet/project
-    collecting ... collected 4 items / 1 deselected / 3 selected
+            $ pytest -v -m "not webtest"
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 1 deselected / 3 selected
 
-    test_server.py::test_something_quick PASSED                          [ 33%]
-    test_server.py::test_another PASSED                                  [ 66%]
-    test_server.py::TestClass::test_method PASSED                        [100%]
+            test_server.py::test_something_quick PASSED                          [ 33%]
+            test_server.py::test_another PASSED                                  [ 66%]
+            test_server.py::TestClass::test_method PASSED                        [100%]
 
-    ===================== 3 passed, 1 deselected in 0.12s ======================
+            ===================== 3 passed, 1 deselected in 0.12s ======================
 
-.. _`marker_keyword_expression_example`:
+        .. _`marker_keyword_expression_example`:
 
-Additionally, you can restrict a test run to only run tests matching one or multiple marker
-keyword arguments, e.g. to run only tests marked with ``device`` and the specific ``serial="123"``:
+        此外，您可以限制测试运行，仅运行匹配一个或多个标记关键字参数的测试，例如，仅运行标记为 ``device`` 且具体为 ``serial="123"`` 的测试：
 
-.. code-block:: pytest
+        .. code-block:: pytest
 
-    $ pytest -v -m "device(serial='123')"
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
-    cachedir: .pytest_cache
-    rootdir: /home/sweet/project
-    collecting ... collected 4 items / 3 deselected / 1 selected
+            $ pytest -v -m "device(serial='123')"
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 3 deselected / 1 selected
 
-    test_server.py::test_something_quick PASSED                          [100%]
+            test_server.py::test_something_quick PASSED                          [100%]
 
-    ===================== 1 passed, 3 deselected in 0.12s ======================
+            ===================== 1 passed, 3 deselected in 0.12s ======================
 
-.. note:: Only keyword argument matching is supported in marker expressions.
+        .. note:: 仅支持关键字参数匹配的标记表达式。
 
-.. note:: Only :class:`int`, (unescaped) :class:`str`, :class:`bool` & :data:`None` values are supported in marker expressions.
+        .. note:: 仅支持 :class:`int`、(未转义的) :class:`str`、:class:`bool` 和 :data:`None` 值在标记表达式中。
 
-Selecting tests based on their node ID
+    .. tab:: 英文
+
+        You can "mark" a test function with custom metadata like this:
+
+        .. code-block:: python
+
+            # content of test_server.py
+
+            import pytest
+
+
+            @pytest.mark.webtest
+            def test_send_http():
+                pass  # perform some webtest test for your app
+
+
+            @pytest.mark.device(serial="123")
+            def test_something_quick():
+                pass
+
+
+            @pytest.mark.device(serial="abc")
+            def test_another():
+                pass
+
+
+            class TestClass:
+                def test_method(self):
+                    pass
+
+
+
+        You can then restrict a test run to only run tests marked with ``webtest``:
+
+        .. code-block:: pytest
+
+            $ pytest -v -m webtest
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 3 deselected / 1 selected
+
+            test_server.py::test_send_http PASSED                                [100%]
+
+            ===================== 1 passed, 3 deselected in 0.12s ======================
+
+        Or the inverse, running all tests except the webtest ones:
+
+        .. code-block:: pytest
+
+            $ pytest -v -m "not webtest"
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 1 deselected / 3 selected
+
+            test_server.py::test_something_quick PASSED                          [ 33%]
+            test_server.py::test_another PASSED                                  [ 66%]
+            test_server.py::TestClass::test_method PASSED                        [100%]
+
+            ===================== 3 passed, 1 deselected in 0.12s ======================
+
+        .. _`marker_keyword_expression_example`:
+
+        Additionally, you can restrict a test run to only run tests matching one or multiple marker
+        keyword arguments, e.g. to run only tests marked with ``device`` and the specific ``serial="123"``:
+
+        .. code-block:: pytest
+
+            $ pytest -v -m "device(serial='123')"
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 3 deselected / 1 selected
+
+            test_server.py::test_something_quick PASSED                          [100%]
+
+            ===================== 1 passed, 3 deselected in 0.12s ======================
+
+        .. note:: Only keyword argument matching is supported in marker expressions.
+
+        .. note:: Only :class:`int`, (unescaped) :class:`str`, :class:`bool` & :data:`None` values are supported in marker expressions.
+
+根据节点 ID 选择测试
 --------------------------------------
 
-You can provide one or more :ref:`node IDs <node-id>` as positional
-arguments to select only specified tests. This makes it easy to select
-tests based on their module, class, method, or function name:
+**Selecting tests based on their node ID**
 
-.. code-block:: pytest
+.. tabs::
 
-    $ pytest -v test_server.py::TestClass::test_method
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
-    cachedir: .pytest_cache
-    rootdir: /home/sweet/project
-    collecting ... collected 1 item
+    .. tab:: 中文
 
-    test_server.py::TestClass::test_method PASSED                        [100%]
+        您可以提供一个或多个 :ref:`节点 ID <node-id>` 作为位置参数，仅选择指定的测试。这使得基于模块、类、方法或函数名称轻松选择测试：
 
-    ============================ 1 passed in 0.12s =============================
+        .. code-block:: pytest
 
-You can also select on the class:
+            $ pytest -v test_server.py::TestClass::test_method
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 1 item
 
-.. code-block:: pytest
+            test_server.py::TestClass::test_method PASSED                        [100%]
 
-    $ pytest -v test_server.py::TestClass
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
-    cachedir: .pytest_cache
-    rootdir: /home/sweet/project
-    collecting ... collected 1 item
+            ============================ 1 passed in 0.12s =============================
 
-    test_server.py::TestClass::test_method PASSED                        [100%]
+        您还可以根据类进行选择：
 
-    ============================ 1 passed in 0.12s =============================
+        .. code-block:: pytest
 
-Or select multiple nodes:
+            $ pytest -v test_server.py::TestClass
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 1 item
 
-.. code-block:: pytest
+            test_server.py::TestClass::test_method PASSED                        [100%]
 
-    $ pytest -v test_server.py::TestClass test_server.py::test_send_http
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
-    cachedir: .pytest_cache
-    rootdir: /home/sweet/project
-    collecting ... collected 2 items
+            ============================ 1 passed in 0.12s =============================
 
-    test_server.py::TestClass::test_method PASSED                        [ 50%]
-    test_server.py::test_send_http PASSED                                [100%]
+        或者选择多个节点：
 
-    ============================ 2 passed in 0.12s =============================
+        .. code-block:: pytest
 
-.. _node-id:
+            $ pytest -v test_server.py::TestClass test_server.py::test_send_http
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 2 items
 
-.. note::
+            test_server.py::TestClass::test_method PASSED                        [ 50%]
+            test_server.py::test_send_http PASSED                                [100%]
 
-    Node IDs are of the form ``module.py::class::method`` or
-    ``module.py::function``.  Node IDs control which tests are
-    collected, so ``module.py::class`` will select all test methods
-    on the class.  Nodes are also created for each parameter of a
-    parametrized fixture or test, so selecting a parametrized test
-    must include the parameter value, e.g.
-    ``module.py::function[param]``.
+            ============================ 2 passed in 0.12s =============================
 
-    Node IDs for failing tests are displayed in the test summary info
-    when running pytest with the ``-rf`` option.  You can also
-    construct Node IDs from the output of ``pytest --collect-only``.
+        .. _node-id:
 
-Using ``-k expr`` to select tests based on their name
+        .. note::
+
+            节点 ID 的格式为 ``module.py::class::method`` 或
+            ``module.py::function``。节点 ID 控制哪些测试被收集，因此 ``module.py::class`` 将选择该类上的所有测试方法。
+            每个参数化 fixture 或测试的每个参数也会创建节点，因此选择参数化测试必须包括参数值，例如
+            ``module.py::function[param]``。
+
+            当使用 ``-rf`` 选项运行 pytest 时，失败测试的节点 ID 将显示在测试摘要信息中。您还可以从 ``pytest --collect-only`` 的输出构建节点 ID。
+
+    .. tab:: 英文
+
+        You can provide one or more :ref:`node IDs <node-id>` as positional
+        arguments to select only specified tests. This makes it easy to select
+        tests based on their module, class, method, or function name:
+
+        .. code-block:: pytest
+
+            $ pytest -v test_server.py::TestClass::test_method
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 1 item
+
+            test_server.py::TestClass::test_method PASSED                        [100%]
+
+            ============================ 1 passed in 0.12s =============================
+
+        You can also select on the class:
+
+        .. code-block:: pytest
+
+            $ pytest -v test_server.py::TestClass
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 1 item
+
+            test_server.py::TestClass::test_method PASSED                        [100%]
+
+            ============================ 1 passed in 0.12s =============================
+
+        Or select multiple nodes:
+
+        .. code-block:: pytest
+
+            $ pytest -v test_server.py::TestClass test_server.py::test_send_http
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 2 items
+
+            test_server.py::TestClass::test_method PASSED                        [ 50%]
+            test_server.py::test_send_http PASSED                                [100%]
+
+            ============================ 2 passed in 0.12s =============================
+
+        .. _node-id:
+
+        .. note::
+
+            Node IDs are of the form ``module.py::class::method`` or
+            ``module.py::function``.  Node IDs control which tests are
+            collected, so ``module.py::class`` will select all test methods
+            on the class.  Nodes are also created for each parameter of a
+            parametrized fixture or test, so selecting a parametrized test
+            must include the parameter value, e.g.
+            ``module.py::function[param]``.
+
+            Node IDs for failing tests are displayed in the test summary info
+            when running pytest with the ``-rf`` option.  You can also
+            construct Node IDs from the output of ``pytest --collect-only``.
+
+使用 ``-k expr`` 根据名称选择测试
 -------------------------------------------------------
 
-.. versionadded:: 2.0/2.3.4
+**Using ``-k expr`` to select tests based on their name**
 
-You can use the ``-k`` command line option to specify an expression
-which implements a substring match on the test names instead of the
-exact match on markers that ``-m`` provides.  This makes it easy to
-select tests based on their names:
+.. tabs::
 
-.. versionchanged:: 5.4
+    .. tab:: 中文
 
-The expression matching is now case-insensitive.
+        .. versionadded:: 2.0/2.3.4
 
-.. code-block:: pytest
+        您可以使用 ``-k`` 命令行选项指定一个表达式，该表达式对测试名称执行子字符串匹配，而不是 ``-m`` 提供的确切匹配。这使得根据测试名称轻松选择测试：
 
-    $ pytest -v -k http  # running with the above defined example module
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
-    cachedir: .pytest_cache
-    rootdir: /home/sweet/project
-    collecting ... collected 4 items / 3 deselected / 1 selected
+        .. versionchanged:: 5.4
 
-    test_server.py::test_send_http PASSED                                [100%]
+        表达式匹配现在是大小写不敏感的。
 
-    ===================== 1 passed, 3 deselected in 0.12s ======================
+        .. code-block:: pytest
 
-And you can also run all tests except the ones that match the keyword:
+            $ pytest -v -k http  # 使用上述定义的示例模块运行
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 3 deselected / 1 selected
 
-.. code-block:: pytest
+            test_server.py::test_send_http PASSED                                [100%]
 
-    $ pytest -k "not send_http" -v
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
-    cachedir: .pytest_cache
-    rootdir: /home/sweet/project
-    collecting ... collected 4 items / 1 deselected / 3 selected
+            ===================== 1 passed, 3 deselected in 0.12s ======================
 
-    test_server.py::test_something_quick PASSED                          [ 33%]
-    test_server.py::test_another PASSED                                  [ 66%]
-    test_server.py::TestClass::test_method PASSED                        [100%]
+        您还可以运行所有测试，除了与关键字匹配的测试：
 
-    ===================== 3 passed, 1 deselected in 0.12s ======================
+        .. code-block:: pytest
 
-Or to select "http" and "quick" tests:
+            $ pytest -k "not send_http" -v
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 1 deselected / 3 selected
 
-.. code-block:: pytest
+            test_server.py::test_something_quick PASSED                          [ 33%]
+            test_server.py::test_another PASSED                                  [ 66%]
+            test_server.py::TestClass::test_method PASSED                        [100%]
 
-    $ pytest -k "http or quick" -v
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
-    cachedir: .pytest_cache
-    rootdir: /home/sweet/project
-    collecting ... collected 4 items / 2 deselected / 2 selected
+            ===================== 3 passed, 1 deselected in 0.12s ======================
 
-    test_server.py::test_send_http PASSED                                [ 50%]
-    test_server.py::test_something_quick PASSED                          [100%]
+        或者选择 "http" 和 "quick" 测试：
 
-    ===================== 2 passed, 2 deselected in 0.12s ======================
+        .. code-block:: pytest
 
-You can use ``and``, ``or``, ``not`` and parentheses.
+            $ pytest -k "http or quick" -v
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 2 deselected / 2 selected
+
+            test_server.py::test_send_http PASSED                                [ 50%]
+            test_server.py::test_something_quick PASSED                          [100%]
+
+            ===================== 2 passed, 2 deselected in 0.12s ======================
+
+        您可以使用 ``and``、``or``、``not`` 和括号。
+
+        除了测试名称，``-k`` 还会匹配测试父级的名称（通常是它所在文件和类的名称）、设置在测试函数上的属性、应用于它或其父级的标记，以及显式添加到它或其父级的任何 :attr:`extra keywords <_pytest.nodes.Node.extra_keyword_matches>`。
+
+    .. tab:: 英文
+
+        .. versionadded:: 2.0/2.3.4
+
+        You can use the ``-k`` command line option to specify an expression
+        which implements a substring match on the test names instead of the
+        exact match on markers that ``-m`` provides.  This makes it easy to
+        select tests based on their names:
+
+        .. versionchanged:: 5.4
+
+        The expression matching is now case-insensitive.
+
+        .. code-block:: pytest
+
+            $ pytest -v -k http  # running with the above defined example module
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 3 deselected / 1 selected
+
+            test_server.py::test_send_http PASSED                                [100%]
+
+            ===================== 1 passed, 3 deselected in 0.12s ======================
+
+        And you can also run all tests except the ones that match the keyword:
+
+        .. code-block:: pytest
+
+            $ pytest -k "not send_http" -v
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 1 deselected / 3 selected
+
+            test_server.py::test_something_quick PASSED                          [ 33%]
+            test_server.py::test_another PASSED                                  [ 66%]
+            test_server.py::TestClass::test_method PASSED                        [100%]
+
+            ===================== 3 passed, 1 deselected in 0.12s ======================
+
+        Or to select "http" and "quick" tests:
+
+        .. code-block:: pytest
+
+            $ pytest -k "http or quick" -v
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+            cachedir: .pytest_cache
+            rootdir: /home/sweet/project
+            collecting ... collected 4 items / 2 deselected / 2 selected
+
+            test_server.py::test_send_http PASSED                                [ 50%]
+            test_server.py::test_something_quick PASSED                          [100%]
+
+            ===================== 2 passed, 2 deselected in 0.12s ======================
+
+        You can use ``and``, ``or``, ``not`` and parentheses.
 
 
-In addition to the test's name, ``-k`` also matches the names of the test's parents (usually, the name of the file and class it's in),
-attributes set on the test function, markers applied to it or its parents and any :attr:`extra keywords <_pytest.nodes.Node.extra_keyword_matches>`
-explicitly added to it or its parents.
+        In addition to the test's name, ``-k`` also matches the names of the test's parents (usually, the name of the file and class it's in),
+        attributes set on the test function, markers applied to it or its parents and any :attr:`extra keywords <_pytest.nodes.Node.extra_keyword_matches>`
+        explicitly added to it or its parents.
 
 
-Registering markers
+注册标记
 -------------------------------------
 
-
+**Registering markers**
 
 .. ini-syntax for custom markers:
 
-Registering markers for your test suite is simple:
+.. tabs::
 
-.. code-block:: ini
+    .. tab:: 中文
 
-    # content of pytest.ini
-    [pytest]
-    markers =
-        webtest: mark a test as a webtest.
-        slow: mark test as slow.
+        注册测试套件的标记非常简单：
 
-Multiple custom markers can be registered, by defining each one in its own line, as shown in above example.
+        .. code-block:: ini
 
-You can ask which markers exist for your test suite - the list includes our just defined ``webtest`` and ``slow`` markers:
+            # content of pytest.ini
+            [pytest]
+            markers =
+                webtest: 将测试标记为 webtest。
+                slow: 将测试标记为慢速。
 
-.. code-block:: pytest
+        可以通过在每一行中定义每个标记来注册多个自定义标记，如上例所示。
 
-    $ pytest --markers
-    @pytest.mark.webtest: mark a test as a webtest.
+        您可以查看测试套件中有哪些标记 - 列表包括我们刚定义的 ``webtest`` 和 ``slow`` 标记：
 
-    @pytest.mark.slow: mark test as slow.
+        .. code-block:: pytest
 
-    @pytest.mark.filterwarnings(warning): add a warning filter to the given test. see https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
+            $ pytest --markers
+            @pytest.mark.webtest: 将测试标记为 webtest。
 
-    @pytest.mark.skip(reason=None): skip the given test function with an optional reason. Example: skip(reason="no way of currently testing this") skips the test.
+            @pytest.mark.slow: 将测试标记为慢速。
 
-    @pytest.mark.skipif(condition, ..., *, reason=...): skip the given test function if any of the conditions evaluate to True. Example: skipif(sys.platform == 'win32') skips the test if we are on the win32 platform. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif
+            @pytest.mark.filterwarnings(warning): 为给定测试添加警告过滤器。请参见 https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
 
-    @pytest.mark.xfail(condition, ..., *, reason=..., run=True, raises=None, strict=xfail_strict): mark the test function as an expected failure if any of the conditions evaluate to True. Optionally specify a reason for better reporting and run=False if you don't even want to execute the test function. If only specific exception(s) are expected, you can list them in raises, and if the test fails in other ways, it will be reported as a true failure. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
+            @pytest.mark.skip(reason=None): 跳过给定的测试函数，带有可选原因。示例：skip(reason="no way of currently testing this") 将跳过该测试。
 
-    @pytest.mark.parametrize(argnames, argvalues): call a test function multiple times passing in different arguments in turn. argvalues generally needs to be a list of values if argnames specifies only one name or a list of tuples of values if argnames specifies multiple names. Example: @parametrize('arg1', [1,2]) would lead to two calls of the decorated test function, one with arg1=1 and another with arg1=2.see https://docs.pytest.org/en/stable/how-to/parametrize.html for more info and examples.
+            @pytest.mark.skipif(condition, ..., *, reason=...): 如果任何条件评估为 True，则跳过给定的测试函数。示例：skipif(sys.platform == 'win32') 如果我们在 win32 平台上，则跳过该测试。请参见 https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif
 
-    @pytest.mark.usefixtures(fixturename1, fixturename2, ...): mark tests as needing all of the specified fixtures. see https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
+            @pytest.mark.xfail(condition, ..., *, reason=..., run=True, raises=None, strict=xfail_strict): 如果任何条件评估为 True，则将测试函数标记为预期失败。可选择指定原因以便更好地报告，并在不想执行测试函数时设置 run=False。如果仅期望特定异常，您可以将它们列在 raises 中，如果测试以其他方式失败，则将其报告为真实失败。请参见 https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
 
-    @pytest.mark.tryfirst: mark a hook implementation function such that the plugin machinery will try to call it first/as early as possible. DEPRECATED, use @pytest.hookimpl(tryfirst=True) instead.
+            @pytest.mark.parametrize(argnames, argvalues): 多次调用测试函数，并依次传递不同的参数。如果 argnames 仅指定一个名称，则 argvalues 通常需要是一个值的列表；如果 argnames 指定多个名称，则需要是一个值的元组列表。示例：@parametrize('arg1', [1,2]) 将导致对装饰的测试函数进行两次调用，一次 arg1=1，另一次 arg1=2。请参见 https://docs.pytest.org/en/stable/how-to/parametrize.html 获取更多信息和示例。
 
-    @pytest.mark.trylast: mark a hook implementation function such that the plugin machinery will try to call it last/as late as possible. DEPRECATED, use @pytest.hookimpl(trylast=True) instead.
+            @pytest.mark.usefixtures(fixturename1, fixturename2, ...): 将测试标记为需要所有指定的夹具。请参见 https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
+
+            @pytest.mark.tryfirst: 将钩子实现函数标记为插件机制将尽早尝试调用它。已弃用，请改用 @pytest.hookimpl(tryfirst=True)。
+
+            @pytest.mark.trylast: 将钩子实现函数标记为插件机制将尽晚尝试调用它。已弃用，请改用 @pytest.hookimpl(trylast=True)。
+
+        有关如何从插件添加和使用标记的示例，请参见 :ref:`adding a custom marker from a plugin`。
+
+        .. note::
+
+            建议显式注册标记，以便：
+
+            * 在您的测试套件中有一个定义标记的地方
+
+            * 通过 ``pytest --markers`` 查询现有标记时输出良好
+
+            * 如果您使用 ``--strict-markers`` 选项，则标记中的拼写错误会被视为错误。
+
+    .. tab:: 英文
+
+        Registering markers for your test suite is simple:
+
+        .. code-block:: ini
+
+            # content of pytest.ini
+            [pytest]
+            markers =
+                webtest: mark a test as a webtest.
+                slow: mark test as slow.
+
+        Multiple custom markers can be registered, by defining each one in its own line, as shown in above example.
+
+        You can ask which markers exist for your test suite - the list includes our just defined ``webtest`` and ``slow`` markers:
+
+        .. code-block:: pytest
+
+            $ pytest --markers
+            @pytest.mark.webtest: mark a test as a webtest.
+
+            @pytest.mark.slow: mark test as slow.
+
+            @pytest.mark.filterwarnings(warning): add a warning filter to the given test. see https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
+
+            @pytest.mark.skip(reason=None): skip the given test function with an optional reason. Example: skip(reason="no way of currently testing this") skips the test.
+
+            @pytest.mark.skipif(condition, ..., *, reason=...): skip the given test function if any of the conditions evaluate to True. Example: skipif(sys.platform == 'win32') skips the test if we are on the win32 platform. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif
+
+            @pytest.mark.xfail(condition, ..., *, reason=..., run=True, raises=None, strict=xfail_strict): mark the test function as an expected failure if any of the conditions evaluate to True. Optionally specify a reason for better reporting and run=False if you don't even want to execute the test function. If only specific exception(s) are expected, you can list them in raises, and if the test fails in other ways, it will be reported as a true failure. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
+
+            @pytest.mark.parametrize(argnames, argvalues): call a test function multiple times passing in different arguments in turn. argvalues generally needs to be a list of values if argnames specifies only one name or a list of tuples of values if argnames specifies multiple names. Example: @parametrize('arg1', [1,2]) would lead to two calls of the decorated test function, one with arg1=1 and another with arg1=2.see https://docs.pytest.org/en/stable/how-to/parametrize.html for more info and examples.
+
+            @pytest.mark.usefixtures(fixturename1, fixturename2, ...): mark tests as needing all of the specified fixtures. see https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
+
+            @pytest.mark.tryfirst: mark a hook implementation function such that the plugin machinery will try to call it first/as early as possible. DEPRECATED, use @pytest.hookimpl(tryfirst=True) instead.
+
+            @pytest.mark.trylast: mark a hook implementation function such that the plugin machinery will try to call it last/as late as possible. DEPRECATED, use @pytest.hookimpl(trylast=True) instead.
 
 
-For an example on how to add and work with markers from a plugin, see
-:ref:`adding a custom marker from a plugin`.
+        For an example on how to add and work with markers from a plugin, see
+        :ref:`adding a custom marker from a plugin`.
 
-.. note::
+        .. note::
 
-    It is recommended to explicitly register markers so that:
+            It is recommended to explicitly register markers so that:
 
-    * There is one place in your test suite defining your markers
+            * There is one place in your test suite defining your markers
 
-    * Asking for existing markers via ``pytest --markers`` gives good output
+            * Asking for existing markers via ``pytest --markers`` gives good output
 
-    * Typos in function markers are treated as an error if you use
-      the ``--strict-markers`` option.
+            * Typos in function markers are treated as an error if you use
+            the ``--strict-markers`` option.
 
 .. _`scoped-marking`:
 
-Marking whole classes or modules
+标记整个类或模块
 ----------------------------------------------------
 
-You may use ``pytest.mark`` decorators with classes to apply markers to all of
-its test methods:
+**Marking whole classes or modules**
 
-.. code-block:: python
+.. tabs::
 
-    # content of test_mark_classlevel.py
-    import pytest
+    .. tab:: 中文
 
+        您可以使用 ``pytest.mark`` 装饰器与类结合，以将标记应用于其所有测试方法：
 
-    @pytest.mark.webtest
-    class TestClass:
-        def test_startup(self):
-            pass
+        .. code-block:: python
 
-        def test_startup_and_more(self):
-            pass
-
-This is equivalent to directly applying the decorator to the
-two test functions.
-
-To apply marks at the module level, use the :globalvar:`pytestmark` global variable::
-
-    import pytest
-    pytestmark = pytest.mark.webtest
-
-or multiple markers::
-
-    pytestmark = [pytest.mark.webtest, pytest.mark.slowtest]
+            # content of test_mark_classlevel.py
+            import pytest
 
 
-Due to legacy reasons, before class decorators were introduced, it is possible to set the
-:globalvar:`pytestmark` attribute on a test class like this:
+            @pytest.mark.webtest
+            class TestClass:
+                def test_startup(self):
+                    pass
 
-.. code-block:: python
+                def test_startup_and_more(self):
+                    pass
 
-    import pytest
+        这相当于直接将装饰器应用于这两个测试函数。
+
+        要在模块级别应用标记，请使用 :globalvar:`pytestmark` 全局变量：
+
+        .. code-block:: python
+
+            import pytest
+            pytestmark = pytest.mark.webtest
+
+        或者多个标记：
+
+        .. code-block:: python
+
+            pytestmark = [pytest.mark.webtest, pytest.mark.slowtest]
 
 
-    class TestClass:
-        pytestmark = pytest.mark.webtest
+        由于历史原因，在引入类装饰器之前，可以像这样在测试类上设置 :globalvar:`pytestmark` 属性：
+
+        .. code-block:: python
+
+            import pytest
+
+
+            class TestClass:
+                pytestmark = pytest.mark.webtest
+
+    .. tab:: 英文
+
+        You may use ``pytest.mark`` decorators with classes to apply markers to all of
+        its test methods:
+
+        .. code-block:: python
+
+            # content of test_mark_classlevel.py
+            import pytest
+
+
+            @pytest.mark.webtest
+            class TestClass:
+                def test_startup(self):
+                    pass
+
+                def test_startup_and_more(self):
+                    pass
+
+        This is equivalent to directly applying the decorator to the
+        two test functions.
+
+        To apply marks at the module level, use the :globalvar:`pytestmark` global variable::
+
+            import pytest
+            pytestmark = pytest.mark.webtest
+
+        or multiple markers::
+
+            pytestmark = [pytest.mark.webtest, pytest.mark.slowtest]
+
+
+        Due to legacy reasons, before class decorators were introduced, it is possible to set the
+        :globalvar:`pytestmark` attribute on a test class like this:
+
+        .. code-block:: python
+
+            import pytest
+
+
+            class TestClass:
+                pytestmark = pytest.mark.webtest
 
 .. _`marking individual tests when using parametrize`:
 
-Marking individual tests when using parametrize
+使用参数化时标记单个测试
 -----------------------------------------------
+
+**Marking individual tests when using parametrize**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 When using parametrize, applying a mark will make it apply
 to each individual test. However it is also possible to
@@ -362,8 +709,18 @@ Skip and xfail marks can also be applied in this way, see :ref:`skip/xfail with 
 
 .. _`adding a custom marker from a plugin`:
 
-Custom marker and command line option to control test runs
+自定义标记和命令行选项来控制测试运行
 ----------------------------------------------------------
+
+**Custom marker and command line option to control test runs**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 .. regendoc:wipe
 
@@ -469,8 +826,18 @@ The ``--markers`` option always gives you a list of available markers:
 
 .. _`passing callables to custom markers`:
 
-Passing a callable to custom markers
+将可调用函数传递给自定义标记
 --------------------------------------------
+
+**Passing a callable to custom markers**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 .. regendoc:wipe
 
@@ -517,8 +884,18 @@ The output is as follows:
 We can see that the custom marker has its argument set extended with the function ``hello_world``. This is the key difference between creating a custom marker as a callable, which invokes ``__call__`` behind the scenes, and using ``with_args``.
 
 
-Reading markers which were set from multiple places
+读取从多个位置设置的标记
 ----------------------------------------------------
+
+**Reading markers which were set from multiple places**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 .. versionadded: 2.2.2
 
@@ -566,8 +943,18 @@ Let's run this without capturing output and see what we get:
     .
     1 passed in 0.12s
 
-Marking platform specific tests with pytest
+使用 pytest 标记特定于平台的测试
 --------------------------------------------------------------
+
+**Marking platform specific tests with pytest**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 .. regendoc:wipe
 
@@ -654,8 +1041,18 @@ Note that if you specify a platform via the marker-command line option like this
 
 then the unmarked-tests will not be run.  It is thus a way to restrict the run to the specific tests.
 
-Automatically adding markers based on test names
+根据测试名称自动添加标记
 --------------------------------------------------------
+
+**Automatically adding markers based on test names**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 .. regendoc:wipe
 

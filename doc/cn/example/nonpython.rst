@@ -4,6 +4,14 @@
 Working with non-python tests
 ====================================================
 
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
+
 .. _`yaml plugin`:
 
 A basic example for specifying tests in Yaml files

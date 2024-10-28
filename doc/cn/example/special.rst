@@ -1,6 +1,14 @@
 A session-fixture which can look at all collected tests
 ----------------------------------------------------------------
 
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
+
 A session-scoped fixture effectively has access to all
 collected test items.  Here is an example of a fixture
 function which walks all collected tests and looks
