@@ -1,13 +1,25 @@
 .. _`changelog`:
 
 =========
-Changelog
+更改日志
 =========
 
-Versions follow `Semantic Versioning <https://semver.org/>`_ (``<major>.<minor>.<patch>``).
+**Changelog**
 
-Backward incompatible (breaking) changes will only be introduced in major versions
-with advance notice in the **Deprecations** section of releases.
+.. tabs::
+
+    .. tab:: 中文
+
+        版本遵循 `语义版本控制 <https://semver.org/>`_  (``<major>.<minor>.<patch>``)。
+
+        向后不兼容（重大）更改将仅在主要版本中引入，并在发布的 **弃用** 部分中提前通知。
+
+    .. tab:: 英文
+
+        Versions follow `Semantic Versioning <https://semver.org/>`_ (``<major>.<minor>.<patch>``).
+
+        Backward incompatible (breaking) changes will only be introduced in major versions
+        with advance notice in the **Deprecations** section of releases.
 
 
 ..
@@ -34,47 +46,91 @@ with advance notice in the **Deprecations** section of releases.
 pytest 8.3.3 (2024-09-09)
 =========================
 
-Bug fixes
+bug修复
 ---------
 
-- `#12446 <https://github.com/pytest-dev/pytest/issues/12446>`_: Avoid calling ``@property`` (and other instance descriptors) during fixture discovery -- by :user:`asottile`
+**Bug fixes**
+
+.. tabs::
+
+    .. tab:: 中文
+
+        - `#12446 <https://github.com/pytest-dev/pytest/issues/12446>`_：避免在装置发现期间调用 ``@property``（和其他实例描述符）--by :user:`asottile`
+
+        - `#12659 <https://github.com/pytest-dev/pytest/issues/12659>`_：修复了在 pytest>=8.1 中使用参数 ``--import-mode=importlib`` 时不显示断言失败差异的问题。
+
+        - `#12667 <https://github.com/pytest-dev/pytest/issues/12667>`_：修复了 `ExceptionInfo.errisinstance` 中的类型更改导致 `mypy` 失败的回归问题。
+
+        - `#12744 <https://github.com/pytest-dev/pytest/issues/12744>`_：修复了与 Python 3.9 或更低版本的类型兼容性 - 将 `typing.Self` 替换为 `typing_extensions.Self` - 作者：:user:`Avasam`
+
+        - `#12745 <https://github.com/pytest-dev/pytest/issues/12745>`_：修复了 Windows 上 nodeid 路径中反斜杠转换错误的问题，确保跨环境的路径处理一致。
+
+        - `#6682 <https://github.com/pytest-dev/pytest/issues/6682>`_：修复了打印失败断言的“msg”部分时不遵守详细程度的错误（如 ``assert condition, msg``）。
+
+        - `#9422 <https://github.com/pytest-dev/pytest/issues/9422>`_: 修复通过 ``-p no:terminal`` 禁用终端插件会导致因缺少 ``verbose`` 选项而崩溃的错误。
+
+          -- 作者：:user:`GTowers1`
+
+    .. tab:: 英文
+
+        - `#12446 <https://github.com/pytest-dev/pytest/issues/12446>`_: Avoid calling ``@property`` (and other instance descriptors) during fixture discovery -- by :user:`asottile`
 
 
-- `#12659 <https://github.com/pytest-dev/pytest/issues/12659>`_: Fixed the issue of not displaying assertion failure differences when using the parameter ``--import-mode=importlib`` in pytest>=8.1.
+        - `#12659 <https://github.com/pytest-dev/pytest/issues/12659>`_: Fixed the issue of not displaying assertion failure differences when using the parameter ``--import-mode=importlib`` in pytest>=8.1.
 
 
-- `#12667 <https://github.com/pytest-dev/pytest/issues/12667>`_: Fixed a regression where type change in `ExceptionInfo.errisinstance` caused `mypy` to fail.
+        - `#12667 <https://github.com/pytest-dev/pytest/issues/12667>`_: Fixed a regression where type change in `ExceptionInfo.errisinstance` caused `mypy` to fail.
 
 
-- `#12744 <https://github.com/pytest-dev/pytest/issues/12744>`_: Fixed typing compatibility with Python 3.9 or less -- replaced `typing.Self` with `typing_extensions.Self` -- by :user:`Avasam`
+        - `#12744 <https://github.com/pytest-dev/pytest/issues/12744>`_: Fixed typing compatibility with Python 3.9 or less -- replaced `typing.Self` with `typing_extensions.Self` -- by :user:`Avasam`
 
 
-- `#12745 <https://github.com/pytest-dev/pytest/issues/12745>`_: Fixed an issue with backslashes being incorrectly converted in nodeid paths on Windows, ensuring consistent path handling across environments.
+        - `#12745 <https://github.com/pytest-dev/pytest/issues/12745>`_: Fixed an issue with backslashes being incorrectly converted in nodeid paths on Windows, ensuring consistent path handling across environments.
 
 
-- `#6682 <https://github.com/pytest-dev/pytest/issues/6682>`_: Fixed bug where the verbosity levels where not being respected when printing the "msg" part of failed assertion (as in ``assert condition, msg``).
+        - `#6682 <https://github.com/pytest-dev/pytest/issues/6682>`_: Fixed bug where the verbosity levels where not being respected when printing the "msg" part of failed assertion (as in ``assert condition, msg``).
 
 
-- `#9422 <https://github.com/pytest-dev/pytest/issues/9422>`_: Fix bug where disabling the terminal plugin via ``-p no:terminal`` would cause crashes related to missing the ``verbose`` option.
+        - `#9422 <https://github.com/pytest-dev/pytest/issues/9422>`_: Fix bug where disabling the terminal plugin via ``-p no:terminal`` would cause crashes related to missing the ``verbose`` option.
 
-  -- by :user:`GTowers1`
+          -- by :user:`GTowers1`
 
 
 
-Improved documentation
+改进的文档
 ----------------------
 
-- `#12663 <https://github.com/pytest-dev/pytest/issues/12663>`_: Clarify that the `pytest_deselected` hook should be called from `pytest_collection_modifyitems` hook implementations when items are deselected.
+**Improved documentation**
+
+.. tabs::
+
+    .. tab:: 中文
+
+        - `#12663 <https://github.com/pytest-dev/pytest/issues/12663>`_：澄清当取消选择项目时，应从 `pytest_collection_modifyitems` 钩子实现中调用 `pytest_deselected` 钩子。
+
+        - `#12678 <https://github.com/pytest-dev/pytest/issues/12678>`_：从文档中的 `tmp_path_retention_policy` 示例中删除错误的引号。
+
+    .. tab:: 英文
+
+        - `#12663 <https://github.com/pytest-dev/pytest/issues/12663>`_: Clarify that the `pytest_deselected` hook should be called from `pytest_collection_modifyitems` hook implementations when items are deselected.
 
 
-- `#12678 <https://github.com/pytest-dev/pytest/issues/12678>`_: Remove erroneous quotes from `tmp_path_retention_policy` example in docs.
+        - `#12678 <https://github.com/pytest-dev/pytest/issues/12678>`_: Remove erroneous quotes from `tmp_path_retention_policy` example in docs.
 
 
 
 Miscellaneous internal changes
 ------------------------------
 
-- `#12769 <https://github.com/pytest-dev/pytest/issues/12769>`_: Fix typos discovered by codespell and add codespell to pre-commit hooks.
+.. tabs::
+
+    .. tab:: 中文
+
+        - `#12769 <https://github.com/pytest-dev/pytest/issues/12769>`_: 修复 codespell 发现的拼写错误，并将 codespell 添加到预提交挂钩中。
+
+    .. tab:: 英文
+
+        - `#12769 <https://github.com/pytest-dev/pytest/issues/12769>`_: Fix typos discovered by codespell and add codespell to pre-commit hooks.
 
 
 pytest 8.3.2 (2024-07-24)

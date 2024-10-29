@@ -1,29 +1,64 @@
 ============================
-Contributing
+贡献
 ============================
 
-Contributions are highly welcomed and appreciated.  Every little bit of help counts,
-so do not hesitate!
+**Contributing**
+
+.. tabs::
+
+    .. tab:: 中文
+
+         我们非常欢迎并赞赏您的贡献。每一点帮助都很重要，所以不要犹豫！
+
+    .. tab:: 英文
+
+         我们非常欢迎并赞赏您的贡献。每一点帮助都很重要，所以不要犹豫！
 
 
 .. _submitfeedback:
 
-Feature requests and feedback
+功能请求和反馈
 -----------------------------
 
-Do you like pytest?  Share some love on Twitter or in your blog posts!
+**Feature requests and feedback**
 
-We'd also like to hear about your propositions and suggestions.  Feel free to
-`submit them as issues <https://github.com/pytest-dev/pytest/issues>`_ and:
+.. tabs::
 
-* Explain in detail how they should work.
-* Keep the scope as narrow as possible.  This will make it easier to implement.
+    .. tab:: 中文
+
+      您喜欢 pytest 吗？在 Twitter 或您的博客文章中分享您的喜爱吧！
+
+      我们也希望听到您的建议和主张。欢迎
+      `将它们作为问题提交 <https://github.com/pytest-dev/pytest/issues>`_ 并且：
+
+      * 详细解释它们应该如何工作。
+      * 尽可能缩小范围。这将使其更容易实现。
+
+    .. tab:: 英文
+
+      Do you like pytest?  Share some love on Twitter or in your blog posts!
+
+      We'd also like to hear about your propositions and suggestions.  Feel free to
+      `submit them as issues <https://github.com/pytest-dev/pytest/issues>`_ and:
+
+      * Explain in detail how they should work.
+      * Keep the scope as narrow as possible.  This will make it easier to implement.
 
 
 .. _reportbugs:
 
-Report bugs
+报告错误
 -----------
+
+**Report bugs**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Report bugs for pytest in the `issue tracker <https://github.com/pytest-dev/pytest/issues>`_.
 
@@ -42,8 +77,18 @@ fix the bug itself.
 
 .. _fixbugs:
 
-Fix bugs
+修复错误
 --------
+
+**Fix bugs**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Look through the `GitHub issues for bugs <https://github.com/pytest-dev/pytest/labels/type:%20bug>`_.
 See also the `"good first issue" issues <https://github.com/pytest-dev/pytest/labels/good%20first%20issue>`_
@@ -56,16 +101,36 @@ Don't forget to check the issue trackers of your favourite plugins, too!
 
 .. _writeplugins:
 
-Implement features
+实现功能
 ------------------
+
+**Implement features**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Look through the `GitHub issues for enhancements <https://github.com/pytest-dev/pytest/labels/type:%20enhancement>`_.
 
 :ref:`Talk <contact>` to developers to find out how you can implement specific
 features.
 
-Write documentation
+编写文档
 -------------------
+
+**Write documentation**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Pytest could always use more documentation.  What exactly is needed?
 
@@ -121,8 +186,18 @@ For example:
 
 .. _submitplugin:
 
-Submitting Plugins to pytest-dev
+向 pytest-dev 提交插件
 --------------------------------
+
+**Submitting Plugins to pytest-dev**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Development of the pytest core, support code, and some plugins happens
 in repositories living under the ``pytest-dev`` organisations:
@@ -186,11 +261,23 @@ As stated, the objective is to share maintenance and avoid "plugin-abandon".
 .. _`pull requests`:
 .. _pull-requests:
 
-Preparing Pull Requests
+准备拉取请求
 -----------------------
 
-Short version
+**Preparing Pull Requests**
+
+简短版本
 ~~~~~~~~~~~~~
+
+**Short version**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 #. Fork the repository.
 #. Fetch tags from upstream if necessary (if you cloned only main `git fetch --tags https://github.com/pytest-dev/pytest`).
@@ -211,8 +298,18 @@ Short version
    add yourself to the ``AUTHORS`` file, in alphabetical order.
 
 
-Long version
+完整版本
 ~~~~~~~~~~~~
+
+**Long version**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 What is a "pull request"?  It informs the project's core developers about the
 changes you want to review and merge.  Pull requests are stored on
@@ -326,8 +423,18 @@ Here is a simple overview, with pytest-specific bits:
     base: main
 
 
-Writing Tests
+编写测试
 ~~~~~~~~~~~~~
+
+**Writing Tests**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Writing tests for plugins or for pytest itself is often done using the `pytester fixture <https://docs.pytest.org/en/stable/reference/reference.html#pytester>`_, as a "black-box" test.
 
@@ -366,8 +473,18 @@ one file which looks like a good fit. For example, a regression test about a bug
 should go into ``test_cacheprovider.py``, given that this option is implemented in ``cacheprovider.py``.
 If in doubt, go ahead and open a PR with your best guess and we can discuss this over the code.
 
-Joining the Development Team
+加入开发团队
 ----------------------------
+
+**Joining the Development Team**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Anyone who has successfully seen through a pull request which did not
 require any extra work from the development team to merge will
@@ -380,8 +497,18 @@ pull requests from other contributors yourself after having reviewed
 them.
 
 
-Merge/squash guidelines
+合并/压缩指南
 -----------------------
+
+**Merge/squash guidelines**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 When a PR is approved and ready to be integrated to the ``main`` branch, one has the option to *merge* the commits unchanged, or *squash* all the commits into a single commit.
 
@@ -431,8 +558,18 @@ As mentioned, those are overall guidelines, not rules cast in stone. This topic 
 *Backport PRs* (as those created automatically from a ``backport`` label) should always be **squashed**, as they preserve the original PR author.
 
 
-Backporting bug fixes for the next patch release
+为下一个补丁版本反向移植错误修复
 ------------------------------------------------
+
+**Backporting bug fixes for the next patch release**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Pytest makes a feature release every few weeks or months. In between, patch releases
 are made to the previous feature release, containing bug fixes only. The bug fixes
@@ -468,8 +605,18 @@ Manual method:
    * Delete the PR body, it usually contains a duplicate commit message.
 
 
-Who does the backporting
+谁负责反向移植
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Who does the backporting**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 As mentioned above, bugs should first be fixed on ``main`` (except in rare occasions
 that a bug only happens in a previous release). So, who should do the backport procedure described
@@ -491,8 +638,18 @@ about backports.
 
 Backports should be **squashed** (rather than **merged**), as doing so preserves the original PR author correctly.
 
-Handling stale issues/PRs
+处理过时的问题/PR
 -------------------------
+
+**Handling stale issues/PRs**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Stale issues/PRs are those where pytest contributors have asked for questions/changes
 and the authors didn't get around to answer/implement them yet after a somewhat long time, or
@@ -509,8 +666,18 @@ it is by no means a dismissal of the topic being tackled by the issue/pull reque
 is just a way for us to clear up the queue and make the maintainers' work more manageable. Submitters
 can always reopen the issue/pull request in their own time later if it makes sense.
 
-When to close
+何时关闭
 ~~~~~~~~~~~~~
+
+**When to close**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 Here are a few general rules the maintainers use deciding when to close issues/PRs because
 of lack of inactivity:
@@ -521,8 +688,18 @@ of lack of inactivity:
 
 The above are **not hard rules**, but merely **guidelines**, and can be (and often are!) reviewed on a case-by-case basis.
 
-Closing pull requests
+关闭拉取请求
 ~~~~~~~~~~~~~~~~~~~~~
+
+**Closing pull requests**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 When closing a Pull Request, it needs to be acknowledging the time, effort, and interest demonstrated by the person which submitted it. As mentioned previously, it is not the intent of the team to dismiss a stalled pull request entirely but to merely to clear up our queue, so a message like the one below is warranted when closing a pull request that went stale:
 
@@ -538,8 +715,18 @@ When closing a Pull Request, it needs to be acknowledging the time, effort, and 
 
     <bye>
 
-Closing issues
+关闭问题
 --------------
+
+**Closing issues**
+
+.. tabs::
+
+    .. tab:: 中文
+
+
+
+    .. tab:: 英文
 
 When a pull request is submitted to fix an issue, add text like ``closes #XYZW`` to the PR description and/or commits (where ``XYZW`` is the issue number). See the `GitHub docs <https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword>`_ for more information.
 

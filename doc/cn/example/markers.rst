@@ -683,29 +683,43 @@
 
     .. tab:: 中文
 
+        当使用 `parametrize` 时，应用标记将使其作用于每个单独的测试。然而，也可以将标记应用于单个测试实例：
 
+        .. code-block:: python
+
+            import pytest
+
+
+            @pytest.mark.foo
+            @pytest.mark.parametrize(
+                ("n", "expected"), [(1, 2), pytest.param(1, 3, marks=pytest.mark.bar), (2, 3)]
+            )
+            def test_increment(n, expected):
+                assert n + 1 == expected
+
+        在这个例子中，标记 "foo" 将应用于三个测试中的每一个，而 "bar" 标记仅应用于第二个测试。跳过（Skip）和预期失败（xfail）标记也可以以这种方式应用，参见 :ref:`skip/xfail with parametrize`。
 
     .. tab:: 英文
 
-When using parametrize, applying a mark will make it apply
-to each individual test. However it is also possible to
-apply a marker to an individual test instance:
+        When using parametrize, applying a mark will make it apply
+        to each individual test. However it is also possible to
+        apply a marker to an individual test instance:
 
-.. code-block:: python
+        .. code-block:: python
 
-    import pytest
+            import pytest
 
 
-    @pytest.mark.foo
-    @pytest.mark.parametrize(
-        ("n", "expected"), [(1, 2), pytest.param(1, 3, marks=pytest.mark.bar), (2, 3)]
-    )
-    def test_increment(n, expected):
-        assert n + 1 == expected
+            @pytest.mark.foo
+            @pytest.mark.parametrize(
+                ("n", "expected"), [(1, 2), pytest.param(1, 3, marks=pytest.mark.bar), (2, 3)]
+            )
+            def test_increment(n, expected):
+                assert n + 1 == expected
 
-In this example the mark "foo" will apply to each of the three
-tests, whereas the "bar" mark is only applied to the second test.
-Skip and xfail marks can also be applied in this way, see :ref:`skip/xfail with parametrize`.
+        In this example the mark "foo" will apply to each of the three
+        tests, whereas the "bar" mark is only applied to the second test.
+        Skip and xfail marks can also be applied in this way, see :ref:`skip/xfail with parametrize`.
 
 .. _`adding a custom marker from a plugin`:
 
@@ -718,110 +732,205 @@ Skip and xfail marks can also be applied in this way, see :ref:`skip/xfail with 
 
     .. tab:: 中文
 
+        .. regendoc:wipe
 
+        插件可以提供自定义标记，并根据它实现特定的行为。这是一个自包含的示例，添加了一个命令行选项和一个参数化测试函数标记，以便根据命名环境运行指定的测试：
+
+        .. code-block:: python
+
+            # content of conftest.py
+
+            import pytest
+
+
+            def pytest_addoption(parser):
+                parser.addoption(
+                    "-E",
+                    action="store",
+                    metavar="NAME",
+                    help="只运行与环境 NAME 匹配的测试。",
+                )
+
+
+            def pytest_configure(config):
+                # 注册一个额外的标记
+                config.addinivalue_line(
+                    "markers", "env(name): 标记测试仅在命名环境中运行"
+                )
+
+
+            def pytest_runtest_setup(item):
+                envnames = [mark.args[0] for mark in item.iter_markers(name="env")]
+                if envnames:
+                    if item.config.getoption("-E") not in envnames:
+                        pytest.skip(f"测试需要在 {envnames!r} 中的环境")
+
+        使用此本地插件的测试文件：
+
+        .. code-block:: python
+
+            # content of test_someenv.py
+
+            import pytest
+
+
+            @pytest.mark.env("stage1")
+            def test_basic_db_operation():
+                pass
+
+        以及指定与测试需求不同环境的示例调用：
+
+        .. code-block:: pytest
+
+            $ pytest -E stage2
+            =========================== 测试会话开始 ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 1 item
+
+            test_someenv.py s                                                    [100%]
+
+            ============================ 1 个测试被跳过，耗时 0.12s ============================
+
+        这是一个指定确切所需环境的示例：
+
+        .. code-block:: pytest
+
+            $ pytest -E stage1
+            =========================== 测试会话开始 ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 1 item
+
+            test_someenv.py .                                                    [100%]
+
+            ============================ 1 个测试通过，耗时 0.12s =============================
+
+        ``--markers`` 选项始终会为你提供可用标记的列表：
+
+        .. code-block:: pytest
+
+            $ pytest --markers
+            @pytest.mark.env(name): 标记测试仅在命名环境中运行
+
+            @pytest.mark.filterwarnings(warning): 为给定测试添加警告过滤器。参见 https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
+
+            @pytest.mark.skip(reason=None): 跳过给定的测试函数，附加可选理由。例如：skip(reason="目前无法测试此") 跳过该测试。
+
+            @pytest.mark.skipif(condition, ..., *, reason=...): 如果任何条件评估为 True，则跳过给定的测试函数。例如：skipif(sys.platform == 'win32') 如果我们在 win32 平台上，则跳过测试。参见 https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif
+
+            @pytest.mark.xfail(condition, ..., *, reason=..., run=True, raises=None, strict=xfail_strict): 如果任何条件评估为 True，则标记测试函数为预期失败。可选地指定理由以便更好的报告，设置 run=False 如果你甚至不想执行测试函数。如果仅期望特定异常，可以在 raises 中列出它们，如果测试以其他方式失败，将被报告为真正的失败。参见 https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
+
+            @pytest.mark.parametrize(argnames, argvalues): 多次调用测试函数，逐次传入不同参数。如果 argnames 仅指定一个名称，则 argvalues 通常需要是值的列表；如果 argnames 指定多个名称，则需要是值的元组列表。例如：@parametrize('arg1', [1,2]) 将导致装饰的测试函数被调用两次，一次 arg1=1，另一次 arg1=2。有关更多信息和示例，请参见 https://docs.pytest.org/en/stable/how-to/parametrize.html。
+
+            @pytest.mark.usefixtures(fixturename1, fixturename2, ...): 将测试标记为需要所有指定的夹具。参见 https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
+
+            @pytest.mark.tryfirst: 标记一个钩子实现函数，以便插件机制尽可能早地调用它。已弃用，请改用 @pytest.hookimpl(tryfirst=True)。
+
+            @pytest.mark.trylast: 标记一个钩子实现函数，以便插件机制尽可能晚地调用它。已弃用，请改用 @pytest.hookimpl(trylast=True)。
 
     .. tab:: 英文
 
-.. regendoc:wipe
+        .. regendoc:wipe
 
-Plugins can provide custom markers and implement specific behaviour
-based on it. This is a self-contained example which adds a command
-line option and a parametrized test function marker to run tests
-specified via named environments:
+        Plugins can provide custom markers and implement specific behaviour
+        based on it. This is a self-contained example which adds a command
+        line option and a parametrized test function marker to run tests
+        specified via named environments:
 
-.. code-block:: python
+        .. code-block:: python
 
-    # content of conftest.py
+            # content of conftest.py
 
-    import pytest
-
-
-    def pytest_addoption(parser):
-        parser.addoption(
-            "-E",
-            action="store",
-            metavar="NAME",
-            help="only run tests matching the environment NAME.",
-        )
+            import pytest
 
 
-    def pytest_configure(config):
-        # register an additional marker
-        config.addinivalue_line(
-            "markers", "env(name): mark test to run only on named environment"
-        )
+            def pytest_addoption(parser):
+                parser.addoption(
+                    "-E",
+                    action="store",
+                    metavar="NAME",
+                    help="only run tests matching the environment NAME.",
+                )
 
 
-    def pytest_runtest_setup(item):
-        envnames = [mark.args[0] for mark in item.iter_markers(name="env")]
-        if envnames:
-            if item.config.getoption("-E") not in envnames:
-                pytest.skip(f"test requires env in {envnames!r}")
-
-A test file using this local plugin:
-
-.. code-block:: python
-
-    # content of test_someenv.py
-
-    import pytest
+            def pytest_configure(config):
+                # register an additional marker
+                config.addinivalue_line(
+                    "markers", "env(name): mark test to run only on named environment"
+                )
 
 
-    @pytest.mark.env("stage1")
-    def test_basic_db_operation():
-        pass
+            def pytest_runtest_setup(item):
+                envnames = [mark.args[0] for mark in item.iter_markers(name="env")]
+                if envnames:
+                    if item.config.getoption("-E") not in envnames:
+                        pytest.skip(f"test requires env in {envnames!r}")
 
-and an example invocations specifying a different environment than what
-the test needs:
+        A test file using this local plugin:
 
-.. code-block:: pytest
+        .. code-block:: python
 
-    $ pytest -E stage2
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
-    rootdir: /home/sweet/project
-    collected 1 item
+            # content of test_someenv.py
 
-    test_someenv.py s                                                    [100%]
+            import pytest
 
-    ============================ 1 skipped in 0.12s ============================
 
-and here is one that specifies exactly the environment needed:
+            @pytest.mark.env("stage1")
+            def test_basic_db_operation():
+                pass
 
-.. code-block:: pytest
+        and an example invocations specifying a different environment than what
+        the test needs:
 
-    $ pytest -E stage1
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
-    rootdir: /home/sweet/project
-    collected 1 item
+        .. code-block:: pytest
 
-    test_someenv.py .                                                    [100%]
+            $ pytest -E stage2
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 1 item
 
-    ============================ 1 passed in 0.12s =============================
+            test_someenv.py s                                                    [100%]
 
-The ``--markers`` option always gives you a list of available markers:
+            ============================ 1 skipped in 0.12s ============================
 
-.. code-block:: pytest
+        and here is one that specifies exactly the environment needed:
 
-    $ pytest --markers
-    @pytest.mark.env(name): mark test to run only on named environment
+        .. code-block:: pytest
 
-    @pytest.mark.filterwarnings(warning): add a warning filter to the given test. see https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
+            $ pytest -E stage1
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 1 item
 
-    @pytest.mark.skip(reason=None): skip the given test function with an optional reason. Example: skip(reason="no way of currently testing this") skips the test.
+            test_someenv.py .                                                    [100%]
 
-    @pytest.mark.skipif(condition, ..., *, reason=...): skip the given test function if any of the conditions evaluate to True. Example: skipif(sys.platform == 'win32') skips the test if we are on the win32 platform. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif
+            ============================ 1 passed in 0.12s =============================
 
-    @pytest.mark.xfail(condition, ..., *, reason=..., run=True, raises=None, strict=xfail_strict): mark the test function as an expected failure if any of the conditions evaluate to True. Optionally specify a reason for better reporting and run=False if you don't even want to execute the test function. If only specific exception(s) are expected, you can list them in raises, and if the test fails in other ways, it will be reported as a true failure. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
+        The ``--markers`` option always gives you a list of available markers:
 
-    @pytest.mark.parametrize(argnames, argvalues): call a test function multiple times passing in different arguments in turn. argvalues generally needs to be a list of values if argnames specifies only one name or a list of tuples of values if argnames specifies multiple names. Example: @parametrize('arg1', [1,2]) would lead to two calls of the decorated test function, one with arg1=1 and another with arg1=2.see https://docs.pytest.org/en/stable/how-to/parametrize.html for more info and examples.
+        .. code-block:: pytest
 
-    @pytest.mark.usefixtures(fixturename1, fixturename2, ...): mark tests as needing all of the specified fixtures. see https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
+            $ pytest --markers
+            @pytest.mark.env(name): mark test to run only on named environment
 
-    @pytest.mark.tryfirst: mark a hook implementation function such that the plugin machinery will try to call it first/as early as possible. DEPRECATED, use @pytest.hookimpl(tryfirst=True) instead.
+            @pytest.mark.filterwarnings(warning): add a warning filter to the given test. see https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
 
-    @pytest.mark.trylast: mark a hook implementation function such that the plugin machinery will try to call it last/as late as possible. DEPRECATED, use @pytest.hookimpl(trylast=True) instead.
+            @pytest.mark.skip(reason=None): skip the given test function with an optional reason. Example: skip(reason="no way of currently testing this") skips the test.
+
+            @pytest.mark.skipif(condition, ..., *, reason=...): skip the given test function if any of the conditions evaluate to True. Example: skipif(sys.platform == 'win32') skips the test if we are on the win32 platform. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif
+
+            @pytest.mark.xfail(condition, ..., *, reason=..., run=True, raises=None, strict=xfail_strict): mark the test function as an expected failure if any of the conditions evaluate to True. Optionally specify a reason for better reporting and run=False if you don't even want to execute the test function. If only specific exception(s) are expected, you can list them in raises, and if the test fails in other ways, it will be reported as a true failure. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
+
+            @pytest.mark.parametrize(argnames, argvalues): call a test function multiple times passing in different arguments in turn. argvalues generally needs to be a list of values if argnames specifies only one name or a list of tuples of values if argnames specifies multiple names. Example: @parametrize('arg1', [1,2]) would lead to two calls of the decorated test function, one with arg1=1 and another with arg1=2.see https://docs.pytest.org/en/stable/how-to/parametrize.html for more info and examples.
+
+            @pytest.mark.usefixtures(fixturename1, fixturename2, ...): mark tests as needing all of the specified fixtures. see https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
+
+            @pytest.mark.tryfirst: mark a hook implementation function such that the plugin machinery will try to call it first/as early as possible. DEPRECATED, use @pytest.hookimpl(tryfirst=True) instead.
+
+            @pytest.mark.trylast: mark a hook implementation function such that the plugin machinery will try to call it last/as late as possible. DEPRECATED, use @pytest.hookimpl(trylast=True) instead.
 
 
 .. _`passing callables to custom markers`:
@@ -835,53 +944,95 @@ The ``--markers`` option always gives you a list of available markers:
 
     .. tab:: 中文
 
+        .. regendoc:wipe
 
+        以下是将在下一个示例中使用的配置文件：
+
+        .. code-block:: python
+
+            # content of conftest.py
+            import sys
+
+
+            def pytest_runtest_setup(item):
+                for marker in item.iter_markers(name="my_marker"):
+                    print(marker)
+                    sys.stdout.flush()
+
+        自定义标记可以设置其参数，即 ``args`` 和 ``kwargs`` 属性，可以通过将其作为可调用对象调用或使用 ``pytest.mark.MARKER_NAME.with_args`` 来定义。这两种方法在大多数情况下实现相同的效果。
+
+        然而，如果有一个可调用对象作为唯一的位置参数且没有关键字参数，使用 ``pytest.mark.MARKER_NAME(c)`` 将不会将 ``c`` 作为位置参数传递，而是用自定义标记装饰 ``c``（参见 :ref:`MarkDecorator <mark>`）。幸运的是，``pytest.mark.MARKER_NAME.with_args`` 可以解决这个问题：
+
+        .. code-block:: python
+
+            # content of test_custom_marker.py
+            import pytest
+
+
+            def hello_world(*args, **kwargs):
+                return "Hello World"
+
+
+            @pytest.mark.my_marker.with_args(hello_world)
+            def test_with_args():
+                pass
+
+        输出如下：
+
+        .. code-block:: pytest
+
+            $ pytest -q -s
+            Mark(name='my_marker', args=(<function hello_world at 0xdeadbeef0001>,), kwargs={})
+            .
+            1 passed in 0.12s
+
+        我们可以看到，自定义标记的参数设置已扩展为函数 ``hello_world``。这是创建自定义标记作为可调用对象的关键区别，该过程在幕后调用 ``__call__``，而使用 ``with_args`` 则不会。
 
     .. tab:: 英文
 
-.. regendoc:wipe
+        .. regendoc:wipe
 
-Below is the config file that will be used in the next examples:
+        Below is the config file that will be used in the next examples:
 
-.. code-block:: python
+        .. code-block:: python
 
-    # content of conftest.py
-    import sys
-
-
-    def pytest_runtest_setup(item):
-        for marker in item.iter_markers(name="my_marker"):
-            print(marker)
-            sys.stdout.flush()
-
-A custom marker can have its argument set, i.e. ``args`` and ``kwargs`` properties, defined by either invoking it as a callable or using ``pytest.mark.MARKER_NAME.with_args``. These two methods achieve the same effect most of the time.
-
-However, if there is a callable as the single positional argument with no keyword arguments, using the ``pytest.mark.MARKER_NAME(c)`` will not pass ``c`` as a positional argument but decorate ``c`` with the custom marker (see :ref:`MarkDecorator <mark>`). Fortunately, ``pytest.mark.MARKER_NAME.with_args`` comes to the rescue:
-
-.. code-block:: python
-
-    # content of test_custom_marker.py
-    import pytest
+            # content of conftest.py
+            import sys
 
 
-    def hello_world(*args, **kwargs):
-        return "Hello World"
+            def pytest_runtest_setup(item):
+                for marker in item.iter_markers(name="my_marker"):
+                    print(marker)
+                    sys.stdout.flush()
+
+        A custom marker can have its argument set, i.e. ``args`` and ``kwargs`` properties, defined by either invoking it as a callable or using ``pytest.mark.MARKER_NAME.with_args``. These two methods achieve the same effect most of the time.
+
+        However, if there is a callable as the single positional argument with no keyword arguments, using the ``pytest.mark.MARKER_NAME(c)`` will not pass ``c`` as a positional argument but decorate ``c`` with the custom marker (see :ref:`MarkDecorator <mark>`). Fortunately, ``pytest.mark.MARKER_NAME.with_args`` comes to the rescue:
+
+        .. code-block:: python
+
+            # content of test_custom_marker.py
+            import pytest
 
 
-    @pytest.mark.my_marker.with_args(hello_world)
-    def test_with_args():
-        pass
+            def hello_world(*args, **kwargs):
+                return "Hello World"
 
-The output is as follows:
 
-.. code-block:: pytest
+            @pytest.mark.my_marker.with_args(hello_world)
+            def test_with_args():
+                pass
 
-    $ pytest -q -s
-    Mark(name='my_marker', args=(<function hello_world at 0xdeadbeef0001>,), kwargs={})
-    .
-    1 passed in 0.12s
+        The output is as follows:
 
-We can see that the custom marker has its argument set extended with the function ``hello_world``. This is the key difference between creating a custom marker as a callable, which invokes ``__call__`` behind the scenes, and using ``with_args``.
+        .. code-block:: pytest
+
+            $ pytest -q -s
+            Mark(name='my_marker', args=(<function hello_world at 0xdeadbeef0001>,), kwargs={})
+            .
+            1 passed in 0.12s
+
+        We can see that the custom marker has its argument set extended with the function ``hello_world``. This is the key difference between creating a custom marker as a callable, which invokes ``__call__`` behind the scenes, and using ``with_args``.
 
 
 读取从多个位置设置的标记
@@ -893,55 +1044,97 @@ We can see that the custom marker has its argument set extended with the functio
 
     .. tab:: 中文
 
+        .. versionadded: 2.2.2
 
+        .. regendoc:wipe
+
+        如果你在测试套件中大量使用标记，你可能会遇到同一个测试函数上应用多个标记的情况。通过插件代码，你可以读取所有这样的设置。示例：
+
+        .. code-block:: python
+
+            # content of test_mark_three_times.py
+            import pytest
+
+            pytestmark = pytest.mark.glob("module", x=1)
+
+
+            @pytest.mark.glob("class", x=2)
+            class TestClass:
+                @pytest.mark.glob("function", x=3)
+                def test_something(self):
+                    pass
+
+        在这里，我们将标记 "glob" 应用三次于同一个测试函数。从 conftest 文件中，我们可以这样读取：
+
+        .. code-block:: python
+
+            # content of conftest.py
+            import sys
+
+
+            def pytest_runtest_setup(item):
+                for mark in item.iter_markers(name="glob"):
+                    print(f"glob args={mark.args} kwargs={mark.kwargs}")
+                    sys.stdout.flush()
+
+        让我们在不捕获输出的情况下运行这个，看看我们得到什么：
+
+        .. code-block:: pytest
+
+            $ pytest -q -s
+            glob args=('function',) kwargs={'x': 3}
+            glob args=('class',) kwargs={'x': 2}
+            glob args=('module',) kwargs={'x': 1}
+            .
+            1 passed in 0.12s
 
     .. tab:: 英文
 
-.. versionadded: 2.2.2
+        .. versionadded: 2.2.2
 
-.. regendoc:wipe
+        .. regendoc:wipe
 
-If you are heavily using markers in your test suite you may encounter the case where a marker is applied several times to a test function.  From plugin
-code you can read over all such settings.  Example:
+        If you are heavily using markers in your test suite you may encounter the case where a marker is applied several times to a test function.  From plugin
+        code you can read over all such settings.  Example:
 
-.. code-block:: python
+        .. code-block:: python
 
-    # content of test_mark_three_times.py
-    import pytest
+            # content of test_mark_three_times.py
+            import pytest
 
-    pytestmark = pytest.mark.glob("module", x=1)
-
-
-    @pytest.mark.glob("class", x=2)
-    class TestClass:
-        @pytest.mark.glob("function", x=3)
-        def test_something(self):
-            pass
-
-Here we have the marker "glob" applied three times to the same
-test function.  From a conftest file we can read it like this:
-
-.. code-block:: python
-
-    # content of conftest.py
-    import sys
+            pytestmark = pytest.mark.glob("module", x=1)
 
 
-    def pytest_runtest_setup(item):
-        for mark in item.iter_markers(name="glob"):
-            print(f"glob args={mark.args} kwargs={mark.kwargs}")
-            sys.stdout.flush()
+            @pytest.mark.glob("class", x=2)
+            class TestClass:
+                @pytest.mark.glob("function", x=3)
+                def test_something(self):
+                    pass
 
-Let's run this without capturing output and see what we get:
+        Here we have the marker "glob" applied three times to the same
+        test function.  From a conftest file we can read it like this:
 
-.. code-block:: pytest
+        .. code-block:: python
 
-    $ pytest -q -s
-    glob args=('function',) kwargs={'x': 3}
-    glob args=('class',) kwargs={'x': 2}
-    glob args=('module',) kwargs={'x': 1}
-    .
-    1 passed in 0.12s
+            # content of conftest.py
+            import sys
+
+
+            def pytest_runtest_setup(item):
+                for mark in item.iter_markers(name="glob"):
+                    print(f"glob args={mark.args} kwargs={mark.kwargs}")
+                    sys.stdout.flush()
+
+        Let's run this without capturing output and see what we get:
+
+        .. code-block:: pytest
+
+            $ pytest -q -s
+            glob args=('function',) kwargs={'x': 3}
+            glob args=('class',) kwargs={'x': 2}
+            glob args=('module',) kwargs={'x': 1}
+            .
+            1 passed in 0.12s
 
 使用 pytest 标记特定于平台的测试
 --------------------------------------------------------------
@@ -952,94 +1145,172 @@ Let's run this without capturing output and see what we get:
 
     .. tab:: 中文
 
+        .. regendoc:wipe
 
+        考虑你有一个测试套件，用于标记特定平台的测试，例如 ``pytest.mark.darwin``、``pytest.mark.win32`` 等，并且还有一些在所有平台上运行且没有特定标记的测试。如果你现在想要仅运行特定平台的测试，可以使用以下插件：
+
+        .. code-block:: python
+
+            # content of conftest.py
+            #
+            import sys
+
+            import pytest
+
+            ALL = set("darwin linux win32".split())
+
+
+            def pytest_runtest_setup(item):
+                supported_platforms = ALL.intersection(mark.name for mark in item.iter_markers())
+                plat = sys.platform
+                if supported_platforms and plat not in supported_platforms:
+                    pytest.skip(f"无法在平台 {plat} 上运行")
+
+        这样，如果测试为其他平台指定，则会被跳过。让我们做一个小测试文件，展示这是什么样子：
+
+        .. code-block:: python
+
+            # content of test_plat.py
+
+            import pytest
+
+
+            @pytest.mark.darwin
+            def test_if_apple_is_evil():
+                pass
+
+
+            @pytest.mark.linux
+            def test_if_linux_works():
+                pass
+
+
+            @pytest.mark.win32
+            def test_if_win32_crashes():
+                pass
+
+
+            def test_runs_everywhere():
+                pass
+
+        然后你会看到两个测试被跳过，两个测试按预期执行：
+
+        .. code-block:: pytest
+
+            $ pytest -rs # 此选项报告跳过的原因
+            =========================== 测试会话开始 ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 4 items
+
+            test_plat.py s.s.                                                    [100%]
+
+            ========================= 简短测试摘要信息 ==========================
+            SKIPPED [2] conftest.py:13: 无法在平台 linux 上运行
+            ======================= 2 个通过，2 个跳过，耗时 0.12s =======================
+
+        请注意，如果你通过标记命令行选项指定平台，如下所示：
+
+        .. code-block:: pytest
+
+            $ pytest -m linux
+            =========================== 测试会话开始 ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 4 items / 3 被排除 / 1 被选择
+
+            test_plat.py .                                                       [100%]
+
+            ===================== 1 个通过，3 个被排除，耗时 0.12s ======================
+
+        那么未标记的测试将不会运行。因此，这是一种将运行限制为特定测试的方法。
 
     .. tab:: 英文
 
-.. regendoc:wipe
+        .. regendoc:wipe
 
-Consider you have a test suite which marks tests for particular platforms,
-namely ``pytest.mark.darwin``, ``pytest.mark.win32`` etc. and you
-also have tests that run on all platforms and have no specific
-marker.  If you now want to have a way to only run the tests
-for your particular platform, you could use the following plugin:
+        Consider you have a test suite which marks tests for particular platforms,
+        namely ``pytest.mark.darwin``, ``pytest.mark.win32`` etc. and you
+        also have tests that run on all platforms and have no specific
+        marker.  If you now want to have a way to only run the tests
+        for your particular platform, you could use the following plugin:
 
-.. code-block:: python
+        .. code-block:: python
 
-    # content of conftest.py
-    #
-    import sys
+            # content of conftest.py
+            #
+            import sys
 
-    import pytest
+            import pytest
 
-    ALL = set("darwin linux win32".split())
-
-
-    def pytest_runtest_setup(item):
-        supported_platforms = ALL.intersection(mark.name for mark in item.iter_markers())
-        plat = sys.platform
-        if supported_platforms and plat not in supported_platforms:
-            pytest.skip(f"cannot run on platform {plat}")
-
-then tests will be skipped if they were specified for a different platform.
-Let's do a little test file to show how this looks like:
-
-.. code-block:: python
-
-    # content of test_plat.py
-
-    import pytest
+            ALL = set("darwin linux win32".split())
 
 
-    @pytest.mark.darwin
-    def test_if_apple_is_evil():
-        pass
+            def pytest_runtest_setup(item):
+                supported_platforms = ALL.intersection(mark.name for mark in item.iter_markers())
+                plat = sys.platform
+                if supported_platforms and plat not in supported_platforms:
+                    pytest.skip(f"cannot run on platform {plat}")
+
+        then tests will be skipped if they were specified for a different platform.
+        Let's do a little test file to show how this looks like:
+
+        .. code-block:: python
+
+            # content of test_plat.py
+
+            import pytest
 
 
-    @pytest.mark.linux
-    def test_if_linux_works():
-        pass
+            @pytest.mark.darwin
+            def test_if_apple_is_evil():
+                pass
 
 
-    @pytest.mark.win32
-    def test_if_win32_crashes():
-        pass
+            @pytest.mark.linux
+            def test_if_linux_works():
+                pass
 
 
-    def test_runs_everywhere():
-        pass
+            @pytest.mark.win32
+            def test_if_win32_crashes():
+                pass
 
-then you will see two tests skipped and two executed tests as expected:
 
-.. code-block:: pytest
+            def test_runs_everywhere():
+                pass
 
-    $ pytest -rs # this option reports skip reasons
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
-    rootdir: /home/sweet/project
-    collected 4 items
+        then you will see two tests skipped and two executed tests as expected:
 
-    test_plat.py s.s.                                                    [100%]
+        .. code-block:: pytest
 
-    ========================= short test summary info ==========================
-    SKIPPED [2] conftest.py:13: cannot run on platform linux
-    ======================= 2 passed, 2 skipped in 0.12s =======================
+            $ pytest -rs # this option reports skip reasons
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 4 items
 
-Note that if you specify a platform via the marker-command line option like this:
+            test_plat.py s.s.                                                    [100%]
 
-.. code-block:: pytest
+            ========================= short test summary info ==========================
+            SKIPPED [2] conftest.py:13: cannot run on platform linux
+            ======================= 2 passed, 2 skipped in 0.12s =======================
 
-    $ pytest -m linux
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
-    rootdir: /home/sweet/project
-    collected 4 items / 3 deselected / 1 selected
+        Note that if you specify a platform via the marker-command line option like this:
 
-    test_plat.py .                                                       [100%]
+        .. code-block:: pytest
 
-    ===================== 1 passed, 3 deselected in 0.12s ======================
+            $ pytest -m linux
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 4 items / 3 deselected / 1 selected
 
-then the unmarked-tests will not be run.  It is thus a way to restrict the run to the specific tests.
+            test_plat.py .                                                       [100%]
+
+            ===================== 1 passed, 3 deselected in 0.12s ======================
+
+        then the unmarked-tests will not be run.  It is thus a way to restrict the run to the specific tests.
 
 根据测试名称自动添加标记
 --------------------------------------------------------
@@ -1050,107 +1321,202 @@ then the unmarked-tests will not be run.  It is thus a way to restrict the run t
 
     .. tab:: 中文
 
+        .. regendoc:wipe
 
+        如果你有一个测试套件，其中测试函数名称指示某种类型的测试，你可以实现一个钩子，自动定义标记，以便你可以使用 ``-m`` 选项。让我们来看一下这个测试模块：
+
+        .. code-block:: python
+
+            # content of test_module.py
+
+
+            def test_interface_simple():
+                assert 0
+
+
+            def test_interface_complex():
+                assert 0
+
+
+            def test_event_simple():
+                assert 0
+
+
+            def test_something_else():
+                assert 0
+
+        我们想要动态定义两个标记，可以在 ``conftest.py`` 插件中做到这一点：
+
+        .. code-block:: python
+
+            # content of conftest.py
+
+            import pytest
+
+
+            def pytest_collection_modifyitems(items):
+                for item in items:
+                    if "interface" in item.nodeid:
+                        item.add_marker(pytest.mark.interface)
+                    elif "event" in item.nodeid:
+                        item.add_marker(pytest.mark.event)
+
+        现在我们可以使用 ``-m option`` 选择一组测试：
+
+        .. code-block:: pytest
+
+            $ pytest -m interface --tb=short
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 4 items / 2 deselected / 2 selected
+
+            test_module.py FF                                                    [100%]
+
+            ================================= FAILURES =================================
+            __________________________ test_interface_simple ___________________________
+            test_module.py:4: in test_interface_simple
+                assert 0
+            E   assert 0
+            __________________________ test_interface_complex __________________________
+            test_module.py:8: in test_interface_complex
+                assert 0
+            E   assert 0
+            ========================= short test summary info ==========================
+            FAILED test_module.py::test_interface_simple - assert 0
+            FAILED test_module.py::test_interface_complex - assert 0
+            ===================== 2 failed, 2 deselected in 0.12s ======================
+
+        或者选择“event”和“interface”测试：
+
+        .. code-block:: pytest
+
+            $ pytest -m "interface or event" --tb=short
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 4 items / 1 deselected / 3 selected
+
+            test_module.py FFF                                                   [100%]
+
+            ================================= FAILURES =================================
+            __________________________ test_interface_simple ___________________________
+            test_module.py:4: in test_interface_simple
+                assert 0
+            E   assert 0
+            __________________________ test_interface_complex __________________________
+            test_module.py:8: in test_interface_complex
+                assert 0
+            E   assert 0
+            ____________________________ test_event_simple _____________________________
+            test_module.py:12: in test_event_simple
+                assert 0
+            E   assert 0
+            ========================= short test summary info ==========================
+            FAILED test_module.py::test_interface_simple - assert 0
+            FAILED test_module.py::test_interface_complex - assert 0
+            FAILED test_module.py::test_event_simple - assert 0
+            ===================== 3 failed, 1 deselected in 0.12s ======================
 
     .. tab:: 英文
 
-.. regendoc:wipe
+        .. regendoc:wipe
 
-If you have a test suite where test function names indicate a certain
-type of test, you can implement a hook that automatically defines
-markers so that you can use the ``-m`` option with it. Let's look
-at this test module:
+        If you have a test suite where test function names indicate a certain
+        type of test, you can implement a hook that automatically defines
+        markers so that you can use the ``-m`` option with it. Let's look
+        at this test module:
 
-.. code-block:: python
+        .. code-block:: python
 
-    # content of test_module.py
-
-
-    def test_interface_simple():
-        assert 0
+            # content of test_module.py
 
 
-    def test_interface_complex():
-        assert 0
+            def test_interface_simple():
+                assert 0
 
 
-    def test_event_simple():
-        assert 0
+            def test_interface_complex():
+                assert 0
 
 
-    def test_something_else():
-        assert 0
-
-We want to dynamically define two markers and can do it in a
-``conftest.py`` plugin:
-
-.. code-block:: python
-
-    # content of conftest.py
-
-    import pytest
+            def test_event_simple():
+                assert 0
 
 
-    def pytest_collection_modifyitems(items):
-        for item in items:
-            if "interface" in item.nodeid:
-                item.add_marker(pytest.mark.interface)
-            elif "event" in item.nodeid:
-                item.add_marker(pytest.mark.event)
+            def test_something_else():
+                assert 0
 
-We can now use the ``-m option`` to select one set:
+        We want to dynamically define two markers and can do it in a
+        ``conftest.py`` plugin:
 
-.. code-block:: pytest
+        .. code-block:: python
 
-    $ pytest -m interface --tb=short
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
-    rootdir: /home/sweet/project
-    collected 4 items / 2 deselected / 2 selected
+            # content of conftest.py
 
-    test_module.py FF                                                    [100%]
+            import pytest
 
-    ================================= FAILURES =================================
-    __________________________ test_interface_simple ___________________________
-    test_module.py:4: in test_interface_simple
-        assert 0
-    E   assert 0
-    __________________________ test_interface_complex __________________________
-    test_module.py:8: in test_interface_complex
-        assert 0
-    E   assert 0
-    ========================= short test summary info ==========================
-    FAILED test_module.py::test_interface_simple - assert 0
-    FAILED test_module.py::test_interface_complex - assert 0
-    ===================== 2 failed, 2 deselected in 0.12s ======================
 
-or to select both "event" and "interface" tests:
+            def pytest_collection_modifyitems(items):
+                for item in items:
+                    if "interface" in item.nodeid:
+                        item.add_marker(pytest.mark.interface)
+                    elif "event" in item.nodeid:
+                        item.add_marker(pytest.mark.event)
 
-.. code-block:: pytest
+        We can now use the ``-m option`` to select one set:
 
-    $ pytest -m "interface or event" --tb=short
-    =========================== test session starts ============================
-    platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
-    rootdir: /home/sweet/project
-    collected 4 items / 1 deselected / 3 selected
+        .. code-block:: pytest
 
-    test_module.py FFF                                                   [100%]
+            $ pytest -m interface --tb=short
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 4 items / 2 deselected / 2 selected
 
-    ================================= FAILURES =================================
-    __________________________ test_interface_simple ___________________________
-    test_module.py:4: in test_interface_simple
-        assert 0
-    E   assert 0
-    __________________________ test_interface_complex __________________________
-    test_module.py:8: in test_interface_complex
-        assert 0
-    E   assert 0
-    ____________________________ test_event_simple _____________________________
-    test_module.py:12: in test_event_simple
-        assert 0
-    E   assert 0
-    ========================= short test summary info ==========================
-    FAILED test_module.py::test_interface_simple - assert 0
-    FAILED test_module.py::test_interface_complex - assert 0
-    FAILED test_module.py::test_event_simple - assert 0
-    ===================== 3 failed, 1 deselected in 0.12s ======================
+            test_module.py FF                                                    [100%]
+
+            ================================= FAILURES =================================
+            __________________________ test_interface_simple ___________________________
+            test_module.py:4: in test_interface_simple
+                assert 0
+            E   assert 0
+            __________________________ test_interface_complex __________________________
+            test_module.py:8: in test_interface_complex
+                assert 0
+            E   assert 0
+            ========================= short test summary info ==========================
+            FAILED test_module.py::test_interface_simple - assert 0
+            FAILED test_module.py::test_interface_complex - assert 0
+            ===================== 2 failed, 2 deselected in 0.12s ======================
+
+        or to select both "event" and "interface" tests:
+
+        .. code-block:: pytest
+
+            $ pytest -m "interface or event" --tb=short
+            =========================== test session starts ============================
+            platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+            rootdir: /home/sweet/project
+            collected 4 items / 1 deselected / 3 selected
+
+            test_module.py FFF                                                   [100%]
+
+            ================================= FAILURES =================================
+            __________________________ test_interface_simple ___________________________
+            test_module.py:4: in test_interface_simple
+                assert 0
+            E   assert 0
+            __________________________ test_interface_complex __________________________
+            test_module.py:8: in test_interface_complex
+                assert 0
+            E   assert 0
+            ____________________________ test_event_simple _____________________________
+            test_module.py:12: in test_event_simple
+                assert 0
+            E   assert 0
+            ========================= short test summary info ==========================
+            FAILED test_module.py::test_interface_simple - assert 0
+            FAILED test_module.py::test_interface_complex - assert 0
+            FAILED test_module.py::test_event_simple - assert 0
+            ===================== 3 failed, 1 deselected in 0.12s ======================

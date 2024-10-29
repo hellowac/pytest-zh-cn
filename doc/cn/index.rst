@@ -28,7 +28,7 @@ pytest:帮助你编写更好的程序
     example/index
 
 .. toctree::
-    :caption: About the project
+    :caption: 关于项目
     :hidden:
 
     changelog
@@ -40,7 +40,7 @@ pytest:帮助你编写更好的程序
     contact
 
 .. toctree::
-    :caption: Useful links
+    :caption: 游泳的链接
     :hidden:
 
     pytest @ PyPI <https://pypi.org/project/pytest/>
