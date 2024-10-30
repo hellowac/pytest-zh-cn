@@ -2,7 +2,7 @@
 
 .. _explanation:
 
-解释
+解答
 ================
 
 **Explanation**
