@@ -1,0 +1,622 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="示例和自定义技巧" href="../example/index.html" /><link rel="prev" title="CI Pipelines" href="ci.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/explanation/flaky.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>不稳定的测试 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">入门</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how-to/index.html">操作指南</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">解答</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ci.html">CI Pipelines</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example/index.html">示例和自定义技巧</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../example/reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>不稳定的测试<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<p><strong>Flaky tests</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>“间歇性”测试是指表现出间歇性或偶发失败的测试，其行为似乎是非确定性的。有时它会通过，有时会失败，且原因不明。本页讨论了可以帮助识别、修复或缓解这些问题的 pytest 特性以及其他一般策略。</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>A “flaky” test is one that exhibits intermittent or sporadic failure, that seems to have non-deterministic behaviour. Sometimes it passes, sometimes it fails, and it’s not clear why. This page discusses pytest features that can help and other general strategies for identifying, fixing or mitigating them.</p>
+</div></div>
+<section id="id2">
+<h2>不稳定的测试为何是个问题<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p><strong>Why flaky tests are a problem</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>间歇性测试在使用持续集成（CI）服务器时尤其麻烦，因为在合并新的代码更改之前，所有测试都必须通过。如果测试结果不是可靠的信号——即测试失败并不意味着代码更改导致了测试失败——开发人员可能会对测试结果产生不信任，从而忽视真正的失败。此外，这也会浪费时间，因为开发人员必须重新运行测试套件并调查虚假的失败。</p>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>Flaky tests are particularly troublesome when a continuous integration (CI) server is being used, so that all tests must pass before a new code change can be merged. If the test result is not a reliable signal – that a test failure means the code change broke the test – developers can become mistrustful of the test results, which can lead to overlooking genuine failures. It is also a source of wasted time as developers must re-run test suites and investigate spurious failures.</p>
+</div></div>
+</section>
+<section id="id3">
+<h2>潜在根本原因<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p><strong>Potential root causes</strong></p>
+<section id="id4">
+<h3>系统状态<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p><strong>System state</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p>广义而言，间歇性测试表明该测试依赖于一些未得到适当控制的系统状态——测试环境没有得到充分隔离。高级别的测试更容易出现间歇性，因为它们依赖于更多的状态。</p>
+<p>间歇性测试有时会在测试套件并行运行时出现（例如使用 <code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code>）。这可能表明某个测试依赖于测试顺序。</p>
+<ul class="simple">
+<li><p>可能是另一个测试未能正确清理自身，留下数据，从而导致间歇性测试失败。</p></li>
+<li><p>间歇性测试依赖于一个未清理自身的数据，而在并行运行中，之前的测试并不总是存在。</p></li>
+<li><p>修改全局状态的测试通常无法并行运行。</p></li>
+</ul>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p>Broadly speaking, a flaky test indicates that the test relies on some system state that is not being appropriately controlled - the test environment is not sufficiently isolated. Higher level tests are more likely to be flaky as they rely on more state.</p>
+<p>Flaky tests sometimes appear when a test suite is run in parallel (such as use of <a class="reference external" href="https://github.com/pytest-dev/pytest-xdist">pytest-xdist</a>). This can indicate a test is reliant on test ordering.</p>
+<ul class="simple">
+<li><p>Perhaps a different test is failing to clean up after itself and leaving behind data which causes the flaky test to fail.</p></li>
+<li><p>The flaky test is reliant on data from a previous test that doesn’t clean up after itself, and in parallel runs that previous test is not always present</p></li>
+<li><p>Tests that modify global state typically cannot be run in parallel.</p></li>
+</ul>
+</div></div>
+</section>
+<section id="id5">
+<h3>过于严格的断言<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<p><strong>Overly strict assertion</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p>过于严格的断言可能会导致浮点数比较和时间问题。此时， <a class="reference internal" href="../reference/reference.html#pytest.approx" title="pytest.approx"><code class="xref py py-func docutils literal notranslate"><span class="pre">pytest.approx()</span></code></a> 非常有用。</p>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>Overly strict assertions can cause problems with floating point comparison as well as timing issues. <a class="reference internal" href="../reference/reference.html#pytest.approx" title="pytest.approx"><code class="xref py py-func docutils literal notranslate"><span class="pre">pytest.approx()</span></code></a> is useful here.</p>
+</div></div>
+</section>
+<section id="id6">
+<h3>线程安全<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<p><strong>Thread safety</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>pytest 是单线程的，始终在同一线程中顺序执行测试，从不自行生成任何线程。</p>
+<p>即使在运行并行测试的插件情况下，例如 <code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code>，通常也是通过生成多个 <em>进程</em> 来批量运行测试，而不是使用多个线程。</p>
+<p>当然，测试和夹具可以在其测试工作流程中自行生成线程（例如，一个在后台启动服务器线程的夹具，或一个执行生成代码并生成线程的测试），但需要注意以下几点：</p>
+<ul class="simple">
+<li><p>确保最终等待任何生成的线程——例如在测试结束时或夹具的拆卸过程中。</p></li>
+<li><p>避免从多个线程使用 pytest 提供的原语（如 <code class="docutils literal notranslate"><span class="pre">pytest.warns</span></code>、<code class="docutils literal notranslate"><span class="pre">pytest.raises</span></code> 等），因为它们不是线程安全的。</p></li>
+</ul>
+<p>如果您的测试套件使用线程并且您看到不稳定的测试结果，请不要排除测试隐式使用 pytest 本身的全局状态的可能性。</p>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><p>pytest is single-threaded, executing its tests always in the same thread, sequentially, never spawning any threads itself.</p>
+<p>Even in case of plugins which run tests in parallel, for example <a class="reference external" href="https://github.com/pytest-dev/pytest-xdist">pytest-xdist</a>, usually work by spawning multiple <em>processes</em> and running tests in batches, without using multiple threads.</p>
+<p>It is of course possible (and common) for tests and fixtures to spawn threads themselves as part of their testing workflow (for example, a fixture that starts a server thread in the background, or a test which executes production code that spawns threads), but some care must be taken:</p>
+<ul class="simple">
+<li><p>Make sure to eventually wait on any spawned threads – for example at the end of a test, or during the teardown of a fixture.</p></li>
+<li><p>Avoid using primitives provided by pytest (<a class="reference internal" href="../reference/reference.html#pytest.warns" title="pytest.warns"><code class="xref py py-func docutils literal notranslate"><span class="pre">pytest.warns()</span></code></a>, <a class="reference internal" href="../reference/reference.html#pytest.raises" title="pytest.raises"><code class="xref py py-func docutils literal notranslate"><span class="pre">pytest.raises()</span></code></a>, etc) from multiple threads, as they are not thread-safe.</p></li>
+</ul>
+<p>If your test suite uses threads and your are seeing flaky test results, do not discount the possibility that the test is implicitly using global state in pytest itself.</p>
+</div></div>
+</section>
+</section>
+<section id="id7">
+<h2>相关功能<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
+<p><strong>Related features</strong></p>
+<section id="xfail-strict">
+<h3>Xfail strict<a class="headerlink" href="#xfail-strict" title="Link to this heading">¶</a></h3>
+<p><strong>Xfail strict</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><p><a class="reference internal" href="../reference/reference.html#pytest-mark-xfail-ref"><span class="std std-ref">pytest.mark.xfail</span></a> 配合 <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> 可以标记一个测试，使其失败不会导致整个构建失败。这可以视为一种手动隔离，长期使用是相当危险的。</p>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><p><a class="reference internal" href="../reference/reference.html#pytest-mark-xfail-ref"><span class="std std-ref">pytest.mark.xfail</span></a> with <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> can be used to mark a test so that its failure does not cause the whole build to break. This could be considered like a manual quarantine, and is rather dangerous to use permanently.</p>
+</div></div>
+</section>
+<section id="pytest-current-test">
+<h3>PYTEST_CURRENT_TEST<a class="headerlink" href="#pytest-current-test" title="Link to this heading">¶</a></h3>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><p><span class="target" id="index-0"></span><a class="reference internal" href="../reference/reference.html#envvar-4"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTEST_CURRENT_TEST</span></code></a> 可能对找出“哪个测试卡住了”很有帮助。有关更多详细信息，请参阅 <a class="reference internal" href="../example/simple.html#pytest-current-test-env"><span class="std std-ref">pytest当前测试环境</span></a>。</p>
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><p><span class="target" id="index-1"></span><a class="reference internal" href="../reference/reference.html#envvar-4"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTEST_CURRENT_TEST</span></code></a> may be useful for figuring out “which test got stuck”.
+See <a class="reference internal" href="../example/simple.html#pytest-current-test-env"><span class="std std-ref">PYTEST_CURRENT_TEST 环境变量</span></a> for more details.</p>
+</div></div>
+</section>
+<section id="id8">
+<h3>插件<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<p><strong>Plugins</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-7-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-7-7-0" name="7-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-7-7-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-1" name="7-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-7-7-0" class="sphinx-tabs-panel" id="panel-7-7-0" name="7-0" role="tabpanel" tabindex="0"><p>重新运行任何失败的测试可以通过给予它们额外的通过机会来缓解不稳定测试的负面影响，从而使整体构建不失败。多个 pytest 插件支持此功能：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pytest-dev/pytest-rerunfailures">pytest-rerunfailures</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ESSS/pytest-replay">pytest-replay</a>: 此插件有助于在本地重现 CI 运行期间观察到的崩溃或不稳定测试。</p></li>
+<li><p><a class="reference external" href="https://github.com/dropbox/pytest-flakefinder">pytest-flakefinder</a> - <a class="reference external" href="https://blogs.dropbox.com/tech/2016/03/open-sourcing-pytest-tools/">blog post</a></p></li>
+</ul>
+<p>故意随机化测试的插件可以帮助暴露存在状态问题的测试：</p>
+</div><div aria-labelledby="tab-7-7-1" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-1" name="7-1" role="tabpanel" tabindex="0"><p>Rerunning any failed tests can mitigate the negative effects of flaky tests by giving them additional chances to pass, so that the overall build does not fail. Several pytest plugins support this:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pytest-dev/pytest-rerunfailures">pytest-rerunfailures</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ESSS/pytest-replay">pytest-replay</a>: This plugin helps to reproduce locally crashes or flaky tests observed during CI runs.</p></li>
+<li><p><a class="reference external" href="https://github.com/dropbox/pytest-flakefinder">pytest-flakefinder</a> - <a class="reference external" href="https://blogs.dropbox.com/tech/2016/03/open-sourcing-pytest-tools/">blog post</a></p></li>
+</ul>
+<p>Plugins to deliberately randomize tests can help expose tests with state problems:</p>
+</div></div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/jbasko/pytest-random-order">pytest-random-order</a></p></li>
+<li><p><a class="reference external" href="https://github.com/pytest-dev/pytest-randomly">pytest-randomly</a></p></li>
+</ul>
+</section>
+</section>
+<section id="id13">
+<h2>其他一般策略<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h2>
+<p><strong>Other general strategies</strong></p>
+<section id="id14">
+<h3>拆分测试套件<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
+<p><strong>Split up test suites</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-8-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-8-8-0" name="8-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-8-8-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-8-8-1" name="8-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-8-8-0" class="sphinx-tabs-panel" id="panel-8-8-0" name="8-0" role="tabpanel" tabindex="0"><p>将单个测试套件拆分为两个（例如单元测试与集成测试）是常见的做法，并仅将单元测试套件用作 CI 门。这也有助于保持构建时间的可控，因为高层次的测试往往更慢。然而，这意味着可能会合并导致构建失败的代码，因此需要额外关注集成测试结果的监控。</p>
+</div><div aria-labelledby="tab-8-8-1" class="sphinx-tabs-panel" hidden="true" id="panel-8-8-1" name="8-1" role="tabpanel" tabindex="0"><p>It can be common to split a single test suite into two, such as unit vs integration, and only use the unit test suite as a CI gate. This also helps keep build times manageable as high level tests tend to be slower. However, it means it does become possible for code that breaks the build to be merged, so extra vigilance is needed for monitoring the integration test results.</p>
+</div></div>
+</section>
+<section id="id15">
+<h3>失败时的视频/屏幕截图<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
+<p><strong>Video/screenshot on failure</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-9-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-9-9-0" name="9-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-9-9-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-9-9-1" name="9-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-9-9-0" class="sphinx-tabs-panel" id="panel-9-9-0" name="9-0" role="tabpanel" tabindex="0"><p>对于 UI 测试，这些信息对于了解测试失败时 UI 的状态非常重要。可以将 <code class="docutils literal notranslate"><span class="pre">pytest-splinter</span></code> 与像 <code class="docutils literal notranslate"><span class="pre">pytest-bdd</span></code> 这样的插件一起使用，并且可以在测试失败时 <a class="reference external" href="https://pytest-splinter.readthedocs.io/en/latest/#automatic-screenshots-on-test-failure">自动保存截图</a>，这有助于定位故障原因。</p>
+</div><div aria-labelledby="tab-9-9-1" class="sphinx-tabs-panel" hidden="true" id="panel-9-9-1" name="9-1" role="tabpanel" tabindex="0"><p>For UI tests these are important for understanding what the state of the UI was when the test failed. pytest-splinter can be used with plugins like pytest-bdd and can <a class="reference external" href="https://pytest-splinter.readthedocs.io/en/latest/#automatic-screenshots-on-test-failure">save a screenshot on test failure</a>, which can help to isolate the cause.</p>
+</div></div>
+</section>
+<section id="id17">
+<h3>删除或重写测试<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h3>
+<p><strong>Delete or rewrite the test</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-10-10-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-10-10-0" name="10-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-10-10-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-1" name="10-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-10-10-0" class="sphinx-tabs-panel" id="panel-10-10-0" name="10-0" role="tabpanel" tabindex="0"><p>如果功能已经被其他测试覆盖，那么可以考虑移除该测试。如果没有覆盖，那么可以尝试在更低的层级重写测试，以消除不稳定性或使其源头更加明显。</p>
+</div><div aria-labelledby="tab-10-10-1" class="sphinx-tabs-panel" hidden="true" id="panel-10-10-1" name="10-1" role="tabpanel" tabindex="0"><p>If the functionality is covered by other tests, perhaps the test can be removed. If not, perhaps it can be rewritten at a lower level which will remove the flakiness or make its source more apparent.</p>
+</div></div>
+</section>
+<section id="id18">
+<h3>隔离<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
+<p><strong>Quarantine</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-11-11-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-11-11-0" name="11-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-11-11-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-11-11-1" name="11-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-11-11-0" class="sphinx-tabs-panel" id="panel-11-11-0" name="11-0" role="tabpanel" tabindex="0"><p>Mark Lapierre 在2018年的一篇文章中讨论了 <a class="reference external" href="https://dev.to/mlapierre/pros-and-cons-of-quarantined-tests-2emj">隔离测试的优缺点</a>。</p>
+</div><div aria-labelledby="tab-11-11-1" class="sphinx-tabs-panel" hidden="true" id="panel-11-11-1" name="11-1" role="tabpanel" tabindex="0"><p>Mark Lapierre discusses the <a class="reference external" href="https://dev.to/mlapierre/pros-and-cons-of-quarantined-tests-2emj">Pros and Cons of Quarantined Tests</a> in a post from 2018.</p>
+</div></div>
+</section>
+<section id="ci">
+<h3>失败时重新运行的 CI 工具<a class="headerlink" href="#ci" title="Link to this heading">¶</a></h3>
+<p><strong>CI tools that rerun on failure</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-12-12-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-12-12-0" name="12-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-12-12-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-12-12-1" name="12-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-12-12-0" class="sphinx-tabs-panel" id="panel-12-12-0" name="12-0" role="tabpanel" tabindex="0"><p>Azure Pipelines（Azure云CI/CD工具，前身为Visual Studio Team Services或VSTS）具有 <a class="reference external" href="https://docs.microsoft.com/en-us/previous-versions/azure/devops/2017/dec-11-vsts?view=tfs-2017#identify-flaky-tests">识别不稳定测试</a> 和重新运行失败测试的功能。</p>
+</div><div aria-labelledby="tab-12-12-1" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-1" name="12-1" role="tabpanel" tabindex="0"><p>Azure Pipelines (the Azure cloud CI/CD tool, formerly Visual Studio Team Services or VSTS) has a feature to <a class="reference external" href="https://docs.microsoft.com/en-us/previous-versions/azure/devops/2017/dec-11-vsts?view=tfs-2017#identify-flaky-tests">identify flaky tests</a> and rerun failed tests.</p>
+</div></div>
+</section>
+</section>
+<section id="id21">
+<h2>研究<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h2>
+<p><strong>Research</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-13-13-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-13-13-0" name="13-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-13-13-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-13-13-1" name="13-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-13-13-0" class="sphinx-tabs-panel" id="panel-13-13-0" name="13-0" role="tabpanel" tabindex="0"><p>这是一个有限的列表，请提交问题或拉取请求以扩展它！</p>
+<ul class="simple">
+<li><p>Gao, Zebao, Yalan Liang, Myra B. Cohen, Atif M. Memon, and Zhen Wang. “Making system user interactive tests repeatable: When and what should we control?.” 在 <em>软件工程 (ICSE), 2015 IEEE/ACM 第37届IEEE国际会议</em>, 第1卷, 第55-65页。IEEE, 2015.  <a class="reference external" href="http://www.cs.umd.edu/~atif/pubs/gao-icse15.pdf">PDF</a></p></li>
+<li><p>Palomba, Fabio, and Andy Zaidman. “Does refactoring of test smells induce fixing flaky tests?.” 在 <em>软件维护与演变 (ICSME), 2017 IEEE国际会议</em>, 第1-12页。IEEE, 2017. <a class="reference external" href="https://drive.google.com/file/d/10HdcCQiuQVgW3yYUJD-TSTq1NbYEprl0/view">PDF in Google Drive</a></p></li>
+<li><p>Bell, Jonathan, Owolabi Legunsen, Michael Hilton, Lamyaa Eloussi, Tifany Yung, and Darko Marinov. “DeFlaker: Automatically detecting flaky tests.” 在 <em>2018年国际软件工程会议论文集</em>. 2018. <a class="reference external" href="https://www.jonbell.net/icse18-deflaker.pdf">PDF</a></p></li>
+<li><p>Dutta, Saikat and Shi, August and Choudhary, Rutvik and Zhang, Zhekun and Jain, Aryaman and Misailovic, Sasa. “Detecting flaky tests in probabilistic and machine learning applications.” 在 <em>第29届ACM SIGSOFT国际软件测试与分析研讨会 (ISSTA)</em>, 第211-224页。ACM, 2020. <a class="reference external" href="https://www.cs.cornell.edu/~saikatd/papers/flash-issta20.pdf">PDF</a></p></li>
+</ul>
+</div><div aria-labelledby="tab-13-13-1" class="sphinx-tabs-panel" hidden="true" id="panel-13-13-1" name="13-1" role="tabpanel" tabindex="0"><p>This is a limited list, please submit an issue or pull request to expand it!</p>
+<ul class="simple">
+<li><p>Gao, Zebao, Yalan Liang, Myra B. Cohen, Atif M. Memon, and Zhen Wang. “Making system user interactive tests repeatable: When and what should we control?.” In <em>Software Engineering (ICSE), 2015 IEEE/ACM 37th IEEE International Conference on</em>, vol. 1, pp. 55-65. IEEE, 2015.  <a class="reference external" href="http://www.cs.umd.edu/~atif/pubs/gao-icse15.pdf">PDF</a></p></li>
+<li><p>Palomba, Fabio, and Andy Zaidman. “Does refactoring of test smells induce fixing flaky tests?.” In <em>Software Maintenance and Evolution (ICSME), 2017 IEEE International Conference on</em>, pp. 1-12. IEEE, 2017. <a class="reference external" href="https://drive.google.com/file/d/10HdcCQiuQVgW3yYUJD-TSTq1NbYEprl0/view">PDF in Google Drive</a></p></li>
+<li><p>Bell, Jonathan, Owolabi Legunsen, Michael Hilton, Lamyaa Eloussi, Tifany Yung, and Darko Marinov. “DeFlaker: Automatically detecting flaky tests.” In <em>Proceedings of the 2018 International Conference on Software Engineering</em>. 2018. <a class="reference external" href="https://www.jonbell.net/icse18-deflaker.pdf">PDF</a></p></li>
+<li><p>Dutta, Saikat and Shi, August and Choudhary, Rutvik and Zhang, Zhekun and Jain, Aryaman and Misailovic, Sasa. “Detecting flaky tests in probabilistic and machine learning applications.” In <em>Proceedings of the 29th ACM SIGSOFT International Symposium on Software Testing and Analysis (ISSTA)</em>, pp. 211-224. ACM, 2020. <a class="reference external" href="https://www.cs.cornell.edu/~saikatd/papers/flash-issta20.pdf">PDF</a></p></li>
+</ul>
+</div></div>
+</section>
+<section id="id22">
+<h2>资源<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h2>
+<p><strong>Resources</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-14-14-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-14-14-0" name="14-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-14-14-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-14-14-1" name="14-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-14-14-0" class="sphinx-tabs-panel" id="panel-14-14-0" name="14-0" role="tabpanel" tabindex="0"><ul class="simple">
+<li><p><a class="reference external" href="https://martinfowler.com/articles/nonDeterminism.html">Eradicating Non-Determinism in Tests</a> by Martin Fowler, 2011</p></li>
+<li><p><a class="reference external" href="https://www.thoughtworks.com/insights/blog/no-more-flaky-tests-go-team">No more flaky tests on the Go team</a> by Pavan Sudarshan, 2012</p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/embed/VotJqV4n8ig">The Build That Cried Broken: Building Trust in your Continuous Integration Tests</a> 演讲（视频）by <a class="reference external" href="https://angiejones.tech/">Angie Jones</a> at SeleniumConf Austin 2017</p></li>
+<li><p><a class="reference external" href="https://testandcode.com/50">Test and Code Podcast: Flaky Tests and How to Deal with Them</a> by Brian Okken 和 Anthony Shaw, 2018</p></li>
+<li><p>微软：</p></li>
+<li><p><a class="reference external" href="https://blogs.msdn.microsoft.com/bharry/2017/06/28/testing-in-a-cloud-delivery-cadence/">How we approach testing VSTS to enable continuous delivery</a> by Brian Harry MS, 2017</p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/azure/devops/learn/devops-at-microsoft/eliminating-flaky-tests">Eliminating Flaky Tests</a> 博客和演讲（视频）by Munil Shah, 2017</p></li>
+<li><p>谷歌：</p></li>
+<li><p><a class="reference external" href="https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html">Flaky Tests at Google and How We Mitigate Them</a> by John Micco, 2016</p></li>
+<li><p><a class="reference external" href="https://testing.googleblog.com/2017/04/where-do-our-flaky-tests-come-from.html">Where do Google’s flaky tests come from?</a> by Jeff Listfield, 2017</p></li>
+</ul>
+</div><div aria-labelledby="tab-14-14-1" class="sphinx-tabs-panel" hidden="true" id="panel-14-14-1" name="14-1" role="tabpanel" tabindex="0"><ul class="simple">
+<li><p><a class="reference external" href="https://martinfowler.com/articles/nonDeterminism.html">Eradicating Non-Determinism in Tests</a> by Martin Fowler, 2011</p></li>
+<li><p><a class="reference external" href="https://www.thoughtworks.com/insights/blog/no-more-flaky-tests-go-team">No more flaky tests on the Go team</a> by Pavan Sudarshan, 2012</p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/embed/VotJqV4n8ig">The Build That Cried Broken: Building Trust in your Continuous Integration Tests</a> talk (video) by <a class="reference external" href="https://angiejones.tech/">Angie Jones</a> at SeleniumConf Austin 2017</p></li>
+<li><p><a class="reference external" href="https://testandcode.com/50">Test and Code Podcast: Flaky Tests and How to Deal with Them</a> by Brian Okken and Anthony Shaw, 2018</p></li>
+<li><p>Microsoft:</p></li>
+<li><p><a class="reference external" href="https://blogs.msdn.microsoft.com/bharry/2017/06/28/testing-in-a-cloud-delivery-cadence/">How we approach testing VSTS to enable continuous delivery</a> by Brian Harry MS, 2017</p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/azure/devops/learn/devops-at-microsoft/eliminating-flaky-tests">Eliminating Flaky Tests</a> blog and talk (video) by Munil Shah, 2017</p></li>
+<li><p>Google:</p></li>
+<li><p><a class="reference external" href="https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html">Flaky Tests at Google and How We Mitigate Them</a> by John Micco, 2016</p></li>
+<li><p><a class="reference external" href="https://testing.googleblog.com/2017/04/where-do-our-flaky-tests-come-from.html">Where do Google’s flaky tests come from?</a>  by Jeff Listfield, 2017</p></li>
+</ul>
+</div></div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../example/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">示例和自定义技巧</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="ci.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">CI Pipelines</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">不稳定的测试</a><ul>
+<li><a class="reference internal" href="#id2">不稳定的测试为何是个问题</a></li>
+<li><a class="reference internal" href="#id3">潜在根本原因</a><ul>
+<li><a class="reference internal" href="#id4">系统状态</a></li>
+<li><a class="reference internal" href="#id5">过于严格的断言</a></li>
+<li><a class="reference internal" href="#id6">线程安全</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id7">相关功能</a><ul>
+<li><a class="reference internal" href="#xfail-strict">Xfail strict</a></li>
+<li><a class="reference internal" href="#pytest-current-test">PYTEST_CURRENT_TEST</a></li>
+<li><a class="reference internal" href="#id8">插件</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id13">其他一般策略</a><ul>
+<li><a class="reference internal" href="#id14">拆分测试套件</a></li>
+<li><a class="reference internal" href="#id15">失败时的视频/屏幕截图</a></li>
+<li><a class="reference internal" href="#id17">删除或重写测试</a></li>
+<li><a class="reference internal" href="#id18">隔离</a></li>
+<li><a class="reference internal" href="#ci">失败时重新运行的 CI 工具</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id21">研究</a></li>
+<li><a class="reference internal" href="#id22">资源</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

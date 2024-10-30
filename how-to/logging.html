@@ -1,0 +1,794 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="如何捕获 stdout/stderr 输出" href="capture-stdout-stderr.html" /><link rel="prev" title="管理 pytest 的输出" href="output.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/how-to/logging.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>如何管理日志记录 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">入门</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">操作指南</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example/index.html">示例和自定义技巧</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../example/reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="logging">
+<span id="id1"></span><h1>如何管理日志记录<a class="headerlink" href="#logging" title="Link to this heading">¶</a></h1>
+<p><em>How to manage logging</em></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>pytest 会自动捕获级别为 <code class="docutils literal notranslate"><span class="pre">WARNING</span></code> 或以上的日志消息，并以与捕获的 stdout 和 stderr 相同的方式，在每个失败测试的专门部分中显示它们。</p>
+<p>在没有选项的情况下运行：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
+</pre></div>
+</div>
+<p>显示失败的测试如下：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>----------------------- Captured stdlog call ----------------------
+test_reporting.py    26 WARNING  text going to logger
+----------------------- Captured stdout call ----------------------
+text going to stdout
+----------------------- Captured stderr call ----------------------
+text going to stderr
+==================== 2 failed in 0.02 seconds =====================
+</pre></div>
+</div>
+<p>默认情况下，每个捕获的日志消息会显示模块、行号、日志级别和消息。</p>
+<p>如果需要，可以通过传递特定的格式选项，将日志和日期格式指定为日志模块支持的任何格式：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--log-format<span class="o">=</span><span class="s2">&quot;%(asctime)s %(levelname)s %(message)s&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--log-date-format<span class="o">=</span><span class="s2">&quot;%Y-%m-%d %H:%M:%S&quot;</span>
+</pre></div>
+</div>
+<p>显示失败的测试如下：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>----------------------- Captured stdlog call ----------------------
+2010-04-10 14:48:44 WARNING text going to logger
+----------------------- Captured stdout call ----------------------
+text going to stdout
+----------------------- Captured stderr call ----------------------
+text going to stderr
+==================== 2 failed in 0.02 seconds =====================
+</pre></div>
+</div>
+<p>这些选项也可以通过 <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> 文件进行自定义：</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">log_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">%(asctime)s %(levelname)s %(message)s</span>
+<span class="na">log_date_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">%Y-%m-%d %H:%M:%S</span>
+</pre></div>
+</div>
+<p>可以通过 <code class="docutils literal notranslate"><span class="pre">--log-disable={logger_name}</span></code> 禁用特定的日志记录器。此参数可以多次传递：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--log-disable<span class="o">=</span>main<span class="w"> </span>--log-disable<span class="o">=</span>testing
+</pre></div>
+</div>
+<p>此外，还可以通过以下方式完全禁用失败测试中捕获内容（stdout、stderr 和日志）的报告：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--show-capture<span class="o">=</span>no
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>pytest captures log messages of level <code class="docutils literal notranslate"><span class="pre">WARNING</span></code> or above automatically and displays them in their own section for each failed test in the same manner as captured stdout and stderr.</p>
+<p>Running without options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
+</pre></div>
+</div>
+<p>Shows failed tests like so:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>----------------------- Captured stdlog call ----------------------
+test_reporting.py    26 WARNING  text going to logger
+----------------------- Captured stdout call ----------------------
+text going to stdout
+----------------------- Captured stderr call ----------------------
+text going to stderr
+==================== 2 failed in 0.02 seconds =====================
+</pre></div>
+</div>
+<p>By default each captured log message shows the module, line number, log level and message.</p>
+<p>If desired the log and date format can be specified to anything that the logging module supports by passing specific formatting options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--log-format<span class="o">=</span><span class="s2">&quot;%(asctime)s %(levelname)s %(message)s&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--log-date-format<span class="o">=</span><span class="s2">&quot;%Y-%m-%d %H:%M:%S&quot;</span>
+</pre></div>
+</div>
+<p>Shows failed tests like so:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>----------------------- Captured stdlog call ----------------------
+2010-04-10 14:48:44 WARNING text going to logger
+----------------------- Captured stdout call ----------------------
+text going to stdout
+----------------------- Captured stderr call ----------------------
+text going to stderr
+==================== 2 failed in 0.02 seconds =====================
+</pre></div>
+</div>
+<p>These options can also be customized through <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> file:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">log_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">%(asctime)s %(levelname)s %(message)s</span>
+<span class="na">log_date_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">%Y-%m-%d %H:%M:%S</span>
+</pre></div>
+</div>
+<p>Specific loggers can be disabled via <code class="docutils literal notranslate"><span class="pre">--log-disable={logger_name}</span></code>. This argument can be passed multiple times:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--log-disable<span class="o">=</span>main<span class="w"> </span>--log-disable<span class="o">=</span>testing
+</pre></div>
+</div>
+<p>Further it is possible to disable reporting of captured content (stdout, stderr and logs) on failed tests completely with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--show-capture<span class="o">=</span>no
+</pre></div>
+</div>
+</div></div>
+<section id="caplog-fixture">
+<h2>caplog fixture<a class="headerlink" href="#caplog-fixture" title="Link to this heading">¶</a></h2>
+<p><em>caplog fixture</em></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>在测试中，可以更改捕获的日志消息的日志级别。这是通过 <code class="docutils literal notranslate"><span class="pre">caplog</span></code> 固件支持的：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_foo</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">caplog</span><span class="o">.</span><span class="n">set_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>默认情况下，级别设置在根日志记录器上，但为了方便，也可以设置任何日志记录器的日志级别：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_foo</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">caplog</span><span class="o">.</span><span class="n">set_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;root.baz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>设置的日志级别会在测试结束时自动恢复。</p>
+<p>还可以使用上下文管理器在 <code class="docutils literal notranslate"><span class="pre">with</span></code> 块内临时更改日志级别：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_bar</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">caplog</span><span class="o">.</span><span class="n">at_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>同样，默认情况下，影响的是根日志记录器的级别，但也可以使用以下方式更改任何日志记录器的级别：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_bar</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">caplog</span><span class="o">.</span><span class="n">at_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;root.baz&quot;</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>最后，在测试运行期间发送到日志记录器的所有日志都以 <code class="docutils literal notranslate"><span class="pre">logging.LogRecord</span></code> 实例和最终日志文本的形式提供在固件中。这在您想要断言消息内容时非常有用：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_baz</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">func_under_test</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">caplog</span><span class="o">.</span><span class="n">records</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">record</span><span class="o">.</span><span class="n">levelname</span> <span class="o">!=</span> <span class="s2">&quot;CRITICAL&quot;</span>
+    <span class="k">assert</span> <span class="s2">&quot;wally&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">caplog</span><span class="o">.</span><span class="n">text</span>
+</pre></div>
+</div>
+<p>有关日志记录的所有可用属性，请参见 <code class="docutils literal notranslate"><span class="pre">logging.LogRecord</span></code> 类。</p>
+<p>如果您只是想确保在给定日志记录器名称下以给定严重性和消息记录了特定消息，也可以使用 <code class="docutils literal notranslate"><span class="pre">record_tuples</span></code>：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_foo</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;boo </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;arg&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">caplog</span><span class="o">.</span><span class="n">record_tuples</span> <span class="o">==</span> <span class="p">[(</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s2">&quot;boo arg&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>您可以调用 <code class="docutils literal notranslate"><span class="pre">caplog.clear()</span></code> 来重置测试中的捕获日志记录：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_something_with_clearing_records</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">some_method_that_creates_log_records</span><span class="p">()</span>
+    <span class="n">caplog</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">your_test_method</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="s2">&quot;Foo&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">rec</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">caplog</span><span class="o">.</span><span class="n">records</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">caplog.records</span></code> 属性仅包含当前阶段的记录，因此在 <code class="docutils literal notranslate"><span class="pre">setup</span></code> 阶段中，它仅包含设置日志， <code class="docutils literal notranslate"><span class="pre">call</span></code> 和 <code class="docutils literal notranslate"><span class="pre">teardown</span></code> 阶段也是如此。</p>
+<p>要访问其他阶段的日志，请使用 <code class="docutils literal notranslate"><span class="pre">caplog.get_records(when)</span></code> 方法。例如，如果您想确保使用某个固件的测试永远不会记录任何警告，您可以在拆卸期间检查 <code class="docutils literal notranslate"><span class="pre">setup</span></code> 和 <code class="docutils literal notranslate"><span class="pre">call</span></code> 阶段的记录，如下所示：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">window</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">window</span> <span class="o">=</span> <span class="n">create_window</span><span class="p">()</span>
+    <span class="k">yield</span> <span class="n">window</span>
+    <span class="k">for</span> <span class="n">when</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;setup&quot;</span><span class="p">,</span> <span class="s2">&quot;call&quot;</span><span class="p">):</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">caplog</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="n">when</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">levelno</span> <span class="o">==</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">messages</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;warning messages encountered during testing: </span><span class="si">{</span><span class="n">messages</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>完整的 API 可在 <a class="reference internal" href="../reference/reference.html#pytest.LogCaptureFixture" title="pytest.LogCaptureFixture"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytest.LogCaptureFixture</span></code></a> 中找到。</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">caplog</span></code> 固件向根日志记录器添加了一个处理程序以捕获日志。如果在测试期间修改了根日志记录器，例如使用 <code class="docutils literal notranslate"><span class="pre">logging.config.dictConfig</span></code>，则可能会删除此处理程序并导致无法捕获日志。为避免此情况，请确保任何根日志记录器配置仅添加到现有处理程序中。</p>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>Inside tests it is possible to change the log level for the captured log messages.  This is supported by the <code class="docutils literal notranslate"><span class="pre">caplog</span></code> fixture:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_foo</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">caplog</span><span class="o">.</span><span class="n">set_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By default the level is set on the root logger, however as a convenience it is also possible to set the log level of any logger:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_foo</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">caplog</span><span class="o">.</span><span class="n">set_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;root.baz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The log levels set are restored automatically at the end of the test.</p>
+<p>It is also possible to use a context manager to temporarily change the log level inside a <code class="docutils literal notranslate"><span class="pre">with</span></code> block:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_bar</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">caplog</span><span class="o">.</span><span class="n">at_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Again, by default the level of the root logger is affected but the level of any logger can be changed instead with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_bar</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">caplog</span><span class="o">.</span><span class="n">at_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;root.baz&quot;</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Lastly all the logs sent to the logger during the test run are made available on the fixture in the form of both the <code class="docutils literal notranslate"><span class="pre">logging.LogRecord</span></code> instances and the final log text. This is useful for when you want to assert on the contents of a message:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_baz</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">func_under_test</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">caplog</span><span class="o">.</span><span class="n">records</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">record</span><span class="o">.</span><span class="n">levelname</span> <span class="o">!=</span> <span class="s2">&quot;CRITICAL&quot;</span>
+    <span class="k">assert</span> <span class="s2">&quot;wally&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">caplog</span><span class="o">.</span><span class="n">text</span>
+</pre></div>
+</div>
+<p>For all the available attributes of the log records see the <code class="docutils literal notranslate"><span class="pre">logging.LogRecord</span></code> class.</p>
+<p>You can also resort to <code class="docutils literal notranslate"><span class="pre">record_tuples</span></code> if all you want to do is to ensure, that certain messages have been logged under a given logger name with a given severity and message:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_foo</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;boo </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;arg&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">caplog</span><span class="o">.</span><span class="n">record_tuples</span> <span class="o">==</span> <span class="p">[(</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s2">&quot;boo arg&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>You can call <code class="docutils literal notranslate"><span class="pre">caplog.clear()</span></code> to reset the captured log records in a test:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_something_with_clearing_records</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">some_method_that_creates_log_records</span><span class="p">()</span>
+    <span class="n">caplog</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">your_test_method</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="s2">&quot;Foo&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">rec</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">caplog</span><span class="o">.</span><span class="n">records</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">caplog.records</span></code> attribute contains records from the current stage only, so inside the <code class="docutils literal notranslate"><span class="pre">setup</span></code> phase it contains only setup logs, same with the <code class="docutils literal notranslate"><span class="pre">call</span></code> and
+<code class="docutils literal notranslate"><span class="pre">teardown</span></code> phases.</p>
+<p>To access logs from other stages, use the <code class="docutils literal notranslate"><span class="pre">caplog.get_records(when)</span></code> method. As an example, if you want to make sure that tests which use a certain fixture never log any warnings, you can inspect the records for the <code class="docutils literal notranslate"><span class="pre">setup</span></code> and <code class="docutils literal notranslate"><span class="pre">call</span></code> stages during teardown like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">window</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
+    <span class="n">window</span> <span class="o">=</span> <span class="n">create_window</span><span class="p">()</span>
+    <span class="k">yield</span> <span class="n">window</span>
+    <span class="k">for</span> <span class="n">when</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;setup&quot;</span><span class="p">,</span> <span class="s2">&quot;call&quot;</span><span class="p">):</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">caplog</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="n">when</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">levelno</span> <span class="o">==</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">messages</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;warning messages encountered during testing: </span><span class="si">{</span><span class="n">messages</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The full API is available at <a class="reference internal" href="../reference/reference.html#pytest.LogCaptureFixture" title="pytest.LogCaptureFixture"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytest.LogCaptureFixture</span></code></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">caplog</span></code> fixture adds a handler to the root logger to capture logs. If the root logger is modified during a test, for example with <code class="docutils literal notranslate"><span class="pre">logging.config.dictConfig</span></code>, this handler may be removed and cause no logs to be captured. To avoid this, ensure that any root logger configuration only adds to the existing handlers.</p>
+</div>
+</div></div>
+</section>
+<section id="live-logs">
+<span id="id2"></span><h2>实时日志<a class="headerlink" href="#live-logs" title="Link to this heading">¶</a></h2>
+<p><em>Live Logs</em></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p>通过将 <a class="reference internal" href="../reference/reference.html#confval-16"><code class="xref std std-confval docutils literal notranslate"><span class="pre">log_cli</span></code></a> 配置选项设置为 <code class="docutils literal notranslate"><span class="pre">true</span></code>, pytest 将在日志记录被发出时直接将其输出到控制台。</p>
+<p>您可以通过传递 <code class="docutils literal notranslate"><span class="pre">--log-cli-level</span></code> 来指定打印到控制台的日志记录的日志级别，该级别等于或高于指定级别。此设置接受日志级别名称或数字值，详细信息见 <a class="reference external" href="https://docs.python.org/3/library/logging.html#levels" title="(in Python v3.13)"><span class="xref std std-ref">logging’s documentation</span></a>。</p>
+<p>此外，您还可以指定 <code class="docutils literal notranslate"><span class="pre">--log-cli-format</span></code> 和 <code class="docutils literal notranslate"><span class="pre">--log-cli-date-format</span></code>，这两个选项的默认值与 <code class="docutils literal notranslate"><span class="pre">--log-format</span></code> 和 <code class="docutils literal notranslate"><span class="pre">--log-date-format</span></code> 相同（如果未提供），但仅适用于控制台日志处理程序。</p>
+<p>所有 CLI 日志选项也可以在配置 INI 文件中设置。选项名称如下：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">log_cli_level</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_cli_format</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_cli_date_format</span></code></p></li>
+</ul>
+<p>如果您需要将整个测试套件的日志记录调用记录到文件中，可以传递 <code class="docutils literal notranslate"><span class="pre">--log-file=/path/to/log/file</span></code>。此日志文件默认以写入模式打开，这意味着每次运行测试会话时都会覆盖该文件。如果您希望以追加模式打开该文件，则可以传递 <code class="docutils literal notranslate"><span class="pre">--log-file-mode=a</span></code>。请注意，无论是在 CLI 上传递的相对路径还是在配置文件中声明的相对路径，日志文件位置始终相对于当前工作目录进行解析。</p>
+<p>您还可以通过传递 <code class="docutils literal notranslate"><span class="pre">--log-file-level</span></code> 来指定日志文件的日志级别。此设置接受日志级别名称或数字值，详细信息见 <a class="reference external" href="https://docs.python.org/3/library/logging.html#levels" title="(in Python v3.13)"><span class="xref std std-ref">logging’s documentation</span></a>。</p>
+<p>此外，您还可以指定 <code class="docutils literal notranslate"><span class="pre">--log-file-format</span></code> 和 <code class="docutils literal notranslate"><span class="pre">--log-file-date-format</span></code>，这两个选项等同于 <code class="docutils literal notranslate"><span class="pre">--log-format</span></code> 和 <code class="docutils literal notranslate"><span class="pre">--log-date-format</span></code>，但适用于日志文件日志处理程序。</p>
+<p>所有日志文件选项也可以在配置 INI 文件中设置。选项名称如下：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file_mode</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file_level</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file_format</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file_date_format</span></code></p></li>
+</ul>
+<p>您可以调用 <code class="docutils literal notranslate"><span class="pre">set_log_path()</span></code> 动态自定义日志文件路径。此功能被视为 <strong>实验性</strong>。请注意， <code class="docutils literal notranslate"><span class="pre">set_log_path()</span></code> 会遵循 <code class="docutils literal notranslate"><span class="pre">log_file_mode</span></code> 选项。</p>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p>By setting the <a class="reference internal" href="../reference/reference.html#confval-16"><code class="xref std std-confval docutils literal notranslate"><span class="pre">log_cli</span></code></a> configuration option to <code class="docutils literal notranslate"><span class="pre">true</span></code>, pytest will output logging records as they are emitted directly into the console.</p>
+<p>You can specify the logging level for which log records with equal or higher level are printed to the console by passing <code class="docutils literal notranslate"><span class="pre">--log-cli-level</span></code>. This setting accepts the logging level names or numeric values as seen in <a class="reference external" href="https://docs.python.org/3/library/logging.html#levels" title="(in Python v3.13)"><span class="xref std std-ref">logging’s documentation</span></a>.</p>
+<p>Additionally, you can also specify <code class="docutils literal notranslate"><span class="pre">--log-cli-format</span></code> and <code class="docutils literal notranslate"><span class="pre">--log-cli-date-format</span></code> which mirror and default to <code class="docutils literal notranslate"><span class="pre">--log-format</span></code> and <code class="docutils literal notranslate"><span class="pre">--log-date-format</span></code> if not provided, but are applied only to the console logging handler.</p>
+<p>All of the CLI log options can also be set in the configuration INI file. The
+option names are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">log_cli_level</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_cli_format</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_cli_date_format</span></code></p></li>
+</ul>
+<p>If you need to record the whole test suite logging calls to a file, you can pass
+<code class="docutils literal notranslate"><span class="pre">--log-file=/path/to/log/file</span></code>. This log file is opened in write mode by default which
+means that it will be overwritten at each run tests session.
+If you’d like the file opened in append mode instead, then you can pass <code class="docutils literal notranslate"><span class="pre">--log-file-mode=a</span></code>.
+Note that relative paths for the log-file location, whether passed on the CLI or declared in a
+config file, are always resolved relative to the current working directory.</p>
+<p>You can also specify the logging level for the log file by passing
+<code class="docutils literal notranslate"><span class="pre">--log-file-level</span></code>. This setting accepts the logging level names or numeric
+values as seen in <a class="reference external" href="https://docs.python.org/3/library/logging.html#levels" title="(in Python v3.13)"><span class="xref std std-ref">logging’s documentation</span></a>.</p>
+<p>Additionally, you can also specify <code class="docutils literal notranslate"><span class="pre">--log-file-format</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--log-file-date-format</span></code> which are equal to <code class="docutils literal notranslate"><span class="pre">--log-format</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--log-date-format</span></code> but are applied to the log file logging handler.</p>
+<p>All of the log file options can also be set in the configuration INI file. The
+option names are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file_mode</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file_level</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file_format</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_file_date_format</span></code></p></li>
+</ul>
+<p>You can call <code class="docutils literal notranslate"><span class="pre">set_log_path()</span></code> to customize the log_file path dynamically. This functionality
+is considered <strong>experimental</strong>. Note that <code class="docutils literal notranslate"><span class="pre">set_log_path()</span></code> respects the <code class="docutils literal notranslate"><span class="pre">log_file_mode</span></code> option.</p>
+</div></div>
+</section>
+<section id="log-colors">
+<span id="id3"></span><h2>自定义颜色<a class="headerlink" href="#log-colors" title="Link to this heading">¶</a></h2>
+<p><em>Customizing Colors</em></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p>如果启用了彩色终端输出，日志级别将以颜色显示。支持通过 <code class="docutils literal notranslate"><span class="pre">add_color_level()</span></code> 更改默认颜色或为自定义日志级别添加颜色。示例如下：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">hookimpl</span><span class="p">(</span><span class="n">trylast</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">pytest_configure</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="n">logging_plugin</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pluginmanager</span><span class="o">.</span><span class="n">get_plugin</span><span class="p">(</span><span class="s2">&quot;logging-plugin&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 更改现有日志级别的颜色</span>
+    <span class="n">logging_plugin</span><span class="o">.</span><span class="n">log_cli_handler</span><span class="o">.</span><span class="n">formatter</span><span class="o">.</span><span class="n">add_color_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s2">&quot;cyan&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 为自定义日志级别添加颜色（自定义日志级别 `SPAM` 已设置）</span>
+    <span class="n">logging_plugin</span><span class="o">.</span><span class="n">log_cli_handler</span><span class="o">.</span><span class="n">formatter</span><span class="o">.</span><span class="n">add_color_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">SPAM</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>此功能及其 API 被视为 <strong>实验性</strong>，可能会在发布之间发生更改，而无需提供弃用通知。</p>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>Log levels are colored if colored terminal output is enabled. Changing
+from default colors or putting color on custom log levels is supported
+through <code class="docutils literal notranslate"><span class="pre">add_color_level()</span></code>. Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">hookimpl</span><span class="p">(</span><span class="n">trylast</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">pytest_configure</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="n">logging_plugin</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pluginmanager</span><span class="o">.</span><span class="n">get_plugin</span><span class="p">(</span><span class="s2">&quot;logging-plugin&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Change color on existing log level</span>
+    <span class="n">logging_plugin</span><span class="o">.</span><span class="n">log_cli_handler</span><span class="o">.</span><span class="n">formatter</span><span class="o">.</span><span class="n">add_color_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s2">&quot;cyan&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Add color to a custom log level (a custom log level `SPAM` is already set up)</span>
+    <span class="n">logging_plugin</span><span class="o">.</span><span class="n">log_cli_handler</span><span class="o">.</span><span class="n">formatter</span><span class="o">.</span><span class="n">add_color_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">SPAM</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This feature and its API are considered <strong>experimental</strong> and might change
+between releases without a deprecation notice.</p>
+</div>
+</div></div>
+</section>
+<section id="log-release-notes">
+<span id="id4"></span><h2>发行说明<a class="headerlink" href="#log-release-notes" title="Link to this heading">¶</a></h2>
+<p><em>Release notes</em></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>此功能作为 <a class="reference external" href="https://pypi.org/project/pytest-catchlog">pytest-catchlog</a> 插件的即插即用替代品引入，并且它们之间存在冲突。在引入此功能时，已删除与 <code class="docutils literal notranslate"><span class="pre">pytest-capturelog</span></code> 的向后兼容 API，因此如果出于这个原因您仍然需要 <code class="docutils literal notranslate"><span class="pre">pytest-catchlog</span></code>，可以通过在 <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> 中添加以下内容来禁用内部功能：</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="w">    </span><span class="na">addopts</span><span class="o">=</span><span class="s">-p no:logging</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><p>This feature was introduced as a drop-in replacement for the
+<a class="reference external" href="https://pypi.org/project/pytest-catchlog">pytest-catchlog</a> plugin and they conflict
+with each other. The backward compatibility API with <code class="docutils literal notranslate"><span class="pre">pytest-capturelog</span></code>
+has been dropped when this feature was introduced, so if for that reason you
+still need <code class="docutils literal notranslate"><span class="pre">pytest-catchlog</span></code> you can disable the internal feature by
+adding to your <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code>:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="w">    </span><span class="na">addopts</span><span class="o">=</span><span class="s">-p no:logging</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="pytest-3-4">
+<span id="log-changes-3-4"></span><h2>pytest 3.4 中的不兼容更改<a class="headerlink" href="#pytest-3-4" title="Link to this heading">¶</a></h2>
+<p><em>Incompatible changes in pytest 3.4</em></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><p>此功能是在 <code class="docutils literal notranslate"><span class="pre">3.3</span></code> 中引入的，并且在 <code class="docutils literal notranslate"><span class="pre">3.4</span></code> 中经过社区反馈做了一些 <strong>不兼容的更改</strong>：</p>
+<ul class="simple">
+<li><p>日志级别不会再更改，除非通过 <a class="reference internal" href="../reference/reference.html#confval-26"><code class="xref std std-confval docutils literal notranslate"><span class="pre">log_level</span></code></a> 配置或 <code class="docutils literal notranslate"><span class="pre">--log-level</span></code> 命令行选项显式请求。这允许用户自行配置记录器对象。设置 <a class="reference internal" href="../reference/reference.html#confval-26"><code class="xref std std-confval docutils literal notranslate"><span class="pre">log_level</span></code></a> 将全局设置捕获的日志级别，因此如果特定测试需要比这个级别更低的级别，请使用 <code class="docutils literal notranslate"><span class="pre">caplog.set_level()</span></code> 功能，否则该测试可能会失败。</p></li>
+<li><p><a class="reference internal" href="#live-logs"><span class="std std-ref">实时日志</span></a> 现在默认禁用，可以通过将 <a class="reference internal" href="../reference/reference.html#confval-16"><code class="xref std std-confval docutils literal notranslate"><span class="pre">log_cli</span></code></a> 配置选项设置为 <code class="docutils literal notranslate"><span class="pre">true</span></code> 来启用。当启用时，日志的详细程度增加，因此每个测试的日志都是可见的。</p></li>
+<li><p><a class="reference internal" href="#live-logs"><span class="std std-ref">实时日志</span></a> 现在发送到 <code class="docutils literal notranslate"><span class="pre">sys.stdout</span></code>，不再需要 <code class="docutils literal notranslate"><span class="pre">-s</span></code> 命令行选项才能工作。</p></li>
+</ul>
+<p>如果您希望部分恢复 <code class="docutils literal notranslate"><span class="pre">3.3</span></code> 版本的日志记录行为，可以将以下选项添加到您的 <code class="docutils literal notranslate"><span class="pre">ini</span></code> 文件中：</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">log_cli</span><span class="o">=</span><span class="s">true</span>
+<span class="na">log_level</span><span class="o">=</span><span class="s">NOTSET</span>
+</pre></div>
+</div>
+<p>有关导致这些更改的讨论的更多详细信息，请参见 <a class="reference external" href="https://github.com/pytest-dev/pytest/issues/3013">#3013</a>。</p>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><p>This feature was introduced in <code class="docutils literal notranslate"><span class="pre">3.3</span></code> and some <strong>incompatible changes</strong> have been
+made in <code class="docutils literal notranslate"><span class="pre">3.4</span></code> after community feedback:</p>
+<ul class="simple">
+<li><p>Log levels are no longer changed unless explicitly requested by the <a class="reference internal" href="../reference/reference.html#confval-26"><code class="xref std std-confval docutils literal notranslate"><span class="pre">log_level</span></code></a> configuration</p></li>
+</ul>
+<p>or <code class="docutils literal notranslate"><span class="pre">--log-level</span></code> command-line options. This allows users to configure logger objects themselves.
+Setting <a class="reference internal" href="../reference/reference.html#confval-26"><code class="xref std std-confval docutils literal notranslate"><span class="pre">log_level</span></code></a> will set the level that is captured globally so if a specific test requires
+a lower level than this, use the <code class="docutils literal notranslate"><span class="pre">caplog.set_level()</span></code> functionality otherwise that test will be prone to
+failure.
+* <a class="reference internal" href="#live-logs"><span class="std std-ref">Live Logs</span></a> is now disabled by default and can be enabled setting the
+<a class="reference internal" href="../reference/reference.html#confval-16"><code class="xref std std-confval docutils literal notranslate"><span class="pre">log_cli</span></code></a> configuration option to <code class="docutils literal notranslate"><span class="pre">true</span></code>. When enabled, the verbosity is increased so logging for each
+test is visible.
+* <a class="reference internal" href="#live-logs"><span class="std std-ref">Live Logs</span></a> are now sent to <code class="docutils literal notranslate"><span class="pre">sys.stdout</span></code> and no longer require the <code class="docutils literal notranslate"><span class="pre">-s</span></code> command-line option
+to work.</p>
+<p>If you want to partially restore the logging behavior of version <code class="docutils literal notranslate"><span class="pre">3.3</span></code>, you can add this options to your <code class="docutils literal notranslate"><span class="pre">ini</span></code>
+file:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">log_cli</span><span class="o">=</span><span class="s">true</span>
+<span class="na">log_level</span><span class="o">=</span><span class="s">NOTSET</span>
+</pre></div>
+</div>
+<p>More details about the discussion that lead to this changes can be read in <a class="reference external" href="https://github.com/pytest-dev/pytest/issues/3013">#3013</a>.</p>
+</div></div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="capture-stdout-stderr.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">如何捕获 stdout/stderr 输出</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="output.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">管理 pytest 的输出</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">如何管理日志记录</a><ul>
+<li><a class="reference internal" href="#caplog-fixture">caplog fixture</a></li>
+<li><a class="reference internal" href="#live-logs">实时日志</a></li>
+<li><a class="reference internal" href="#log-colors">自定义颜色</a></li>
+<li><a class="reference internal" href="#log-release-notes">发行说明</a></li>
+<li><a class="reference internal" href="#pytest-3-4">pytest 3.4 中的不兼容更改</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

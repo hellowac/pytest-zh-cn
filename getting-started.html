@@ -1,0 +1,873 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="search.html" /><link rel="next" title="操作指南" href="how-to/index.html" /><link rel="prev" title="pytest:帮助你编写更好的程序" href="index.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/getting-started.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>入门 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">入门</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="how-to/index.html">操作指南</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="how-to/usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="example/index.html">示例和自定义技巧</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="example/reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="get-started">
+<span id="id1"></span><h1>入门<a class="headerlink" href="#get-started" title="Link to this heading">¶</a></h1>
+<p><strong>Get Started</strong></p>
+<section id="pytest">
+<span id="installation"></span><span id="getstarted"></span><h2>安装 <code class="docutils literal notranslate"><span class="pre">pytest</span></code><a class="headerlink" href="#pytest" title="Link to this heading">¶</a></h2>
+<p><strong>Install</strong> <code class="docutils literal notranslate"><span class="pre">pytest</span></code></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> 需要：Python 3.8+ 或 PyPy3。</p>
+<ol class="arabic simple">
+<li><p>在命令行中运行以下命令：</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pytest
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>检查是否安装了正确的版本：</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>--version
+pytest<span class="w"> </span><span class="m">8</span>.3.3
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> requires: Python 3.8+ or PyPy3.</p>
+<ol class="arabic simple">
+<li><p>Run the following command in your command line:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pytest
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Check that you installed the correct version:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>--version
+pytest<span class="w"> </span><span class="m">8</span>.3.3
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="simpletest">
+<span id="id2"></span><h2>创建你的第一个测试<a class="headerlink" href="#simpletest" title="Link to this heading">¶</a></h2>
+<p><strong>Create your first test</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>创建一个名为 <code class="docutils literal notranslate"><span class="pre">test_sample.py</span></code> 的新文件，其中包含一个函数和一个测试：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># test_sample.py 的内容</span>
+<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">test_answer</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">func</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>测试</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 1 item
+
+test_sample.py <span class=" -Color -Color-Red">F</span>                                                     <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_______________________________ test_answer ________________________________</span>
+
+    def test_answer():
+&gt;       assert func(3) == 5
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 4 == 5</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 4 = func(3)</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_sample.py</span>:6: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_sample.py::<span class=" -Color -Color-Bold">test_answer</span> - assert 4 == 5
+<span class=" -Color -Color-Red">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span><span class=" -Color -Color-Red"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">[100%]</span></code> 指的是运行所有测试用例的总体进度。完成后，pytest 会显示失败报告，因为 <code class="docutils literal notranslate"><span class="pre">func(3)</span></code> 没有返回 <code class="docutils literal notranslate"><span class="pre">5</span></code>。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>您可以使用 <code class="docutils literal notranslate"><span class="pre">assert</span></code> 语句来验证测试预期。pytest 的 <a class="reference external" href="https://docs.python.org/3/reference/simple_stmts.html#assert" title="(in Python v3.13)"><span class="xref std std-ref">高级断言自省</span></a> 将智能地报告断言表达式的中间值，这样您就可以避免 <a class="reference external" href="https://docs.python.org/3/library/unittest.html#testcase-objects" title="(in Python v3.13)"><span class="xref std std-ref">JUnit 遗留方法</span></a> 的许多名称。</p>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>Create a new file called <code class="docutils literal notranslate"><span class="pre">test_sample.py</span></code>, containing a function, and a test:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_sample.py</span>
+<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">test_answer</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">func</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>The test</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 1 item
+
+test_sample.py <span class=" -Color -Color-Red">F</span>                                                     <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_______________________________ test_answer ________________________________</span>
+
+    def test_answer():
+&gt;       assert func(3) == 5
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 4 == 5</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 4 = func(3)</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_sample.py</span>:6: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_sample.py::<span class=" -Color -Color-Bold">test_answer</span> - assert 4 == 5
+<span class=" -Color -Color-Red">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span><span class=" -Color -Color-Red"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">[100%]</span></code> refers to the overall progress of running all test cases. After it finishes, pytest then shows a failure report because <code class="docutils literal notranslate"><span class="pre">func(3)</span></code> does not return <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">assert</span></code> statement to verify test expectations. pytest’s <a class="reference external" href="https://docs.python.org/3/reference/simple_stmts.html#assert" title="(in Python v3.13)"><span class="xref std std-ref">Advanced assertion introspection</span></a> will intelligently report intermediate values of the assert expression so you can avoid the many names <a class="reference external" href="https://docs.python.org/3/library/unittest.html#testcase-objects" title="(in Python v3.13)"><span class="xref std std-ref">of JUnit legacy methods</span></a>.</p>
+</div>
+</div></div>
+</section>
+<section id="id3">
+<h2>运行多个测试<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p><strong>Run multiple tests</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> 将在当前目录及其子目录中运行所有形式为 test_*.py 或 *_test.py 的文件。更一般地，它遵循: <a class="reference internal" href="explanation/goodpractices.html#test-discovery"><span class="std std-ref">标准测试发现规则</span></a>。</p>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> will run all files of the form test_*.py or *_test.py in the current directory and its subdirectories. More generally, it follows <a class="reference internal" href="explanation/goodpractices.html#test-discovery"><span class="std std-ref">standard test discovery rules</span></a>.</p>
+</div></div>
+</section>
+<section id="id4">
+<h2>断言引发了某个异常<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<p><strong>Assert that a certain exception is raised</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p>使用 <a class="reference internal" href="how-to/assert.html#assertraises"><span class="std std-ref">raises</span></a> 辅助程序断言某些代码引发了异常：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># test_sysexit.py的内容</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_mytest</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">f</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>您还可以使用 <a class="reference internal" href="how-to/assert.html#assertraises"><span class="std std-ref">raises</span></a> 提供的上下文来断言预期异常是引发的 <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ExceptionGroup" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExceptionGroup</span></code></a> 的一部分：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># test_exceptiongroup.py的内容</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="n">ExceptionGroup</span><span class="p">(</span>
+        <span class="s2">&quot;Group message&quot;</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="ne">RuntimeError</span><span class="p">(),</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_exception_in_group</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">ExceptionGroup</span><span class="p">)</span> <span class="k">as</span> <span class="n">excinfo</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">excinfo</span><span class="o">.</span><span class="n">group_contains</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">excinfo</span><span class="o">.</span><span class="n">group_contains</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>使用“安静(quiet)”报告模式执行测试函数：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_sysexit.py
+<span class=" -Color -Color-Green">.</span>                                                                    <span class=" -Color -Color-Green">[100%]</span>
+<span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">-q/--quiet</span></code> 标志可在此示例和后续示例中保持简短的输出。</p>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>Use the <a class="reference internal" href="how-to/assert.html#assertraises"><span class="std std-ref">raises</span></a> helper to assert that some code raises an exception:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_sysexit.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_mytest</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">f</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can also use the context provided by <a class="reference internal" href="how-to/assert.html#assertraises"><span class="std std-ref">raises</span></a> to
+assert that an expected exception is part of a raised <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ExceptionGroup" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExceptionGroup</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_exceptiongroup.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="n">ExceptionGroup</span><span class="p">(</span>
+        <span class="s2">&quot;Group message&quot;</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="ne">RuntimeError</span><span class="p">(),</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_exception_in_group</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">ExceptionGroup</span><span class="p">)</span> <span class="k">as</span> <span class="n">excinfo</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">excinfo</span><span class="o">.</span><span class="n">group_contains</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">excinfo</span><span class="o">.</span><span class="n">group_contains</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Execute the test function with “quiet” reporting mode:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_sysexit.py
+<span class=" -Color -Color-Green">.</span>                                                                    <span class=" -Color -Color-Green">[100%]</span>
+<span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-q/--quiet</span></code> flag keeps the output brief in this and following examples.</p>
+</div>
+</div></div>
+</section>
+<section id="class">
+<h2>在一个类(class)中对多个测试进行分组<a class="headerlink" href="#class" title="Link to this heading">¶</a></h2>
+<p><strong>Group multiple tests in a class</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>一旦您开发了多个测试，您可能希望将它们分组到一个类中。pytest 使得创建包含多个测试的类变得简单：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># test_class.py 的内容</span>
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">test_one</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;this&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;h&quot;</span> <span class="ow">in</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">test_two</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;check&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> 会发现所有遵循其 <a class="reference internal" href="explanation/goodpractices.html#test-discovery"><span class="std std-ref">Python 测试发现约定</span></a> 的测试，因此它会找到两个以 <code class="docutils literal notranslate"><span class="pre">test_</span></code> 为前缀的函数。无需继承任何类，但请确保将类名前缀为 <code class="docutils literal notranslate"><span class="pre">Test</span></code>，否则该类将被跳过。我们可以简单地通过传递文件名来运行该模块：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_class.py
+<span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">F</span>                                                                   <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________________ TestClass.test_two ____________________________</span>
+
+self = &lt;test_class.TestClass object at 0xdeadbeef0001&gt;
+
+    def test_two(self):
+        x = &quot;hello&quot;
+&gt;       assert hasattr(x, &quot;check&quot;)
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert False</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where False = hasattr(&#39;hello&#39;, &#39;check&#39;)</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_class.py</span>:8: AssertionError
+========================= 测试摘要信息 ==========================
+FAILED test_class.py::TestClass::test_two - AssertionError: assert False
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+<p>第一个测试通过，第二个测试失败。您可以轻松查看断言中的中间值，以帮助您理解失败的原因。</p>
+<p>将测试分组到类中可以带来以下好处：</p>
+<ul class="simple">
+<li><p>测试组织</p></li>
+<li><p>仅在特定类中共享夹具</p></li>
+<li><p>在类级别应用标记，并使其隐式适用于所有测试</p></li>
+</ul>
+<p>在类中分组测试时需要注意的是，每个测试都有一个唯一的类实例。
+让每个测试共享相同的类实例将对测试隔离产生非常不利的影响，并会促进不良的测试实践。
+这一点在下面阐述：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># test_class_demo.py 的内容</span>
+<span class="k">class</span> <span class="nc">TestClassDemoInstance</span><span class="p">:</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">test_one</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">test_two</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -k TestClassDemoInstance -q
+<span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">F</span>                                                                   <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">______________________ TestClassDemoInstance.test_two ______________________</span>
+
+self = &lt;test_class_demo.TestClassDemoInstance object at 0xdeadbeef0002&gt;
+
+    def test_two(self):
+&gt;       assert self.value == 1
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0 == 1</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 0 = &lt;test_class_demo.TestClassDemoInstance object at 0xdeadbeef0002&gt;.value</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_class_demo.py</span>:9: AssertionError
+========================= 测试摘要信息 ==========================
+FAILED test_class_demo.py::TestClassDemoInstance::test_two - assert 0 == 1
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+<p>请注意，在类级别添加的属性是 <em>类属性(class attributes)</em>，因此它们将在测试之间共享。</p>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><p>Once you develop multiple tests, you may want to group them into a class. pytest makes it easy to create a class containing more than one test:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_class.py</span>
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">test_one</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;this&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;h&quot;</span> <span class="ow">in</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">test_two</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;check&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> discovers all tests following its <a class="reference internal" href="explanation/goodpractices.html#test-discovery"><span class="std std-ref">Conventions for Python test discovery</span></a>, so it finds both <code class="docutils literal notranslate"><span class="pre">test_</span></code> prefixed functions. There is no need to subclass anything, but make sure to prefix your class with <code class="docutils literal notranslate"><span class="pre">Test</span></code> otherwise the class will be skipped. We can simply run the module by passing its filename:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_class.py
+<span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">F</span>                                                                   <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________________ TestClass.test_two ____________________________</span>
+
+self = &lt;test_class.TestClass object at 0xdeadbeef0001&gt;
+
+    def test_two(self):
+        x = &quot;hello&quot;
+&gt;       assert hasattr(x, &quot;check&quot;)
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert False</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where False = hasattr(&#39;hello&#39;, &#39;check&#39;)</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_class.py</span>:8: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_class.py::<span class=" -Color -Color-Bold">TestClass::test_two</span> - AssertionError: assert False
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+<p>The first test passed and the second failed. You can easily see the intermediate values in the assertion to help you understand the reason for the failure.</p>
+<p>Grouping tests in classes can be beneficial for the following reasons:</p>
+<ul class="simple">
+<li><p>Test organization</p></li>
+<li><p>Sharing fixtures for tests only in that particular class</p></li>
+<li><p>Applying marks at the class level and having them implicitly apply to all tests</p></li>
+</ul>
+<p>Something to be aware of when grouping tests inside classes is that each test has a unique instance of the class.
+Having each test share the same class instance would be very detrimental to test isolation and would promote poor test practices.
+This is outlined below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_class_demo.py</span>
+<span class="k">class</span> <span class="nc">TestClassDemoInstance</span><span class="p">:</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">test_one</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">test_two</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -k TestClassDemoInstance -q
+<span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">F</span>                                                                   <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">______________________ TestClassDemoInstance.test_two ______________________</span>
+
+self = &lt;test_class_demo.TestClassDemoInstance object at 0xdeadbeef0002&gt;
+
+    def test_two(self):
+&gt;       assert self.value == 1
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0 == 1</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 0 = &lt;test_class_demo.TestClassDemoInstance object at 0xdeadbeef0002&gt;.value</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_class_demo.py</span>:9: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_class_demo.py::<span class=" -Color -Color-Bold">TestClassDemoInstance::test_two</span> - assert 0 == 1
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+<p>Note that attributes added at class level are <em>class attributes</em>, so they will be shared between tests.</p>
+</div></div>
+</section>
+<section id="id5">
+<h2>为功能测试请求唯一的临时目录<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<p><strong>Request a unique temporary directory for functional tests</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> 提供了 <a class="reference internal" href="builtin.html"><span class="doc">内置夹具/函数参数</span></a> 来请求任意资源，比如一个唯一的临时目录：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># test_tmp_path.py 的内容</span>
+<span class="k">def</span> <span class="nf">test_needsfiles</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>在测试函数签名中列出名称 <code class="docutils literal notranslate"><span class="pre">tmp_path</span></code> ， <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 会查找并调用夹具工厂，在执行测试函数调用之前创建资源。在测试运行之前， <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 会为每次测试调用创建一个唯一的临时目录：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_tmp_path.py
+<span class=" -Color -Color-Red">F</span>                                                                    <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________________ test_needsfiles ______________________________</span>
+
+tmp_path = PosixPath(&#39;PYTEST_TMPDIR/test_needsfiles0&#39;)
+
+    def test_needsfiles(tmp_path):
+        print(tmp_path)
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_tmp_path.py</span>:3: AssertionError
+--------------------------- Captured stdout call ---------------------------
+PYTEST_TMPDIR/test_needsfiles0
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_tmp_path.py::<span class=" -Color -Color-Bold">test_needsfiles</span> - assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+<p>有关临时目录处理的更多信息，请参见 <a class="reference internal" href="how-to/tmp_path.html#tmp-path-handling"><span class="std std-ref">临时目录和文件</span></a>。</p>
+<p>使用以下命令查找存在的内置 <a class="reference internal" href="reference/fixtures.html#fixtures"><span class="std std-ref">pytest 夹具</span></a> 的类型：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--fixtures<span class="w">   </span><span class="c1"># 显示内置和自定义夹具</span>
+</pre></div>
+</div>
+<p>请注意，此命令省略以 <code class="docutils literal notranslate"><span class="pre">_</span></code> 开头的夹具，除非添加了 <code class="docutils literal notranslate"><span class="pre">-v</span></code> 选项。</p>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> provides <a class="reference internal" href="builtin.html"><span class="doc">Builtin fixtures/function arguments</span></a> to request arbitrary resources, like a unique temporary directory:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_tmp_path.py</span>
+<span class="k">def</span> <span class="nf">test_needsfiles</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>List the name <code class="docutils literal notranslate"><span class="pre">tmp_path</span></code> in the test function signature and <code class="docutils literal notranslate"><span class="pre">pytest</span></code> will lookup and call a fixture factory to create the resource before performing the test function call. Before the test runs, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> creates a unique-per-test-invocation temporary directory:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_tmp_path.py
+<span class=" -Color -Color-Red">F</span>                                                                    <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________________ test_needsfiles ______________________________</span>
+
+tmp_path = PosixPath(&#39;PYTEST_TMPDIR/test_needsfiles0&#39;)
+
+    def test_needsfiles(tmp_path):
+        print(tmp_path)
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_tmp_path.py</span>:3: AssertionError
+--------------------------- Captured stdout call ---------------------------
+PYTEST_TMPDIR/test_needsfiles0
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_tmp_path.py::<span class=" -Color -Color-Bold">test_needsfiles</span> - assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+<p>More info on temporary directory handling is available at <a class="reference internal" href="how-to/tmp_path.html#tmp-path-handling"><span class="std std-ref">Temporary directories and files</span></a>.</p>
+<p>Find out what kind of builtin <a class="reference internal" href="reference/fixtures.html#fixtures"><span class="std std-ref">pytest fixtures</span></a> exist with the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--fixtures<span class="w">   </span><span class="c1"># shows builtin and custom fixtures</span>
+</pre></div>
+</div>
+<p>Note that this command omits fixtures with leading <code class="docutils literal notranslate"><span class="pre">_</span></code> unless the <code class="docutils literal notranslate"><span class="pre">-v</span></code> option is added.</p>
+</div></div>
+</section>
+<section id="id6">
+<h2>继续阅读<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<p><strong>Continue reading</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><p>查看其他 pytest 资源，以帮助您根据自己的独特工作流程自定义测试：</p>
+<ul class="simple">
+<li><p>“<a class="reference internal" href="how-to/usage.html#usage"><span class="std std-ref">如何调用 pytest</span></a>” 了解命令行调用示例</p></li>
+<li><p>“<a class="reference internal" href="how-to/existingtestsuite.html#existingtestsuite"><span class="std std-ref">如何将 pytest 与现有测试套件结合使用</span></a>” 了解使用现有测试的情况</p></li>
+<li><p>“<a class="reference internal" href="how-to/mark.html#mark"><span class="std std-ref">如何用属性标记测试函数</span></a>” 了解 <code class="docutils literal notranslate"><span class="pre">pytest.mark</span></code> 机制的信息</p></li>
+<li><p>“<a class="reference internal" href="reference/fixtures.html#fixtures"><span class="std std-ref">Fixtures 参考</span></a>” 为您的测试提供功能基准</p></li>
+<li><p>“<a class="reference internal" href="how-to/writing_plugins.html#plugins"><span class="std std-ref">编写插件</span></a>” 了解管理和编写插件的情况</p></li>
+<li><p>“<a class="reference internal" href="explanation/goodpractices.html#goodpractices"><span class="std std-ref">良好的集成实践</span></a>” 了解虚拟环境和测试布局的情况</p></li>
+</ul>
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><p>Check out additional pytest resources to help you customize tests for your unique workflow:</p>
+<ul class="simple">
+<li><p>“<a class="reference internal" href="how-to/usage.html#usage"><span class="std std-ref">如何调用 pytest</span></a>” for command line invocation examples</p></li>
+<li><p>“<a class="reference internal" href="how-to/existingtestsuite.html#existingtestsuite"><span class="std std-ref">如何将 pytest 与现有测试套件结合使用</span></a>” for working with preexisting tests</p></li>
+<li><p>“<a class="reference internal" href="how-to/mark.html#mark"><span class="std std-ref">如何用属性标记测试函数</span></a>” for information on the <code class="docutils literal notranslate"><span class="pre">pytest.mark</span></code> mechanism</p></li>
+<li><p>“<a class="reference internal" href="reference/fixtures.html#fixtures"><span class="std std-ref">Fixtures 参考</span></a>” for providing a functional baseline to your tests</p></li>
+<li><p>“<a class="reference internal" href="how-to/writing_plugins.html#plugins"><span class="std std-ref">编写插件</span></a>” for managing and writing plugins</p></li>
+<li><p>“<a class="reference internal" href="explanation/goodpractices.html#goodpractices"><span class="std std-ref">良好的集成实践</span></a>” for virtualenv and test layouts</p></li>
+</ul>
+</div></div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="how-to/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">操作指南</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">入门</a><ul>
+<li><a class="reference internal" href="#pytest">安装 <code class="docutils literal notranslate"><span class="pre">pytest</span></code></a></li>
+<li><a class="reference internal" href="#simpletest">创建你的第一个测试</a></li>
+<li><a class="reference internal" href="#id3">运行多个测试</a></li>
+<li><a class="reference internal" href="#id4">断言引发了某个异常</a></li>
+<li><a class="reference internal" href="#class">在一个类(class)中对多个测试进行分组</a></li>
+<li><a class="reference internal" href="#id5">为功能测试请求唯一的临时目录</a></li>
+<li><a class="reference internal" href="#id6">继续阅读</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

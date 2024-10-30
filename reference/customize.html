@@ -1,0 +1,764 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="退出码" href="exit-codes.html" /><link rel="prev" title="Fixtures 参考" href="fixtures.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/reference/customize.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>配置 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">入门</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how-to/index.html">操作指南</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">参考指南</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example/index.html">示例和自定义技巧</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../example/reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>配置<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<p><strong>Configuration</strong></p>
+<section id="id2">
+<h2>命令行选项和配置文件设置<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p><strong>Command line options and configuration file settings</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>您可以通过使用通用帮助选项获取关于命令行选项和 INI 风格配置文件中的值的帮助：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-h<span class="w">   </span><span class="c1"># 打印选项 _和_ 配置文件设置</span>
+</pre></div>
+</div>
+<p>这将显示已安装插件注册的命令行和配置文件设置。</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>You can get help on command line options and values in INI-style
+configurations files by using the general help option:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-h<span class="w">   </span><span class="c1"># prints options _and_ config file settings</span>
+</pre></div>
+</div>
+<p>This will display command line and configuration file settings
+which were registered by installed plugins.</p>
+</div></div>
+</section>
+<section id="config-file-formats">
+<span id="id3"></span><h2>配置文件格式<a class="headerlink" href="#config-file-formats" title="Link to this heading">¶</a></h2>
+<p><strong>Configuration file formats</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>许多 <a class="reference internal" href="reference.html#ini-options-ref"><span class="std std-ref">pytest 设置</span></a> 可以在 <em>配置文件</em> 中设置，按照约定，这些配置文件位于您代码库的根目录。</p>
+<p>以下是 pytest 支持的配置文件的快速示例：</p>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>Many <a class="reference internal" href="reference.html#ini-options-ref"><span class="std std-ref">pytest settings</span></a> can be set in a <em>configuration file</em>, which
+by convention resides in the root directory of your repository.</p>
+<p>A quick example of the configuration files supported by pytest:</p>
+</div></div>
+<section id="pytest-ini">
+<h3>pytest.ini<a class="headerlink" href="#pytest-ini" title="Link to this heading">¶</a></h3>
+<p><strong>pytest.ini</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> 文件优先于其他文件，即使是空的文件。</p>
+<p>另外，可以使用隐藏版本 <code class="docutils literal notranslate"><span class="pre">.pytest.ini</span></code>。</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># pytest.ini 或 .pytest.ini</span>
+<span class="k">[pytest]</span>
+<span class="na">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6.0</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-ra -q</span>
+<span class="na">testpaths</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">tests</span>
+<span class="w">    </span><span class="na">integration</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> files take precedence over other files, even when empty.</p>
+<p>Alternatively, the hidden version <code class="docutils literal notranslate"><span class="pre">.pytest.ini</span></code> can be used.</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># pytest.ini or .pytest.ini</span>
+<span class="k">[pytest]</span>
+<span class="na">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6.0</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-ra -q</span>
+<span class="na">testpaths</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">tests</span>
+<span class="w">    </span><span class="na">integration</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="pyproject-toml">
+<h3>pyproject.toml<a class="headerlink" href="#pyproject-toml" title="Link to this heading">¶</a></h3>
+<p><strong>pyproject.toml</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><div class="versionadded">
+<p><span class="versionmodified added">Added in version 6.0.</span></p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> 文件在包含 <code class="docutils literal notranslate"><span class="pre">tool.pytest.ini_options</span></code> 表时会被考虑用于配置。</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="c1"># pyproject.toml</span>
+<span class="k">[tool.pytest.ini_options]</span>
+<span class="n">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;6.0&quot;</span>
+<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-ra -q&quot;</span>
+<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;tests&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;integration&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>可能有人会疑问为何使用 <code class="docutils literal notranslate"><span class="pre">[tool.pytest.ini_options]</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">[tool.pytest]</span></code>，这与其他工具的情况不同。</p>
+<p>原因是 pytest 团队打算在未来充分利用丰富的 TOML 数据格式进行配置，因此保留 <code class="docutils literal notranslate"><span class="pre">[tool.pytest]</span></code> 表用于此目的。目前，<code class="docutils literal notranslate"><span class="pre">ini_options</span></code> 表被用作现有 <code class="docutils literal notranslate"><span class="pre">.ini</span></code> 配置系统与未来配置格式之间的桥梁。</p>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><div class="versionadded">
+<p><span class="versionmodified added">Added in version 6.0.</span></p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> are considered for configuration when they contain a <code class="docutils literal notranslate"><span class="pre">tool.pytest.ini_options</span></code> table.</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="c1"># pyproject.toml</span>
+<span class="k">[tool.pytest.ini_options]</span>
+<span class="n">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;6.0&quot;</span>
+<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-ra -q&quot;</span>
+<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;tests&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;integration&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>One might wonder why <code class="docutils literal notranslate"><span class="pre">[tool.pytest.ini_options]</span></code> instead of <code class="docutils literal notranslate"><span class="pre">[tool.pytest]</span></code> as is the
+case with other tools.</p>
+<p>The reason is that the pytest team intends to fully utilize the rich TOML data format
+for configuration in the future, reserving the <code class="docutils literal notranslate"><span class="pre">[tool.pytest]</span></code> table for that.
+The <code class="docutils literal notranslate"><span class="pre">ini_options</span></code> table is being used, for now, as a bridge between the existing
+<code class="docutils literal notranslate"><span class="pre">.ini</span></code> configuration system and the future configuration format.</p>
+</div>
+</div></div>
+</section>
+<section id="tox-ini">
+<h3>tox.ini<a class="headerlink" href="#tox-ini" title="Link to this heading">¶</a></h3>
+<p><strong>tox.ini</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> 文件是 <a class="reference external" href="https://tox.readthedocs.io">tox</a> 项目的配置文件，也可以用于保存 pytest 配置，只要它们包含 <code class="docutils literal notranslate"><span class="pre">[pytest]</span></code> 部分。</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># tox.ini</span>
+<span class="k">[pytest]</span>
+<span class="na">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6.0</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-ra -q</span>
+<span class="na">testpaths</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">tests</span>
+<span class="w">    </span><span class="na">integration</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> files are the configuration files of the <a class="reference external" href="https://tox.readthedocs.io">tox</a> project,
+and can also be used to hold pytest configuration if they have a <code class="docutils literal notranslate"><span class="pre">[pytest]</span></code> section.</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># tox.ini</span>
+<span class="k">[pytest]</span>
+<span class="na">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6.0</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-ra -q</span>
+<span class="na">testpaths</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">tests</span>
+<span class="w">    </span><span class="na">integration</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="setup-cfg">
+<h3>setup.cfg<a class="headerlink" href="#setup-cfg" title="Link to this heading">¶</a></h3>
+<p><strong>setup.cfg</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> 文件是通用配置文件，最初由 <code class="docutils literal notranslate"><span class="pre">distutils``（现已弃用）和</span> <span class="pre">:std:doc:`setuptools</span> <span class="pre">&lt;setuptools:userguide/declarative_config&gt;`</span> <span class="pre">使用，也可以用于保存</span> <span class="pre">pytest</span> <span class="pre">配置，只要它们包含</span> <span class="pre">``[tool:pytest]</span></code> 部分。</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># setup.cfg</span>
+<span class="k">[tool:pytest]</span>
+<span class="na">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6.0</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-ra -q</span>
+<span class="na">testpaths</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">tests</span>
+<span class="w">    </span><span class="na">integration</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>不建议使用 <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code>，除非用于非常简单的用例。<code class="docutils literal notranslate"><span class="pre">.cfg</span></code>
+文件使用与 <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> 和 <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> 不同的解析器，这可能导致难以追踪的问题。
+尽可能建议使用后者文件或 <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> 来保存您的
+pytest 配置。</p>
+</div>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> files are general purpose configuration files, used originally by <code class="docutils literal notranslate"><span class="pre">distutils</span></code> (now deprecated) and <a class="reference external" href="https://setuptools.pypa.io/en/stable/userguide/declarative_config.html" title="(in setuptools v75.3.0.post20241029)"><span class="xref std std-doc">setuptools</span></a>, and can also be used to hold pytest configuration
+if they have a <code class="docutils literal notranslate"><span class="pre">[tool:pytest]</span></code> section.</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># setup.cfg</span>
+<span class="k">[tool:pytest]</span>
+<span class="na">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6.0</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-ra -q</span>
+<span class="na">testpaths</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">tests</span>
+<span class="w">    </span><span class="na">integration</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Usage of <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> is not recommended unless for very simple use cases. <code class="docutils literal notranslate"><span class="pre">.cfg</span></code>
+files use a different parser than <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> and <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> which might cause hard to track
+down problems.
+When possible, it is recommended to use the latter files, or <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, to hold your
+pytest configuration.</p>
+</div>
+</div></div>
+</section>
+</section>
+<section id="rootdir-configfile">
+<span id="configfiles"></span><span id="rootdir"></span><h2>初始化：确定 rootdir 和 configfile<a class="headerlink" href="#rootdir-configfile" title="Link to this heading">¶</a></h2>
+<p><strong>Initialization: determining rootdir and configfile</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><p>pytest 为每次测试运行确定一个 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>，这取决于命令行参数（指定的测试文件、路径）以及配置文件的存在。确定的 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> 和 <code class="docutils literal notranslate"><span class="pre">configfile</span></code> 会在启动时作为 pytest 头部的一部分打印出来。</p>
+<p>以下是 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 使用 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> 的总结：</p>
+<ul class="simple">
+<li><p>在收集期间构造 <em>nodeids</em>；每个测试会被分配一个唯一的 <em>nodeid</em>，该 <em>nodeid</em> 以 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> 为根，考虑完整路径、类名、函数名和参数化（如有）。</p></li>
+<li><p>被插件用作存储项目/测试运行特定信息的稳定位置；例如，内部的 <a class="reference internal" href="../how-to/cache.html#cache"><span class="std std-ref">cache</span></a> 插件会在 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> 中创建一个 <code class="docutils literal notranslate"><span class="pre">.pytest_cache</span></code> 子目录以存储其跨测试运行状态。</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">rootdir</span></code> <strong>不</strong> 用于修改 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>/<code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> 或影响模块的导入方式。有关更多细节，请参见 <a class="reference internal" href="../explanation/pythonpath.html#pythonpath"><span class="std std-ref">pytest 导入机制和 sys.path / PYTHONPATH</span></a>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">--rootdir=path</span></code> 命令行选项可用于强制指定一个特定目录。
+请注意，与其他命令行选项不同，<code class="docutils literal notranslate"><span class="pre">--rootdir</span></code> 不能与 <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> 中的 <a class="reference internal" href="reference.html#confval-0"><code class="xref std std-confval docutils literal notranslate"><span class="pre">addopts</span></code></a> 一起使用，因为 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> 已经用于 <em>查找</em> <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code>。</p>
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><p>pytest determines a <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> for each test run which depends on
+the command line arguments (specified test files, paths) and on
+the existence of configuration files.  The determined <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> and <code class="docutils literal notranslate"><span class="pre">configfile</span></code> are
+printed as part of the pytest header during startup.</p>
+<p>Here’s a summary what <code class="docutils literal notranslate"><span class="pre">pytest</span></code> uses <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> for:</p>
+<ul class="simple">
+<li><p>Construct <em>nodeids</em> during collection; each test is assigned</p></li>
+</ul>
+<p>a unique <em>nodeid</em> which is rooted at the <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> and takes into account
+the full path, class name, function name and parametrization (if any).</p>
+<ul class="simple">
+<li><p>Is used by plugins as a stable location to store project/test run specific information;</p></li>
+</ul>
+<p>for example, the internal <a class="reference internal" href="../how-to/cache.html#cache"><span class="std std-ref">cache</span></a> plugin creates a <code class="docutils literal notranslate"><span class="pre">.pytest_cache</span></code> subdirectory
+in <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> to store its cross-test run state.</p>
+<p><code class="docutils literal notranslate"><span class="pre">rootdir</span></code> is <strong>NOT</strong> used to modify <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>/<code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> or
+influence how modules are imported. See <a class="reference internal" href="../explanation/pythonpath.html#pythonpath"><span class="std std-ref">pytest 导入机制和 sys.path / PYTHONPATH</span></a> for more details.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">--rootdir=path</span></code> command-line option can be used to force a specific directory.
+Note that contrary to other command-line options, <code class="docutils literal notranslate"><span class="pre">--rootdir</span></code> cannot be used with
+<a class="reference internal" href="reference.html#confval-0"><code class="xref std std-confval docutils literal notranslate"><span class="pre">addopts</span></code></a> inside <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> because the <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> is used to <em>find</em> <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code>
+already.</p>
+</div></div>
+<section id="id4">
+<h3>查找 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code><a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p><strong>Finding the ``rootdir``</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-7-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-7-7-0" name="7-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-7-7-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-1" name="7-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-7-7-0" class="sphinx-tabs-panel" id="panel-7-7-0" name="7-0" role="tabpanel" tabindex="0"><p>以下是从 <code class="docutils literal notranslate"><span class="pre">args</span></code> 中查找 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> 的算法：</p>
+<ul class="simple">
+<li><p>如果命令行中传入了 <code class="docutils literal notranslate"><span class="pre">-c</span></code>，则将其用作配置文件，并将其目录作为 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>。</p></li>
+<li><p>确定指定的 <code class="docutils literal notranslate"><span class="pre">args</span></code> 的共同祖先目录，这些路径被识别为文件系统中存在的路径。如果没有找到这样的路径，则共同祖先目录设置为当前工作目录。</p></li>
+<li><p>在祖先目录及其上层查找 <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code>、<code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>、<code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> 和 <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> 文件。如果匹配到一个文件，它将成为 <code class="docutils literal notranslate"><span class="pre">configfile</span></code>，其目录将成为 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>。</p></li>
+<li><p>如果未找到配置文件，则从共同祖先目录向上查找 <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> 来确定 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>。</p></li>
+<li><p>如果未找到 <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>，则在每个指定的 <code class="docutils literal notranslate"><span class="pre">args</span></code> 及其上层查找 <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code>、<code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>、<code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> 和 <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code>。如果匹配到一个文件，它将成为 <code class="docutils literal notranslate"><span class="pre">configfile</span></code>，其目录将成为 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>。</p></li>
+<li><p>如果未找到 <code class="docutils literal notranslate"><span class="pre">configfile</span></code> 且未传递配置参数，则使用已经确定的共同祖先作为根目录。这允许在不属于某个包且没有特定配置文件的结构中使用 pytest。</p></li>
+</ul>
+<p>如果没有给出 <code class="docutils literal notranslate"><span class="pre">args</span></code>，pytest 将在当前工作目录下收集测试，并从那里开始确定 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>。</p>
+<p>文件仅在满足以下条件时才会匹配为配置：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code>：将始终匹配并优先，即使是空的。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>：包含 <code class="docutils literal notranslate"><span class="pre">[tool.pytest.ini_options]</span></code> 表。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tox.ini</span></code>：包含 <code class="docutils literal notranslate"><span class="pre">[pytest]</span></code> 部分。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code>：包含 <code class="docutils literal notranslate"><span class="pre">[tool:pytest]</span></code> 部分。</p></li>
+</ul>
+<p>最后，如果没有找到其他匹配项，则 <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> 文件将被视为 <code class="docutils literal notranslate"><span class="pre">configfile</span></code>，即使它不包含 <code class="docutils literal notranslate"><span class="pre">[tool.pytest.ini_options]</span></code> 表（这一点是在 <code class="docutils literal notranslate"><span class="pre">8.1</span></code> 中添加的）。</p>
+<p>文件将按照上述顺序考虑。来自多个 <code class="docutils literal notranslate"><span class="pre">configfile</span></code> 候选的选项永远不会合并 - 第一个匹配的胜出。</p>
+<p>配置文件还确定 <code class="docutils literal notranslate"><span class="pre">rootpath</span></code> 的值。</p>
+<p><a class="reference internal" href="reference.html#pytest.Config" title="pytest.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a> 对象（可以通过钩子或 <a class="reference internal" href="reference.html#std-fixture-pytestconfig"><code class="xref std std-fixture docutils literal notranslate"><span class="pre">pytestconfig</span></code></a> 夹具访问）将随后携带这些属性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="reference.html#pytest.Config.rootpath" title="pytest.Config.rootpath"><code class="xref py py-attr docutils literal notranslate"><span class="pre">config.rootpath</span></code></a>：确定的根目录，保证存在。它用作构建测试地址（“nodeids”）的参考目录，也可以被插件用于存储每次测试运行的信息。</p></li>
+<li><p><a class="reference internal" href="reference.html#pytest.Config.inipath" title="pytest.Config.inipath"><code class="xref py py-attr docutils literal notranslate"><span class="pre">config.inipath</span></code></a>：确定的 <code class="docutils literal notranslate"><span class="pre">configfile</span></code>，可能为 <code class="docutils literal notranslate"><span class="pre">None``（出于历史原因命名为</span> <span class="pre">``inipath</span></code>）。</p></li>
+</ul>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 6.1: </span><code class="docutils literal notranslate"><span class="pre">config.rootpath</span></code> 和 <code class="docutils literal notranslate"><span class="pre">config.inipath</span></code> 属性。它们是较旧的 <code class="docutils literal notranslate"><span class="pre">config.rootdir</span></code> 和 <code class="docutils literal notranslate"><span class="pre">config.inifile</span></code> 的 <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a> 版本，后者的类型为 <code class="docutils literal notranslate"><span class="pre">py.path.local</span></code>，并仍然存在以保持向后兼容。</p>
+</div>
+<p>示例：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>path/to/testdir<span class="w"> </span>path/other/
+</pre></div>
+</div>
+<p>将确定共同祖先为 <code class="docutils literal notranslate"><span class="pre">path</span></code>，然后按以下方式检查配置文件：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># 首先查找 pytest.ini 文件
+path/pytest.ini
+path/pyproject.toml  # 必须包含 [tool.pytest.ini_options] 表以匹配
+path/tox.ini         # 必须包含 [pytest] 部分以匹配
+path/setup.cfg       # 必须包含 [tool:pytest] 部分以匹配
+pytest.ini
+... # 一直到根目录
+
+# 现在查找 setup.py
+path/setup.py
+setup.py
+... # 一直到根目录
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>自定义 pytest 插件命令行参数可能包含路径，如
+<code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--log-output</span> <span class="pre">../../test.log</span> <span class="pre">args</span></code>。在这种情况下，<code class="docutils literal notranslate"><span class="pre">args</span></code> 是强制性的，
+否则 pytest 会使用 test.log 的文件夹来确定 rootdir
+（另请参见 <a class="reference external" href="https://github.com/pytest-dev/pytest/issues/1435">#1435</a>）。
+也可以使用点 <code class="docutils literal notranslate"><span class="pre">.</span></code> 来引用当前工作目录。</p>
+</div>
+</div><div aria-labelledby="tab-7-7-1" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-1" name="7-1" role="tabpanel" tabindex="0"><p>Here is the algorithm which finds the rootdir from <code class="docutils literal notranslate"><span class="pre">args</span></code>:</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">-c</span></code> is passed in the command-line, use that as configuration file, and its directory as <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>.</p></li>
+<li><p>Determine the common ancestor directory for the specified <code class="docutils literal notranslate"><span class="pre">args</span></code> that are recognised as paths that exist in the file system. If no such paths are found, the common ancestor directory is set to the current working directory.</p></li>
+<li><p>Look for <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code>, <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code>, and <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> files in the ancestor directory and upwards.  If one is matched, it becomes the <code class="docutils literal notranslate"><span class="pre">configfile</span></code> and its directory becomes the <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>.</p></li>
+<li><p>If no configuration file was found, look for <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> upwards from the common ancestor directory to determine the <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>.</p></li>
+<li><p>If no <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> was found, look for <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code>, <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code>, and <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> in each of the specified <code class="docutils literal notranslate"><span class="pre">args</span></code> and upwards. If one is matched, it becomes the <code class="docutils literal notranslate"><span class="pre">configfile</span></code> and its directory becomes the <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>.</p></li>
+<li><p>If no <code class="docutils literal notranslate"><span class="pre">configfile</span></code> was found and no configuration argument is passed, use the already determined common ancestor as root directory. This allows the use of pytest in structures that are not part of a package and don’t have any particular configuration file.</p></li>
+</ul>
+<p>If no <code class="docutils literal notranslate"><span class="pre">args</span></code> are given, pytest collects test below the current working
+directory and also starts determining the <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> from there.</p>
+<p>Files will only be matched for configuration if:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code>: will always match and take precedence, even if empty.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>: contains a <code class="docutils literal notranslate"><span class="pre">[tool.pytest.ini_options]</span></code> table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tox.ini</span></code>: contains a <code class="docutils literal notranslate"><span class="pre">[pytest]</span></code> section.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code>: contains a <code class="docutils literal notranslate"><span class="pre">[tool:pytest]</span></code> section.</p></li>
+</ul>
+<p>Finally, a <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file will be considered the <code class="docutils literal notranslate"><span class="pre">configfile</span></code> if no other match was found, in this case
+even if it does not contain a <code class="docutils literal notranslate"><span class="pre">[tool.pytest.ini_options]</span></code> table (this was added in <code class="docutils literal notranslate"><span class="pre">8.1</span></code>).</p>
+<p>The files are considered in the order above. Options from multiple <code class="docutils literal notranslate"><span class="pre">configfiles</span></code> candidates
+are never merged - the first match wins.</p>
+<p>The configuration file also determines the value of the <code class="docutils literal notranslate"><span class="pre">rootpath</span></code>.</p>
+<p>The <a class="reference internal" href="reference.html#pytest.Config" title="pytest.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a> object (accessible via hooks or through the <a class="reference internal" href="reference.html#std-fixture-pytestconfig"><code class="xref std std-fixture docutils literal notranslate"><span class="pre">pytestconfig</span></code></a> fixture) will subsequently carry these attributes:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="reference.html#pytest.Config.rootpath" title="pytest.Config.rootpath"><code class="xref py py-attr docutils literal notranslate"><span class="pre">config.rootpath</span></code></a>: the determined root directory, guaranteed to exist. It is used as a reference directory for constructing test addresses (“nodeids”) and can be used also by plugins for storing per-testrun information.</p></li>
+<li><p><a class="reference internal" href="reference.html#pytest.Config.inipath" title="pytest.Config.inipath"><code class="xref py py-attr docutils literal notranslate"><span class="pre">config.inipath</span></code></a>: the determined <code class="docutils literal notranslate"><span class="pre">configfile</span></code>, may be <code class="docutils literal notranslate"><span class="pre">None</span></code> (it is named <code class="docutils literal notranslate"><span class="pre">inipath</span></code> for historical reasons).</p></li>
+</ul>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 6.1: </span>The <code class="docutils literal notranslate"><span class="pre">config.rootpath</span></code> and <code class="docutils literal notranslate"><span class="pre">config.inipath</span></code> properties. They are <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a> versions of the older <code class="docutils literal notranslate"><span class="pre">config.rootdir</span></code> and <code class="docutils literal notranslate"><span class="pre">config.inifile</span></code>, which have type <code class="docutils literal notranslate"><span class="pre">py.path.local</span></code>, and still exist for backward compatibility.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>path/to/testdir<span class="w"> </span>path/other/
+</pre></div>
+</div>
+<p>will determine the common ancestor as <code class="docutils literal notranslate"><span class="pre">path</span></code> and then
+check for configuration files as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># first look for pytest.ini files
+path/pytest.ini
+path/pyproject.toml  # must contain a [tool.pytest.ini_options] table to match
+path/tox.ini         # must contain [pytest] section to match
+path/setup.cfg       # must contain [tool:pytest] section to match
+pytest.ini
+... # all the way up to the root
+
+# now look for setup.py
+path/setup.py
+setup.py
+... # all the way up to the root
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Custom pytest plugin commandline arguments may include a path, as in
+<code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--log-output</span> <span class="pre">../../test.log</span> <span class="pre">args</span></code>. Then <code class="docutils literal notranslate"><span class="pre">args</span></code> is mandatory,
+otherwise pytest uses the folder of test.log for rootdir determination
+(see also <a class="reference external" href="https://github.com/pytest-dev/pytest/issues/1435">#1435</a>).
+A dot <code class="docutils literal notranslate"><span class="pre">.</span></code> for referencing to the current working directory is also
+possible.</p>
+</div>
+</div></div>
+</section>
+</section>
+<section id="adding-default-options">
+<span id="how-to-change-command-line-options-defaults"></span><span id="id5"></span><h2>内置配置文件选项<a class="headerlink" href="#adding-default-options" title="Link to this heading">¶</a></h2>
+<p><strong>Builtin configuration file options</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-8-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-8-8-0" name="8-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-8-8-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-8-8-1" name="8-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-8-8-0" class="sphinx-tabs-panel" id="panel-8-8-0" name="8-0" role="tabpanel" tabindex="0"><p>有关完整的选项列表，请参阅 <a class="reference internal" href="reference.html#ini-options-ref"><span class="std std-ref">参考文档</span></a>。</p>
+</div><div aria-labelledby="tab-8-8-1" class="sphinx-tabs-panel" hidden="true" id="panel-8-8-1" name="8-1" role="tabpanel" tabindex="0"><p>For the full list of options consult the <a class="reference internal" href="reference.html#ini-options-ref"><span class="std std-ref">reference documentation</span></a>.</p>
+</div></div>
+</section>
+<section id="id6">
+<h2>语法高亮主题自定义<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<p><strong>Syntax highlighting theme customization</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-9-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-9-9-0" name="9-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-9-9-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-9-9-1" name="9-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-9-9-0" class="sphinx-tabs-panel" id="panel-9-9-0" name="9-0" role="tabpanel" tabindex="0"><p>pytest 使用的语法高亮主题可以通过两个环境变量进行自定义：</p>
+<ul class="simple">
+<li><p><span class="target" id="index-0"></span><a class="reference internal" href="reference.html#envvar-8"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTEST_THEME</span></code></a> 设置要使用的 <a class="reference external" href="https://pygments.org/docs/styles/">pygment style</a> 。</p></li>
+<li><p><span class="target" id="index-1"></span><a class="reference internal" href="reference.html#envvar-9"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTEST_THEME_MODE</span></code></a> 将此样式设置为 <em>light</em> 或 <em>dark</em>。</p></li>
+</ul>
+</div><div aria-labelledby="tab-9-9-1" class="sphinx-tabs-panel" hidden="true" id="panel-9-9-1" name="9-1" role="tabpanel" tabindex="0"><p>The syntax highlighting themes used by pytest can be customized using two environment variables:</p>
+<ul class="simple">
+<li><p><span class="target" id="index-2"></span><a class="reference internal" href="reference.html#envvar-8"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTEST_THEME</span></code></a> sets a <a class="reference external" href="https://pygments.org/docs/styles/">pygment style</a> to use.</p></li>
+<li><p><span class="target" id="index-3"></span><a class="reference internal" href="reference.html#envvar-9"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTEST_THEME_MODE</span></code></a> sets this style to <em>light</em> or <em>dark</em>.</p></li>
+</ul>
+</div></div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="exit-codes.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">退出码</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="fixtures.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Fixtures 参考</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">配置</a><ul>
+<li><a class="reference internal" href="#id2">命令行选项和配置文件设置</a></li>
+<li><a class="reference internal" href="#config-file-formats">配置文件格式</a><ul>
+<li><a class="reference internal" href="#pytest-ini">pytest.ini</a></li>
+<li><a class="reference internal" href="#pyproject-toml">pyproject.toml</a></li>
+<li><a class="reference internal" href="#tox-ini">tox.ini</a></li>
+<li><a class="reference internal" href="#setup-cfg">setup.cfg</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rootdir-configfile">初始化：确定 rootdir 和 configfile</a><ul>
+<li><a class="reference internal" href="#id4">查找 <code class="docutils literal notranslate"><span class="pre">rootdir</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adding-default-options">内置配置文件选项</a></li>
+<li><a class="reference internal" href="#id6">语法高亮主题自定义</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

@@ -1,0 +1,532 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="编写插件" href="writing_plugins.html" /><link rel="prev" title="如何使用 skip 和 xfail 处理无法成功的测试" href="skipping.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/how-to/plugins.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>如何安装和使用插件 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">入门</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">操作指南</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example/index.html">示例和自定义技巧</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../example/reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="using-plugins">
+<span id="extplugins"></span><span id="external-plugins"></span><span id="id1"></span><h1>如何安装和使用插件<a class="headerlink" href="#using-plugins" title="Link to this heading">¶</a></h1>
+<p><strong>How to install and use plugins</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>本节介绍了安装和使用第三方插件的内容。要编写自己的插件，请参阅 <a class="reference internal" href="writing_plugins.html#writing-plugins"><span class="std std-ref">编写插件</span></a>。</p>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">pip</span></code> 轻松安装第三方插件：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pytest-NAME
+pip<span class="w"> </span>uninstall<span class="w"> </span>pytest-NAME
+</pre></div>
+</div>
+<p>如果插件已安装，<code class="docutils literal notranslate"><span class="pre">pytest</span></code> 会自动找到并集成它，无需手动激活。</p>
+<p>以下是一些流行插件的简短注释列表：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-django">pytest-django</a>：为 <a class="reference external" href="https://docs.djangoproject.com/">django</a> 应用程序编写测试，并集成 pytest。</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-twisted">pytest-twisted</a>：为 <a class="reference external" href="https://twistedmatrix.com/">twisted</a> 应用程序编写测试，启动反应器并处理测试函数中的延迟。</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-cov">pytest-cov</a>：提供测试覆盖率报告，兼容分布式测试。</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-xdist">pytest-xdist</a>：分发测试到多个 CPU 和远程主机，支持分箱模式以应对段错误，并可在文件变更时自动重跑失败测试。</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-instafail">pytest-instafail</a>：在测试运行时即时报告失败。</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-bdd">pytest-bdd</a>：使用行为驱动的测试编写测试。</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-timeout">pytest-timeout</a>：根据函数标记或全局定义设置测试超时时间。</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-pep8">pytest-pep8</a>：提供 <code class="docutils literal notranslate"><span class="pre">--pep8</span></code> 选项以启用 PEP8 合规性检查。</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-flakes">pytest-flakes</a>：使用 pyflakes 检查源代码。</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/allure-pytest">allure-pytest</a>：通过 <a class="reference external" href="https://github.com/allure-framework/">allure-framework</a> 报告测试结果。</p></li>
+</ul>
+<p>要查看所有插件的完整列表及其在不同 pytest 和 Python 版本下的最新测试状态，请访问 <a class="reference internal" href="../reference/plugin_list.html#plugin-list"><span class="std std-ref">Pytest 插件列表</span></a>。您还可以通过 <a class="reference external" href="https://pypi.org/search/?q=pytest-">pytest- pypi.org search</a> 发现更多插件。</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>This section talks about installing and using third party plugins.
+For writing your own plugins, please refer to <a class="reference internal" href="writing_plugins.html#writing-plugins"><span class="std std-ref">编写插件</span></a>.</p>
+<p>Installing a third party plugin can be easily done with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pytest-NAME
+pip<span class="w"> </span>uninstall<span class="w"> </span>pytest-NAME
+</pre></div>
+</div>
+<p>If a plugin is installed, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> automatically finds and integrates it, there is no need to activate it.</p>
+<p>Here is a little annotated list for some popular plugins:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-django">pytest-django</a>: write tests for <a class="reference external" href="https://docs.djangoproject.com/">django</a> apps, using pytest integration.</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-twisted">pytest-twisted</a>: write tests for <a class="reference external" href="https://twistedmatrix.com/">twisted</a> apps, starting a reactor and processing deferreds from test functions.</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-cov">pytest-cov</a>: coverage reporting, compatible with distributed testing</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-xdist">pytest-xdist</a>: to distribute tests to CPUs and remote hosts, to run in boxed mode which allows to survive segmentation faults, to run in looponfailing mode, automatically re-running failing tests on file changes.</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-instafail">pytest-instafail</a>: to report failures while the test run is happening.</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-bdd">pytest-bdd</a>: to write tests using behaviour-driven testing.</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-timeout">pytest-timeout</a>: to timeout tests based on function marks or global definitions.</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-pep8">pytest-pep8</a>: a <code class="docutils literal notranslate"><span class="pre">--pep8</span></code> option to enable PEP8 compliance checking.</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-flakes">pytest-flakes</a>: check source code with pyflakes.</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/allure-pytest">allure-pytest</a>: report test results via <a class="reference external" href="https://github.com/allure-framework/">allure-framework</a>.</p></li>
+</ul>
+<p>To see a complete list of all plugins with their latest testing status against different pytest and Python versions, please visit <a class="reference internal" href="../reference/plugin_list.html#plugin-list"><span class="std std-ref">Pytest 插件列表</span></a>.</p>
+<p>You may also discover more plugins through a <a class="reference external" href="https://pypi.org/search/?q=pytest-">pytest- pypi.org search</a>.</p>
+</div></div>
+<section id="conftest">
+<span id="available-installable-plugins"></span><h2>在测试模块或 conftest 文件中请求/加载插件<a class="headerlink" href="#conftest" title="Link to this heading">¶</a></h2>
+<p><strong>Requiring/Loading plugins in a test module or conftest file</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>可以在测试模块或 <code class="docutils literal notranslate"><span class="pre">conftest</span></code> 文件中使用 <a class="reference internal" href="../reference/reference.html#globalvar-2"><code class="xref std std-globalvar docutils literal notranslate"><span class="pre">pytest_plugins</span></code></a> 来要求插件：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pytest_plugins</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;myapp.testsupport.myplugin&quot;</span><span class="p">,)</span>
+</pre></div>
+</div>
+<p>当加载该测试模块或 <code class="docutils literal notranslate"><span class="pre">conftest</span></code> 插件时，指定的插件也会被加载。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>在非根目录的 <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> 文件中使用 <code class="docutils literal notranslate"><span class="pre">pytest_plugins</span></code> 变量来要求插件的做法已被弃用。请参阅编写插件部分的
+<span class="xref std std-ref">详细解释</span>。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">pytest_plugins</span></code> 名称已被保留，不应将其用作自定义插件模块的名称。</p>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>You can require plugins in a test module or a conftest file using <a class="reference internal" href="../reference/reference.html#globalvar-2"><code class="xref std std-globalvar docutils literal notranslate"><span class="pre">pytest_plugins</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pytest_plugins</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;myapp.testsupport.myplugin&quot;</span><span class="p">,)</span>
+</pre></div>
+</div>
+<p>When the test module or conftest plugin is loaded the specified plugins
+will be loaded as well.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requiring plugins using a <code class="docutils literal notranslate"><span class="pre">pytest_plugins</span></code> variable in non-root
+<code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> files is deprecated. See
+<span class="xref std std-ref">full explanation</span>
+in the Writing plugins section.</p>
+</div>
+<p>The name <code class="docutils literal notranslate"><span class="pre">pytest_plugins</span></code> is reserved and should not be used as a
+name for a custom plugin module.</p>
+</div></div>
+</section>
+<section id="findpluginname">
+<span id="id5"></span><h2>找出哪些插件处于活动状态<a class="headerlink" href="#findpluginname" title="Link to this heading">¶</a></h2>
+<p><strong>Finding out which plugins are active</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p>如果您想查看环境中哪些插件是活跃的，可以输入：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--trace-config
+</pre></div>
+</div>
+<p>这将显示一个扩展的测试头，其中列出了激活的插件及其名称。同时还会在加载时打印出本地插件，也就是 <a class="reference internal" href="writing_plugins.html#conftest-py-plugins"><span class="std std-ref">conftest.py</span></a> 文件。</p>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p>If you want to find out which plugins are active in your
+environment you can type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--trace-config
+</pre></div>
+</div>
+<p>and will get an extended test header which shows activated plugins
+and their names. It will also print local plugins aka
+<a class="reference internal" href="writing_plugins.html#conftest-py-plugins"><span class="std std-ref">conftest.py</span></a> files when they are loaded.</p>
+</div></div>
+</section>
+<section id="cmdunregister">
+<span id="id6"></span><h2>按名称停用/取消注册插件<a class="headerlink" href="#cmdunregister" title="Link to this heading">¶</a></h2>
+<p><strong>Deactivating / unregistering a plugin by name</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p>您可以阻止插件加载或注销它们：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-p<span class="w"> </span>no:NAME
+</pre></div>
+</div>
+<p>这表示任何后续激活/加载指定插件的尝试都将无效。</p>
+<p>如果您想在项目中无条件禁用某个插件，可以将以下选项添加到 <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> 文件中：</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-p no:NAME</span>
+</pre></div>
+</div>
+<p>或者，您也可以仅在特定环境中禁用插件（例如在 CI 服务器中），为此可以将环境变量 <code class="docutils literal notranslate"><span class="pre">PYTEST_ADDOPTS</span></code> 设置为 <code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">no:name</span></code>。</p>
+<p>关于如何获取插件名称，请参见 <a class="reference internal" href="#findpluginname"><span class="std std-ref">找出哪些插件处于活动状态</span></a>。</p>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>You can prevent plugins from loading or unregister them:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-p<span class="w"> </span>no:NAME
+</pre></div>
+</div>
+<p>This means that any subsequent try to activate/load the named
+plugin will not work.</p>
+<p>If you want to unconditionally disable a plugin for a project, you can add
+this option to your <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> file:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-p no:NAME</span>
+</pre></div>
+</div>
+<p>Alternatively to disable it only in certain environments (for example in a
+CI server), you can set <code class="docutils literal notranslate"><span class="pre">PYTEST_ADDOPTS</span></code> environment variable to
+<code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">no:name</span></code>.</p>
+<p>See <a class="reference internal" href="#findpluginname"><span class="std std-ref">找出哪些插件处于活动状态</span></a> for how to obtain the name of a plugin.</p>
+</div></div>
+<span class="target" id="builtin-plugins"></span></section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="writing_plugins.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">编写插件</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="skipping.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">如何使用 skip 和 xfail 处理无法成功的测试</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">如何安装和使用插件</a><ul>
+<li><a class="reference internal" href="#conftest">在测试模块或 conftest 文件中请求/加载插件</a></li>
+<li><a class="reference internal" href="#findpluginname">找出哪些插件处于活动状态</a></li>
+<li><a class="reference internal" href="#cmdunregister">按名称停用/取消注册插件</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

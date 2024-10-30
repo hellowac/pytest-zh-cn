@@ -1,0 +1,783 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="如何实现 xunit 样式的设置" href="xunit_setup.html" /><link rel="prev" title="如何将 pytest 与现有测试套件结合使用" href="existingtestsuite.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/how-to/unittest.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>如何在 pytest 中使用基于 unittest 的测试 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">入门</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">操作指南</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example/index.html">示例和自定义技巧</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../example/reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="pytest-unittest">
+<span id="unittest"></span><span id="unittest-testcase"></span><h1>如何在 pytest 中使用基于 unittest 的测试<a class="headerlink" href="#pytest-unittest" title="Link to this heading">¶</a></h1>
+<p><strong>How to use</strong> <code class="docutils literal notranslate"><span class="pre">unittest</span></code> <strong>-based tests with pytest</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> 支持开箱即用地运行基于 Python <code class="docutils literal notranslate"><span class="pre">unittest</span></code> 的测试。它旨在利用现有的基于 <code class="docutils literal notranslate"><span class="pre">unittest</span></code> 的测试套件，使用 pytest 作为测试运行器，并逐步适应测试套件，以充分利用 pytest 的特性。</p>
+<p>要使用 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 运行现有的 <code class="docutils literal notranslate"><span class="pre">unittest</span></code> 风格测试套件，请输入：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests
+</pre></div>
+</div>
+<p>pytest 将自动收集 <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> 子类及其在 <code class="docutils literal notranslate"><span class="pre">test_*.py</span></code> 或 <code class="docutils literal notranslate"><span class="pre">*_test.py</span></code> 文件中的 <code class="docutils literal notranslate"><span class="pre">test</span></code> 方法。</p>
+<p>几乎所有的 <code class="docutils literal notranslate"><span class="pre">unittest</span></code> 特性都得到支持：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;unittest.skip</span></code> 风格的装饰器；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setUp/tearDown</span></code>；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setUpClass/tearDownClass</span></code>；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setUpModule/tearDownModule</span></code>；</p></li>
+</ul>
+<p>此外，<a class="reference external" href="https://docs.python.org/3/library/unittest.html#subtests" title="(in Python v3.13)"><span class="xref std std-ref">subtests</span></a> 通过 <a class="reference external" href="https://github.com/pytest-dev/pytest-subtests">pytest-subtests</a> 插件得到支持。</p>
+<p>到目前为止，pytest 不支持以下功能：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/unittest.html#load-tests-protocol">load_tests protocol</a> ;</p></li>
+</ul>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> supports running Python <code class="docutils literal notranslate"><span class="pre">unittest</span></code>-based tests out of the box.
+It’s meant for leveraging existing <code class="docutils literal notranslate"><span class="pre">unittest</span></code>-based test suites
+to use pytest as a test runner and also allow to incrementally adapt
+the test suite to take full advantage of pytest’s features.</p>
+<p>To run an existing <code class="docutils literal notranslate"><span class="pre">unittest</span></code>-style test suite using <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests
+</pre></div>
+</div>
+<p>pytest will automatically collect <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> subclasses and
+their <code class="docutils literal notranslate"><span class="pre">test</span></code> methods in <code class="docutils literal notranslate"><span class="pre">test_*.py</span></code> or <code class="docutils literal notranslate"><span class="pre">*_test.py</span></code> files.</p>
+<p>Almost all <code class="docutils literal notranslate"><span class="pre">unittest</span></code> features are supported:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;unittest.skip</span></code> style decorators;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setUp/tearDown</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setUpClass/tearDownClass</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setUpModule/tearDownModule</span></code>;</p></li>
+</ul>
+<p>Additionally, <a class="reference external" href="https://docs.python.org/3/library/unittest.html#subtests" title="(in Python v3.13)"><span class="xref std std-ref">subtests</span></a> are supported by the
+<a class="reference external" href="https://github.com/pytest-dev/pytest-subtests">pytest-subtests</a> plugin.</p>
+<p>Up to this point pytest does not have support for the following features:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/unittest.html#load-tests-protocol">load_tests protocol</a> ;</p></li>
+</ul>
+</div></div>
+<section id="id1">
+<h2>开箱即用的优势<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p><strong>Benefits out of the box</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>通过使用 pytest 运行测试套件，您可以利用几个功能，在大多数情况下无需修改现有代码：</p>
+<ul class="simple">
+<li><p>获取 <a class="reference internal" href="../example/reportingdemo.html#tbreportdemo"><span class="std std-ref">更有信息量的回溯</span></a>；</p></li>
+<li><p>捕获 <a class="reference internal" href="capture-stdout-stderr.html#captures"><span class="std std-ref">stdout 和 stderr</span></a>；</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">-k</span></code> 和 <code class="docutils literal notranslate"><span class="pre">-m</span></code> 标志的 <a class="reference internal" href="usage.html#select-tests"><span class="std std-ref">测试选择选项</span></a>；</p></li>
+<li><p><a class="reference internal" href="failures.html#maxfail"><span class="std std-ref">第一次（或 N 次）失败后停止</span></a>；</p></li>
+<li><p>用于调试测试失败的 <a class="reference internal" href="failures.html#pdb-option"><span class="std std-ref">–pdb</span></a> 命令行选项</p></li>
+</ul>
+<p>（见下文的 <a class="reference internal" href="#pdb-unittest-note"><span class="std std-ref">note</span></a>）；
+* 使用 <a class="reference external" href="https://pypi.org/project/pytest-xdist">pytest-xdist</a> 插件将测试分发到多个 CPU；
+* 使用 <a class="reference internal" href="assert.html#assert"><span class="std std-ref">普通断言语句</span></a> 代替 <code class="docutils literal notranslate"><span class="pre">self.assert*</span></code> 函数
+（ <a class="reference external" href="https://pypi.org/project/unittest2pytest">unittest2pytest</a> 在这方面非常有帮助）；</p>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>By running your test suite with pytest you can make use of several features,
+in most cases without having to modify existing code:</p>
+<ul class="simple">
+<li><p>Obtain <a class="reference internal" href="../example/reportingdemo.html#tbreportdemo"><span class="std std-ref">more informative tracebacks</span></a>;</p></li>
+<li><p><a class="reference internal" href="capture-stdout-stderr.html#captures"><span class="std std-ref">stdout and stderr</span></a> capturing;</p></li>
+<li><p><a class="reference internal" href="usage.html#select-tests"><span class="std std-ref">Test selection options</span></a> using <code class="docutils literal notranslate"><span class="pre">-k</span></code> and <code class="docutils literal notranslate"><span class="pre">-m</span></code> flags;</p></li>
+<li><p><a class="reference internal" href="failures.html#maxfail"><span class="std std-ref">第一次（或 N 次）失败后停止</span></a>;</p></li>
+<li><p><a class="reference internal" href="failures.html#pdb-option"><span class="std std-ref">–pdb</span></a> command-line option for debugging on test failures</p></li>
+</ul>
+<p>(see <a class="reference internal" href="#pdb-unittest-note"><span class="std std-ref">note</span></a> below);
+* Distribute tests to multiple CPUs using the <a class="reference external" href="https://pypi.org/project/pytest-xdist">pytest-xdist</a> plugin;
+* Use <a class="reference internal" href="assert.html#assert"><span class="std std-ref">plain assert-statements</span></a> instead of <code class="docutils literal notranslate"><span class="pre">self.assert*</span></code> functions
+(<a class="reference external" href="https://pypi.org/project/unittest2pytest">unittest2pytest</a> is immensely helpful in this);</p>
+</div></div>
+</section>
+<section id="unittest-testcase-pytest">
+<h2><code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> 子类中的 pytest 功能<a class="headerlink" href="#unittest-testcase-pytest" title="Link to this heading">¶</a></h2>
+<p><strong>pytest features in</strong> <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> <strong>subclasses</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p>以下 pytest 功能在 <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> 子类中有效：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="mark.html#mark"><span class="std std-ref">标记</span></a> ： <a class="reference internal" href="skipping.html#skip"><span class="std std-ref">跳过</span></a>、 <a class="reference internal" href="skipping.html#skipif"><span class="std std-ref">条件跳过</span></a>、 <a class="reference internal" href="skipping.html#xfail"><span class="std std-ref">预期失败</span></a> ；</p></li>
+<li><p><a class="reference internal" href="#mixing-fixtures"><span class="std std-ref">自动使用的 fixtures</span></a> ；</p></li>
+</ul>
+<p>以下 pytest 功能 <strong>无效</strong>，并且由于设计哲学的不同，可能永远不会有效：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../reference/fixtures.html#fixture"><span class="std std-ref">fixtures</span></a> （除了 <code class="docutils literal notranslate"><span class="pre">autouse</span></code> fixtures，见 <a class="reference internal" href="#mixing-fixtures"><span class="std std-ref">下面</span></a> ）；</p></li>
+<li><p><a class="reference internal" href="parametrize.html#parametrize"><span class="std std-ref">参数化</span></a> ；</p></li>
+<li><p><a class="reference internal" href="writing_plugins.html#writing-plugins"><span class="std std-ref">自定义钩子</span></a> ；</p></li>
+</ul>
+<p>第三方插件的兼容性可能因插件和测试套件而异。</p>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p>The following pytest features work in <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> subclasses:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="mark.html#mark"><span class="std std-ref">Marks</span></a>: <a class="reference internal" href="skipping.html#skip"><span class="std std-ref">skip</span></a> , <a class="reference internal" href="skipping.html#skipif"><span class="std std-ref">skipif</span></a> , <a class="reference internal" href="skipping.html#xfail"><span class="std std-ref">xfail</span></a> ;</p></li>
+<li><p><a class="reference internal" href="#mixing-fixtures"><span class="std std-ref">Auto-use fixtures</span></a>;</p></li>
+</ul>
+<p>The following pytest features <strong>do not</strong> work, and probably
+never will due to different design philosophies:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../reference/fixtures.html#fixture"><span class="std std-ref">Fixtures</span></a> (except for <code class="docutils literal notranslate"><span class="pre">autouse</span></code> fixtures, see <a class="reference internal" href="#mixing-fixtures"><span class="std std-ref">below</span></a>);</p></li>
+<li><p><a class="reference internal" href="parametrize.html#parametrize"><span class="std std-ref">Parametrization</span></a>;</p></li>
+<li><p><a class="reference internal" href="writing_plugins.html#writing-plugins"><span class="std std-ref">Custom hooks</span></a>;</p></li>
+</ul>
+<p>Third party plugins may or may not work well, depending on the plugin and the test suite.</p>
+</div></div>
+</section>
+<section id="pytest-unittest-testcase">
+<span id="mixing-fixtures"></span><h2>使用标记将 pytest 装置混合到 <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> 子类中<a class="headerlink" href="#pytest-unittest-testcase" title="Link to this heading">¶</a></h2>
+<p><strong>Mixing pytest fixtures into</strong> <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> <strong>subclasses using marks</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p>使用 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 运行你的 unittest 允许你在 <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> 风格的测试中使用其 <a class="reference internal" href="../reference/fixtures.html#fixture"><span class="std std-ref">fixture 机制</span></a>。假设你至少浏览过 pytest fixture 的特性，让我们直接进入一个示例，该示例集成了 pytest 的 <code class="docutils literal notranslate"><span class="pre">db_class</span></code> fixture，设置一个类缓存的数据库对象，然后从 unittest 风格的测试中引用它：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># conftest.py 的内容</span>
+
+<span class="c1"># 我们在下面定义一个 fixture 函数，它将通过</span>
+<span class="c1"># 在测试中引用其名称来“使用”</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">db_class</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">DummyDB</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># 在调用测试上下文上设置一个类属性</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">cls</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">DummyDB</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>这定义了一个 fixture 函数 <code class="docutils literal notranslate"><span class="pre">db_class</span></code>，如果被使用，将在每个测试类中调用一次，并将类级别的 <code class="docutils literal notranslate"><span class="pre">db</span></code> 属性设置为 <code class="docutils literal notranslate"><span class="pre">DummyDB</span></code> 实例。fixture 函数通过接收一个特殊的 <code class="docutils literal notranslate"><span class="pre">request</span></code> 对象来实现这一点，该对象提供对 <a class="reference internal" href="fixtures.html#request-context"><span class="std std-ref">请求测试上下文</span></a> 的访问，例如 <code class="docutils literal notranslate"><span class="pre">cls</span></code> 属性，表示使用该 fixture 的类。这种架构将 fixture 编写与实际测试代码解耦，并通过最小的引用（即 fixture 名称）允许重用该 fixture。因此，让我们编写一个实际的 <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> 类，使用我们的 fixture 定义：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># test_unittest_db.py 的内容</span>
+
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">usefixtures</span><span class="p">(</span><span class="s2">&quot;db_class&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MyTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test_method1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;db&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>  <span class="c1"># 为演示目的而失败</span>
+
+    <span class="k">def</span> <span class="nf">test_method2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>  <span class="c1"># 为演示目的而失败</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.usefixtures(&quot;db_class&quot;)</span></code> 类装饰器确保 pytest fixture 函数 <code class="docutils literal notranslate"><span class="pre">db_class</span></code> 每个类调用一次。由于故意失败的断言语句，我们可以查看 traceback 中的 <code class="docutils literal notranslate"><span class="pre">self.db</span></code> 值：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest test_unittest_db.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 2 items
+
+test_unittest_db.py <span class=" -Color -Color-Red">FF</span>                                               <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ MyTest.test_method1 ____________________________</span>
+
+self = &lt;test_unittest_db.MyTest testMethod=test_method1&gt;
+
+    def test_method1(self):
+        assert hasattr(self, &quot;db&quot;)
+&gt;       assert 0, self.db  # fail for demo purposes
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: &lt;conftest.db_class.&lt;locals&gt;.DummyDB object at 0xdeadbeef0001&gt;</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_unittest_db.py</span>:11: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ MyTest.test_method2 ____________________________</span>
+
+self = &lt;test_unittest_db.MyTest testMethod=test_method2&gt;
+
+    def test_method2(self):
+&gt;       assert 0, self.db  # fail for demo purposes
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: &lt;conftest.db_class.&lt;locals&gt;.DummyDB object at 0xdeadbeef0001&gt;</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_unittest_db.py</span>:14: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_unittest_db.py::<span class=" -Color -Color-Bold">MyTest::test_method1</span> - AssertionError: &lt;conft...
+<span class=" -Color -Color-Red">FAILED</span> test_unittest_db.py::<span class=" -Color -Color-Bold">MyTest::test_method2</span> - AssertionError: &lt;conft...
+<span class=" -Color -Color-Red">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Red">2 failed</span><span class=" -Color -Color-Red"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p>这个默认的 pytest traceback 显示两个测试方法共享同一个 <code class="docutils literal notranslate"><span class="pre">self.db</span></code> 实例，这是我们在编写上述类作用域 fixture 函数时的意图。</p>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>Running your unittest with <code class="docutils literal notranslate"><span class="pre">pytest</span></code> allows you to use its
+<a class="reference internal" href="../reference/fixtures.html#fixture"><span class="std std-ref">fixture mechanism</span></a> with <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> style
+tests.  Assuming you have at least skimmed the pytest fixture features,
+let’s jump-start into an example that integrates a pytest <code class="docutils literal notranslate"><span class="pre">db_class</span></code>
+fixture, setting up a class-cached database object, and then reference
+it from a unittest-style test:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+<span class="c1"># we define a fixture function below and it will be &quot;used&quot; by</span>
+<span class="c1"># referencing its name from tests</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">db_class</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">DummyDB</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># set a class attribute on the invoking test context</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">cls</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">DummyDB</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This defines a fixture function <code class="docutils literal notranslate"><span class="pre">db_class</span></code> which - if used - is
+called once for each test class and which sets the class-level
+<code class="docutils literal notranslate"><span class="pre">db</span></code> attribute to a <code class="docutils literal notranslate"><span class="pre">DummyDB</span></code> instance.  The fixture function
+achieves this by receiving a special <code class="docutils literal notranslate"><span class="pre">request</span></code> object which gives
+access to <a class="reference internal" href="fixtures.html#request-context"><span class="std std-ref">the requesting test context</span></a> such
+as the <code class="docutils literal notranslate"><span class="pre">cls</span></code> attribute, denoting the class from which the fixture
+is used.  This architecture de-couples fixture writing from actual test
+code and allows reuse of the fixture by a minimal reference, the fixture
+name.  So let’s write an actual <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> class using our
+fixture definition:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_unittest_db.py</span>
+
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">usefixtures</span><span class="p">(</span><span class="s2">&quot;db_class&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MyTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test_method1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;db&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>  <span class="c1"># fail for demo purposes</span>
+
+    <span class="k">def</span> <span class="nf">test_method2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>  <span class="c1"># fail for demo purposes</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.usefixtures(&quot;db_class&quot;)</span></code> class-decorator makes sure that
+the pytest fixture function <code class="docutils literal notranslate"><span class="pre">db_class</span></code> is called once per class.
+Due to the deliberately failing assert statements, we can take a look at
+the <code class="docutils literal notranslate"><span class="pre">self.db</span></code> values in the traceback:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest test_unittest_db.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 2 items
+
+test_unittest_db.py <span class=" -Color -Color-Red">FF</span>                                               <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ MyTest.test_method1 ____________________________</span>
+
+self = &lt;test_unittest_db.MyTest testMethod=test_method1&gt;
+
+    def test_method1(self):
+        assert hasattr(self, &quot;db&quot;)
+&gt;       assert 0, self.db  # fail for demo purposes
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: &lt;conftest.db_class.&lt;locals&gt;.DummyDB object at 0xdeadbeef0001&gt;</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_unittest_db.py</span>:11: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ MyTest.test_method2 ____________________________</span>
+
+self = &lt;test_unittest_db.MyTest testMethod=test_method2&gt;
+
+    def test_method2(self):
+&gt;       assert 0, self.db  # fail for demo purposes
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: &lt;conftest.db_class.&lt;locals&gt;.DummyDB object at 0xdeadbeef0001&gt;</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_unittest_db.py</span>:14: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_unittest_db.py::<span class=" -Color -Color-Bold">MyTest::test_method1</span> - AssertionError: &lt;conft...
+<span class=" -Color -Color-Red">FAILED</span> test_unittest_db.py::<span class=" -Color -Color-Bold">MyTest::test_method2</span> - AssertionError: &lt;conft...
+<span class=" -Color -Color-Red">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Red">2 failed</span><span class=" -Color -Color-Red"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p>This default pytest traceback shows that the two test methods
+share the same <code class="docutils literal notranslate"><span class="pre">self.db</span></code> instance which was our intention
+when writing the class-scoped fixture function above.</p>
+</div></div>
+</section>
+<section id="id2">
+<h2>使用自动使用装置并访问其他装置<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p><strong>Using autouse fixtures and accessing other fixtures</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>虽然通常明确声明给定测试所需的 fixtures 是更好的做法，但有时你可能希望在特定上下文中自动使用 fixtures。毕竟，传统的 unittest-setup 风格要求使用这种隐式 fixture 编写，你可能已经习惯了这种方式或喜欢它。</p>
+<p>你可以使用 <code class="docutils literal notranslate"><span class="pre">&#64;pytest.fixture(autouse=True)</span></code> 标记 fixture 函数，并在希望使用它的上下文中定义该 fixture 函数。让我们来看一个 <code class="docutils literal notranslate"><span class="pre">initdir</span></code> fixture，它使得 <code class="docutils literal notranslate"><span class="pre">TestCase</span></code> 类的所有测试方法在一个临时目录中执行，并预初始化 <code class="docutils literal notranslate"><span class="pre">samplefile.ini</span></code> 。我们的 <code class="docutils literal notranslate"><span class="pre">initdir</span></code> fixture 本身使用 pytest 内置的 <a class="reference internal" href="../reference/reference.html#std:fixture-3"><code class="xref std std-fixture docutils literal notranslate"><span class="pre">tmp_path</span></code></a> fixture 来委托创建每个测试的临时目录：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># test_unittest_cleandir.py 的内容</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">class</span> <span class="nc">MyTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">initdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+        <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>  <span class="c1"># 切换到 pytest 提供的临时目录</span>
+        <span class="n">tmp_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;samplefile.ini&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;# testdata&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;samplefile.ini&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="s2">&quot;testdata&quot;</span> <span class="ow">in</span> <span class="n">s</span>
+</pre></div>
+</div>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">autouse</span></code> 标志，<code class="docutils literal notranslate"><span class="pre">initdir</span></code> fixture 函数将用于定义它的类的所有方法。这是使用 <code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.usefixtures(&quot;initdir&quot;)</span></code> 标记在类上进行标记的简便方法，就像在前面的示例中那样。</p>
+<p>运行这个测试模块 …:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_unittest_cleandir.py
+<span class=" -Color -Color-Green">.</span>                                                                    <span class=" -Color -Color-Green">[100%]</span>
+<span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s</span>
+</pre></div>
+</div>
+<p>… 给我们一个通过的测试，因为 <code class="docutils literal notranslate"><span class="pre">initdir</span></code> fixture 函数在 <code class="docutils literal notranslate"><span class="pre">test_method</span></code> 之前被执行。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> 方法不能直接接收 fixture 参数，因为实现这一点可能会影响运行一般 unittest.TestCase 测试套件的能力。</p>
+<p>上述的 <code class="docutils literal notranslate"><span class="pre">usefixtures</span></code> 和 <code class="docutils literal notranslate"><span class="pre">autouse</span></code> 示例应该有助于将 pytest fixtures 混入 unittest 套件中。</p>
+<p>你还可以逐步从继承 <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> 转向 <em>plain asserts</em>，然后开始逐步受益于完整的 pytest 特性集。</p>
+</div>
+<div class="admonition note" id="pdb-unittest-note">
+<p class="admonition-title">Note</p>
+<p>由于两个框架之间的架构差异，基于 <code class="docutils literal notranslate"><span class="pre">unittest</span></code> 的测试的设置和拆卸是在测试的 <code class="docutils literal notranslate"><span class="pre">call</span></code> 阶段进行，而不是在 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 的标准 <code class="docutils literal notranslate"><span class="pre">setup</span></code> 和 <code class="docutils literal notranslate"><span class="pre">teardown</span></code> 阶段。这在某些情况下很重要，特别是在推理错误时。例如，如果基于 <code class="docutils literal notranslate"><span class="pre">unittest</span></code> 的套件在设置过程中出现错误，<code class="docutils literal notranslate"><span class="pre">pytest</span></code> 将在其 <code class="docutils literal notranslate"><span class="pre">setup</span></code> 阶段报告没有错误，而是在 <code class="docutils literal notranslate"><span class="pre">call</span></code> 阶段引发错误。</p>
+</div>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><p>Although it’s usually better to explicitly declare use of fixtures you need
+for a given test, you may sometimes want to have fixtures that are
+automatically used in a given context.  After all, the traditional
+style of unittest-setup mandates the use of this implicit fixture writing
+and chances are, you are used to it or like it.</p>
+<p>You can flag fixture functions with <code class="docutils literal notranslate"><span class="pre">&#64;pytest.fixture(autouse=True)</span></code>
+and define the fixture function in the context where you want it used.
+Let’s look at an <code class="docutils literal notranslate"><span class="pre">initdir</span></code> fixture which makes all test methods of a
+<code class="docutils literal notranslate"><span class="pre">TestCase</span></code> class execute in a temporary directory with a
+pre-initialized <code class="docutils literal notranslate"><span class="pre">samplefile.ini</span></code>.  Our <code class="docutils literal notranslate"><span class="pre">initdir</span></code> fixture itself uses
+the pytest builtin <a class="reference internal" href="../reference/reference.html#std:fixture-3"><code class="xref std std-fixture docutils literal notranslate"><span class="pre">tmp_path</span></code></a> fixture to delegate the
+creation of a per-test temporary directory:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_unittest_cleandir.py</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">class</span> <span class="nc">MyTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">initdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+        <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>  <span class="c1"># change to pytest-provided temporary directory</span>
+        <span class="n">tmp_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;samplefile.ini&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;# testdata&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;samplefile.ini&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="s2">&quot;testdata&quot;</span> <span class="ow">in</span> <span class="n">s</span>
+</pre></div>
+</div>
+<p>Due to the <code class="docutils literal notranslate"><span class="pre">autouse</span></code> flag the <code class="docutils literal notranslate"><span class="pre">initdir</span></code> fixture function will be
+used for all methods of the class where it is defined.  This is a
+shortcut for using a <code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.usefixtures(&quot;initdir&quot;)</span></code> marker
+on the class like in the previous example.</p>
+<p>Running this test module …:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_unittest_cleandir.py
+<span class=" -Color -Color-Green">.</span>                                                                    <span class=" -Color -Color-Green">[100%]</span>
+<span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s</span>
+</pre></div>
+</div>
+<p>… gives us one passed test because the <code class="docutils literal notranslate"><span class="pre">initdir</span></code> fixture function
+was executed ahead of the <code class="docutils literal notranslate"><span class="pre">test_method</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> methods cannot directly receive fixture
+arguments as implementing that is likely to inflict
+on the ability to run general unittest.TestCase test suites.</p>
+<p>The above <code class="docutils literal notranslate"><span class="pre">usefixtures</span></code> and <code class="docutils literal notranslate"><span class="pre">autouse</span></code> examples should help to mix in
+pytest fixtures into unittest suites.</p>
+<p>You can also gradually move away from subclassing from <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> to <em>plain asserts</em>
+and then start to benefit from the full pytest feature set step by step.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Due to architectural differences between the two frameworks, setup and
+teardown for <code class="docutils literal notranslate"><span class="pre">unittest</span></code>-based tests is performed during the <code class="docutils literal notranslate"><span class="pre">call</span></code> phase
+of testing instead of in <code class="docutils literal notranslate"><span class="pre">pytest</span></code>’s standard <code class="docutils literal notranslate"><span class="pre">setup</span></code> and <code class="docutils literal notranslate"><span class="pre">teardown</span></code>
+stages. This can be important to understand in some situations, particularly
+when reasoning about errors. For example, if a <code class="docutils literal notranslate"><span class="pre">unittest</span></code>-based suite
+exhibits errors during setup, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> will report no errors during its
+<code class="docutils literal notranslate"><span class="pre">setup</span></code> phase and will instead raise the error during <code class="docutils literal notranslate"><span class="pre">call</span></code>.</p>
+</div>
+</div></div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="xunit_setup.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">如何实现 xunit 样式的设置</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="existingtestsuite.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">如何将 pytest 与现有测试套件结合使用</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">如何在 pytest 中使用基于 unittest 的测试</a><ul>
+<li><a class="reference internal" href="#id1">开箱即用的优势</a></li>
+<li><a class="reference internal" href="#unittest-testcase-pytest"><code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> 子类中的 pytest 功能</a></li>
+<li><a class="reference internal" href="#pytest-unittest-testcase">使用标记将 pytest 装置混合到 <code class="docutils literal notranslate"><span class="pre">unittest.TestCase</span></code> 子类中</a></li>
+<li><a class="reference internal" href="#id2">使用自动使用装置并访问其他装置</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

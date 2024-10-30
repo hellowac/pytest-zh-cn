@@ -1,0 +1,824 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="pytest 导入机制和 sys.path / PYTHONPATH" href="pythonpath.html" /><link rel="prev" title="关于 fixtures" href="fixtures.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/explanation/goodpractices.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>良好的集成实践 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">入门</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how-to/index.html">操作指南</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">解答</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example/index.html">示例和自定义技巧</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../example/reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="goodpractices">
+<span id="id1"></span><h1>良好的集成实践<a class="headerlink" href="#goodpractices" title="Link to this heading">¶</a></h1>
+<p><strong>Good Integration Practices</strong></p>
+<section id="pip">
+<h2>使用 pip 安装软件包<a class="headerlink" href="#pip" title="Link to this heading">¶</a></h2>
+<p><strong>Install package with pip</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>对于开发，我们建议您使用 <a class="reference external" href="https://docs.python.org/3/library/venv.html#module-venv" title="(in Python v3.13)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">venv</span></code></a> 来创建虚拟环境，并使用 <a class="reference external" href="https://pip.pypa.io/en/stable/" title="(in pip v24.3)"><span>pip</span></a> 来安装您的应用程序及其任何依赖项，以及 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 包本身。这确保了您的代码和依赖项与系统 Python 安装隔离。</p>
+<p>在您的代码库根目录下创建一个 <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> 文件，具体如 <a class="reference external" href="https://packaging.python.org/en/latest/tutorials/packaging-projects/" title="(in Python Packaging User Guide)"><span>Packaging Python Projects</span></a> 中所述。前几行应如下所示：</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[build-system]</span>
+<span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;hatchling&quot;</span><span class="p">]</span>
+<span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hatchling.build&quot;</span>
+
+<span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PACKAGENAME&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PACKAGEVERSION&quot;</span>
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">PACKAGENAME</span></code> 和 <code class="docutils literal notranslate"><span class="pre">PACKAGEVERSION</span></code> 分别是您包的名称和版本。</p>
+<p>然后，您可以通过从同一目录运行以下命令以 “editable” 模式安装您的包：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+<p>这让您可以随意更改源代码（包括测试和应用程序），并重新运行测试。</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>For development, we recommend you use <a class="reference external" href="https://docs.python.org/3/library/venv.html#module-venv" title="(in Python v3.13)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">venv</span></code></a> for virtual environments and
+<a class="reference external" href="https://pip.pypa.io/en/stable/" title="(in pip v24.3)"><span>pip</span></a> for installing your application and any dependencies,
+as well as the <code class="docutils literal notranslate"><span class="pre">pytest</span></code> package itself.
+This ensures your code and dependencies are isolated from your system Python installation.</p>
+<p>Create a <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file in the root of your repository as described in
+<a class="reference external" href="https://packaging.python.org/en/latest/tutorials/packaging-projects/" title="(in Python Packaging User Guide)"><span>Packaging Python Projects</span></a>.
+The first few lines should look like this:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[build-system]</span>
+<span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;hatchling&quot;</span><span class="p">]</span>
+<span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hatchling.build&quot;</span>
+
+<span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PACKAGENAME&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PACKAGEVERSION&quot;</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">PACKAGENAME</span></code> and <code class="docutils literal notranslate"><span class="pre">PACKAGEVERSION</span></code> are the name and version of your package respectively.</p>
+<p>You can then install your package in “editable” mode by running from the same directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+<p>which lets you change your source code (both tests and application) and rerun tests at will.</p>
+</div></div>
+</section>
+<section id="python">
+<span id="python-test-discovery"></span><span id="test-discovery"></span><h2>Python 测试发现的约定<a class="headerlink" href="#python" title="Link to this heading">¶</a></h2>
+<p><strong>Conventions for Python test discovery</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> 实现了以下标准测试发现流程：</p>
+<ul class="simple">
+<li><p>如果未指定任何参数，则从 <a class="reference internal" href="../reference/reference.html#confval-35"><code class="xref std std-confval docutils literal notranslate"><span class="pre">testpaths</span></code></a> 开始收集（如果已配置），或者从当前目录开始。或者，可以使用任意组合的目录、文件名或节点 ID 作为命令行参数。</p></li>
+<li><p>递归进入目录，除非它们与 <a class="reference internal" href="../reference/reference.html#confval-29"><code class="xref std std-confval docutils literal notranslate"><span class="pre">norecursedirs</span></code></a> 匹配。</p></li>
+<li><p>在这些目录中，搜索 <code class="docutils literal notranslate"><span class="pre">test_*.py</span></code> 或 <code class="docutils literal notranslate"><span class="pre">*_test.py</span></code> 文件，按其 <a class="reference internal" href="#test-package-name">test package name</a> 导入。</p></li>
+<li><p>从这些文件中收集测试项：</p></li>
+<li><p>以 <code class="docutils literal notranslate"><span class="pre">test</span></code> 为前缀的测试函数或类外的方法。</p></li>
+<li><p>以 <code class="docutils literal notranslate"><span class="pre">test</span></code> 为前缀的测试函数或 <code class="docutils literal notranslate"><span class="pre">Test</span></code> 前缀测试类中的方法（不带 <code class="docutils literal notranslate"><span class="pre">__init__</span></code> 方法）。使用 <code class="docutils literal notranslate"><span class="pre">&#64;staticmethod</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&#64;classmethod</span></code> 装饰的方法也被考虑在内。</p></li>
+</ul>
+<p>有关如何自定义测试发现的示例，请参见 <a class="reference internal" href="../example/pythoncollection.html"><span class="doc">改变标准 (Python) 测试的发现机制</span></a>。</p>
+<p>在 Python 模块中，<code class="docutils literal notranslate"><span class="pre">pytest</span></code> 还使用标准的 <a class="reference internal" href="../how-to/unittest.html#unittest-testcase"><span class="std std-ref">unittest.TestCase</span></a> 子类化技术发现测试。</p>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> implements the following standard test discovery:</p>
+<ul class="simple">
+<li><p>If no arguments are specified then collection starts from <a class="reference internal" href="../reference/reference.html#confval-35"><code class="xref std std-confval docutils literal notranslate"><span class="pre">testpaths</span></code></a></p></li>
+</ul>
+<p>(if configured) or the current directory. Alternatively, command line arguments
+can be used in any combination of directories, file names or node ids.
+* Recurse into directories, unless they match <a class="reference internal" href="../reference/reference.html#confval-29"><code class="xref std std-confval docutils literal notranslate"><span class="pre">norecursedirs</span></code></a>.
+* In those directories, search for <code class="docutils literal notranslate"><span class="pre">test_*.py</span></code> or <code class="docutils literal notranslate"><span class="pre">*_test.py</span></code> files, imported by their <a class="reference internal" href="#test-package-name">test package name</a>.
+* From those files, collect test items:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code> prefixed test functions or methods outside of class.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code> prefixed test functions or methods inside <code class="docutils literal notranslate"><span class="pre">Test</span></code> prefixed test classes (without an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method). Methods decorated with <code class="docutils literal notranslate"><span class="pre">&#64;staticmethod</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;classmethods</span></code> are also considered.</p></li>
+</ul>
+<p>For examples of how to customize your test discovery <a class="reference internal" href="../example/pythoncollection.html"><span class="doc">改变标准 (Python) 测试的发现机制</span></a>.</p>
+<p>Within Python modules, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> also discovers tests using the standard
+<a class="reference internal" href="../how-to/unittest.html#unittest-testcase"><span class="std std-ref">unittest.TestCase</span></a> subclassing technique.</p>
+</div></div>
+</section>
+<section id="test-layout">
+<span id="id2"></span><h2>选择测试布局<a class="headerlink" href="#test-layout" title="Link to this heading">¶</a></h2>
+<p><strong>Choosing a test layout</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> 支持两种常见的测试布局：</p>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> supports two common test layouts:</p>
+</div></div>
+<section id="id3">
+<h3>在应用程序代码之外进行测试<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<p><strong>Tests outside application code</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p>将测试放置在实际应用代码之外的额外目录中可能很有用，特别是当您有许多功能测试或出于其他原因希望将测试与实际应用代码分开时（这通常是个好主意）：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pyproject.toml
+src/
+    mypkg/
+        __init__.py
+        app.py
+        view.py
+tests/
+    test_app.py
+    test_view.py
+    ...
+</pre></div>
+</div>
+<p>这有以下好处：</p>
+<ul class="simple">
+<li><p>在执行 <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code> 后，您的测试可以针对已安装的版本运行。</p></li>
+<li><p>在执行 <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--editable</span> <span class="pre">.</span></code> 后，您的测试可以针对本地副本进行可编辑安装。</p></li>
+</ul>
+<p>对于新项目，我们建议使用 <code class="docutils literal notranslate"><span class="pre">importlib</span></code> <a class="reference internal" href="pythonpath.html#import-modes"><span class="std std-ref">import mode</span></a> （有关详细解释，请参见 <a class="reference internal" href="#which-import-mode">which-import-mode</a>）。
+为此，将以下内容添加到您的 <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> 中：</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.pytest.ini_options]</span>
+<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;--import-mode=importlib&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>通常，特别是如果您使用默认的导入模式 <code class="docutils literal notranslate"><span class="pre">prepend</span></code>，<a href="#id4"><span class="problematic" id="id5">**</span></a>强烈**建议使用 <code class="docutils literal notranslate"><span class="pre">src</span></code> 布局。
+在此布局中，您的应用程序根包位于根目录的子目录中，即 <code class="docutils literal notranslate"><span class="pre">src/mypkg/</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">mypkg</span></code>。</p>
+<p>这种布局可以避免许多常见的陷阱，并且有许多好处，Ionel Cristian Mărieș 在这篇优秀的 <a class="reference external" href="https://blog.ionelmc.ro/2014/05/25/python-packaging/#the-structure&gt;">blog post</a> 中对此进行了更好的解释。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果您不使用可编辑安装并使用上述 <code class="docutils literal notranslate"><span class="pre">src</span></code> 布局，则需要扩展 Python 的模块文件搜索路径，以便直接对本地副本执行测试。您可以通过设置 <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> 环境变量以临时方式实现：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>PYTHONPATH=src pytest</p>
+<p>或通过使用 <a class="reference internal" href="../reference/reference.html#confval-33"><code class="xref std std-confval docutils literal notranslate"><span class="pre">pythonpath</span></code></a> 配置变量并将以下内容添加到您的 <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> 中，以永久方式实现：</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.pytest.ini_options]</span>
+<span class="n">pythonpath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;src&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果您不使用可编辑安装且不使用 <code class="docutils literal notranslate"><span class="pre">src</span></code> 布局（<code class="docutils literal notranslate"><span class="pre">mypkg</span></code> 直接位于根目录中），则可以依赖于 Python 默认将当前目录放入 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> 中来导入您的包，并运行 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code> 直接对本地副本执行测试。</p>
+<p>有关调用 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 和 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code> 之间差异的更多信息，请参见 <a class="reference internal" href="pythonpath.html#pytest-vs-python-m-pytest"><span class="std std-ref">调用 pytest 与 python -m pytest</span></a>。</p>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>Putting tests into an extra directory outside your actual application code
+might be useful if you have many functional tests or for other reasons want
+to keep tests separate from actual application code (often a good idea):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pyproject.toml
+src/
+    mypkg/
+        __init__.py
+        app.py
+        view.py
+tests/
+    test_app.py
+    test_view.py
+    ...
+</pre></div>
+</div>
+<p>This has the following benefits:</p>
+<ul class="simple">
+<li><p>Your tests can run against an installed version after executing <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code>.</p></li>
+<li><p>Your tests can run against the local copy with an editable install after executing <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--editable</span> <span class="pre">.</span></code>.</p></li>
+</ul>
+<p>For new projects, we recommend to use <code class="docutils literal notranslate"><span class="pre">importlib</span></code> <a class="reference internal" href="pythonpath.html#import-modes"><span class="std std-ref">import mode</span></a>
+(see <a class="reference internal" href="#which-import-mode">which-import-mode</a> for a detailed explanation).
+To this end, add the following to your <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.pytest.ini_options]</span>
+<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;--import-mode=importlib&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Generally, but especially if you use the default import mode <code class="docutils literal notranslate"><span class="pre">prepend</span></code>,
+it is <strong>strongly</strong> suggested to use a <code class="docutils literal notranslate"><span class="pre">src</span></code> layout.
+Here, your application root package resides in a sub-directory of your root,
+i.e. <code class="docutils literal notranslate"><span class="pre">src/mypkg/</span></code> instead of <code class="docutils literal notranslate"><span class="pre">mypkg</span></code>.</p>
+<p>This layout prevents a lot of common pitfalls and has many benefits,
+which are better explained in this excellent <a class="reference external" href="https://blog.ionelmc.ro/2014/05/25/python-packaging/#the-structure&gt;">blog post</a> by Ionel Cristian Mărieș.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not use an editable install and use the <code class="docutils literal notranslate"><span class="pre">src</span></code> layout as above you need to extend the Python’s
+search path for module files to execute the tests against the local copy directly. You can do it in an
+ad-hoc manner by setting the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> environment variable:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>PYTHONPATH=src pytest</p>
+<p>or in a permanent manner by using the <a class="reference internal" href="../reference/reference.html#confval-33"><code class="xref std std-confval docutils literal notranslate"><span class="pre">pythonpath</span></code></a> configuration variable and adding the
+following to your <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.pytest.ini_options]</span>
+<span class="n">pythonpath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;src&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not use an editable install and not use the <code class="docutils literal notranslate"><span class="pre">src</span></code> layout (<code class="docutils literal notranslate"><span class="pre">mypkg</span></code> directly in the root
+directory) you can rely on the fact that Python by default puts the current directory in <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> to
+import your package and run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code> to execute the tests against the local copy directly.</p>
+<p>See <a class="reference internal" href="pythonpath.html#pytest-vs-python-m-pytest"><span class="std std-ref">调用 pytest 与 python -m pytest</span></a> for more information about the difference between calling <code class="docutils literal notranslate"><span class="pre">pytest</span></code> and
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code>.</p>
+</div>
+</div></div>
+</section>
+<section id="id6">
+<h3>作为应用程序代码的一部分进行测试<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<p><strong>Tests as part of application code</strong></p>
+<div class="sphinx-tabs docutils container" id="test-package-name">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>将测试目录内联到您的应用程序包中是有用的，特别是当您有测试与应用程序模块之间的直接关系，并希望将它们与应用程序一起分发时：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pyproject.toml
+[src/]mypkg/
+    __init__.py
+    app.py
+    view.py
+    tests/
+        __init__.py
+        test_app.py
+        test_view.py
+        ...
+</pre></div>
+</div>
+<p>在这种方案中，使用 <code class="docutils literal notranslate"><span class="pre">--pyargs</span></code> 选项运行测试非常简单：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--pyargs<span class="w"> </span>mypkg
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> 将发现 <code class="docutils literal notranslate"><span class="pre">mypkg</span></code> 的安装位置并从那里收集测试。</p>
+<p>请注意，这种布局也可以与前一节提到的 <code class="docutils literal notranslate"><span class="pre">src</span></code> 布局结合使用。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>您可以为您的应用程序使用命名空间包（PEP420），但 pytest 仍将根据 <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> 文件的存在执行 <a class="reference internal" href="#test-package-name">test package name</a> 发现。如果您使用上述两种推荐的文件系统布局之一，但将 <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> 文件从目录中省略，它应该可以正常工作。然而，对于“内联测试”，您需要使用绝对导入来访问应用程序代码。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">prepend</span></code> 和 <code class="docutils literal notranslate"><span class="pre">append</span></code> 导入模式中，如果 pytest 在递归文件系统时找到 <code class="docutils literal notranslate"><span class="pre">&quot;a/b/test_module.py&quot;</span></code> 测试文件，它将按以下方式确定导入名称：</p>
+<ul class="simple">
+<li><p>确定 <code class="docutils literal notranslate"><span class="pre">basedir</span></code>：这是第一个不包含 <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> 的“向上”目录（朝向根目录）。例如，如果 <code class="docutils literal notranslate"><span class="pre">a</span></code> 和 <code class="docutils literal notranslate"><span class="pre">b</span></code> 都包含 <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> 文件，则 <code class="docutils literal notranslate"><span class="pre">a</span></code> 的父目录将成为 <code class="docutils literal notranslate"><span class="pre">basedir</span></code>。</p></li>
+<li><p>执行 <code class="docutils literal notranslate"><span class="pre">sys.path.insert(0,</span> <span class="pre">basedir)</span></code> 以使测试模块可以通过完全限定的导入名称导入。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">a.b.test_module</span></code>，路径通过将路径分隔符 <code class="docutils literal notranslate"><span class="pre">/</span></code> 转换为 “.” 字符来确定。这意味着您必须遵循目录和文件名称直接映射到导入名称的约定。</p></li>
+</ul>
+<p>采用这种稍微复杂的导入技术的原因是，在较大的项目中，多个测试模块可能相互导入，因此推导出一个标准导入名称有助于避免意外情况，例如测试模块被导入两次。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">--import-mode=importlib</span></code>，事情就简单多了，因为 pytest 不需要更改 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> 或 <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>，从而使事情变得不那么令人惊讶。</p>
+</div>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><p>Inlining test directories into your application package
+is useful if you have direct relation between tests and application modules and
+want to distribute them along with your application:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pyproject.toml
+[src/]mypkg/
+    __init__.py
+    app.py
+    view.py
+    tests/
+        __init__.py
+        test_app.py
+        test_view.py
+        ...
+</pre></div>
+</div>
+<p>In this scheme, it is easy to run your tests using the <code class="docutils literal notranslate"><span class="pre">--pyargs</span></code> option:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--pyargs<span class="w"> </span>mypkg
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> will discover where <code class="docutils literal notranslate"><span class="pre">mypkg</span></code> is installed and collect tests from there.</p>
+<p>Note that this layout also works in conjunction with the <code class="docutils literal notranslate"><span class="pre">src</span></code> layout mentioned in the previous section.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use namespace packages (PEP420) for your application
+but pytest will still perform <a class="reference internal" href="#test-package-name">test package name</a> discovery based on the
+presence of <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> files.  If you use one of the
+two recommended file system layouts above but leave away the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>
+files from your directories, it should just work.  From
+“inlined tests”, however, you will need to use absolute imports for
+getting at your application code.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">prepend</span></code> and <code class="docutils literal notranslate"><span class="pre">append</span></code> import-modes, if pytest finds a <code class="docutils literal notranslate"><span class="pre">&quot;a/b/test_module.py&quot;</span></code>
+test file while recursing into the filesystem it determines the import name
+as follows:</p>
+<ul class="simple">
+<li><p>determine <code class="docutils literal notranslate"><span class="pre">basedir</span></code>: this is the first “upward” (towards the root)</p></li>
+</ul>
+<p>directory not containing an <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>.  If e.g. both <code class="docutils literal notranslate"><span class="pre">a</span></code>
+and <code class="docutils literal notranslate"><span class="pre">b</span></code> contain an <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file then the parent directory
+of <code class="docutils literal notranslate"><span class="pre">a</span></code> will become the <code class="docutils literal notranslate"><span class="pre">basedir</span></code>.</p>
+<ul class="simple">
+<li><p>perform <code class="docutils literal notranslate"><span class="pre">sys.path.insert(0,</span> <span class="pre">basedir)</span></code> to make the test module</p></li>
+</ul>
+<p>importable under the fully qualified import name.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">a.b.test_module</span></code> where the path is determined</p></li>
+</ul>
+<p>by converting path separators <code class="docutils literal notranslate"><span class="pre">/</span></code> into “.” characters.  This means
+you must follow the convention of having directory and file
+names map directly to the import names.</p>
+<p>The reason for this somewhat evolved importing technique is
+that in larger projects multiple test modules might import
+from each other and thus deriving a canonical import name helps
+to avoid surprises such as a test module getting imported twice.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">--import-mode=importlib</span></code> things are less convoluted because
+pytest doesn’t need to change <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> or <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>, making things
+much less surprising.</p>
+</div>
+</div></div>
+</section>
+<section id="which-import-mode">
+<span id="id7"></span><h3>选择导入模式<a class="headerlink" href="#which-import-mode" title="Link to this heading">¶</a></h3>
+<p><strong>Choosing an import mode</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><p>出于历史原因，pytest 默认使用 <code class="docutils literal notranslate"><span class="pre">prepend</span></code> <a class="reference internal" href="pythonpath.html#import-modes"><span class="std std-ref">import mode</span></a>，而不是我们为新项目推荐的 <code class="docutils literal notranslate"><span class="pre">importlib</span></code> 导入模式。原因在于 <code class="docutils literal notranslate"><span class="pre">prepend</span></code> 模式的工作方式：</p>
+<p>由于没有包可用来推导完整的包名，<code class="docutils literal notranslate"><span class="pre">pytest</span></code> 将把您的测试文件作为 <em>顶级</em> 模块导入。在第一个示例中（<a class="reference external" href="https://setuptools.pypa.io/en/stable/userguide/package_discovery.html#src-layout" title="(in setuptools v75.3.0.post20241029)"><span class="xref std std-ref">src layout</span></a>），测试文件将作为 <code class="docutils literal notranslate"><span class="pre">test_app</span></code> 和 <code class="docutils literal notranslate"><span class="pre">test_view</span></code> 顶级模块导入，通过将 <code class="docutils literal notranslate"><span class="pre">tests/</span></code> 添加到 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>。</p>
+<p>这导致与 <code class="docutils literal notranslate"><span class="pre">importlib</span></code> 导入模式相比的一个缺点：您的测试文件必须具有 <strong>唯一名称</strong>。</p>
+<p>如果您需要具有相同名称的测试模块，作为变通方法，您可以在 <code class="docutils literal notranslate"><span class="pre">tests</span></code> 文件夹及其子文件夹中添加 <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> 文件，将它们更改为包：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pyproject.toml
+mypkg/
+    ...
+tests/
+    __init__.py
+    foo/
+        __init__.py
+        test_view.py
+    bar/
+        __init__.py
+        test_view.py
+</pre></div>
+</div>
+<p>现在 pytest 将加载模块为 <code class="docutils literal notranslate"><span class="pre">tests.foo.test_view</span></code> 和 <code class="docutils literal notranslate"><span class="pre">tests.bar.test_view</span></code>，允许您拥有相同名称的模块。但这会引入一个微妙的问题：为了从 <code class="docutils literal notranslate"><span class="pre">tests</span></code> 目录加载测试模块，pytest 会将仓库根目录添加到 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>，这会带来一个副作用，即 <code class="docutils literal notranslate"><span class="pre">mypkg</span></code> 也变得可以导入。</p>
+<p>如果您使用像 <a class="reference internal" href="#tox">tox</a> 这样的工具在虚拟环境中测试您的包，这将是一个问题，因为您希望测试的是您包的 <em>已安装</em> 版本，而不是来自仓库的本地代码。</p>
+<p><code class="docutils literal notranslate"><span class="pre">importlib</span></code> 导入模式没有上述缺点，因为在导入测试模块时不会更改 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>。</p>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><p>For historical reasons, pytest defaults to the <code class="docutils literal notranslate"><span class="pre">prepend</span></code> <a class="reference internal" href="pythonpath.html#import-modes"><span class="std std-ref">import mode</span></a>
+instead of the <code class="docutils literal notranslate"><span class="pre">importlib</span></code> import mode we recommend for new projects.
+The reason lies in the way the <code class="docutils literal notranslate"><span class="pre">prepend</span></code> mode works:</p>
+<p>Since there are no packages to derive a full package name from,
+<code class="docutils literal notranslate"><span class="pre">pytest</span></code> will import your test files as <em>top-level</em> modules.
+The test files in the first example (<a class="reference external" href="https://setuptools.pypa.io/en/stable/userguide/package_discovery.html#src-layout" title="(in setuptools v75.3.0.post20241029)"><span class="xref std std-ref">src layout</span></a>) would be imported as
+<code class="docutils literal notranslate"><span class="pre">test_app</span></code> and <code class="docutils literal notranslate"><span class="pre">test_view</span></code> top-level modules by adding <code class="docutils literal notranslate"><span class="pre">tests/</span></code> to <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>.</p>
+<p>This results in a drawback compared to the import mode <code class="docutils literal notranslate"><span class="pre">importlib</span></code>:
+your test files must have <strong>unique names</strong>.</p>
+<p>If you need to have test modules with the same name,
+as a workaround you might add <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> files to your <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder and subfolders,
+changing them to packages:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pyproject.toml
+mypkg/
+    ...
+tests/
+    __init__.py
+    foo/
+        __init__.py
+        test_view.py
+    bar/
+        __init__.py
+        test_view.py
+</pre></div>
+</div>
+<p>Now pytest will load the modules as <code class="docutils literal notranslate"><span class="pre">tests.foo.test_view</span></code> and <code class="docutils literal notranslate"><span class="pre">tests.bar.test_view</span></code>,
+allowing you to have modules with the same name.
+But now this introduces a subtle problem:
+in order to load the test modules from the <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory,
+pytest prepends the root of the repository to <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>,
+which adds the side-effect that now <code class="docutils literal notranslate"><span class="pre">mypkg</span></code> is also importable.</p>
+<p>This is problematic if you are using a tool like <a class="reference internal" href="#tox">tox</a> to test your package in a virtual environment,
+because you want to test the <em>installed</em> version of your package,
+not the local code from the repository.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">importlib</span></code> import mode does not have any of the drawbacks above,
+because <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> is not changed when importing test modules.</p>
+</div></div>
+</section>
+</section>
+<section id="tox">
+<span id="use-tox"></span><h2>tox<a class="headerlink" href="#tox" title="Link to this heading">¶</a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><p>一旦您完成工作并想确保您的实际包通过所有测试，您可能想要了解 <a class="reference external" href="https://tox.wiki/en/stable/index.html" title="(in Project name not set v4.23)"><span class="xref std std-doc">tox</span></a>，这是一个虚拟环境测试自动化工具。 <code class="docutils literal notranslate"><span class="pre">tox</span></code> 帮助您设置带有预定义依赖项的虚拟环境，然后执行带有选项的预配置测试命令。它将针对已安装的包运行测试，而不是针对您的源代码检出，从而帮助检测打包中的问题。</p>
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><p>Once you are done with your work and want to make sure that your actual
+package passes all tests you may want to look into <a class="reference external" href="https://tox.wiki/en/stable/index.html" title="(in Project name not set v4.23)"><span class="xref std std-doc">tox</span></a>, the
+virtualenv test automation tool.
+<code class="docutils literal notranslate"><span class="pre">tox</span></code> helps you to setup virtualenv environments with pre-defined
+dependencies and then executing a pre-configured test command with
+options.  It will run tests against the installed package and not
+against your source code checkout, helping to detect packaging
+glitches.</p>
+</div></div>
+</section>
+<section id="setuptools">
+<h2>不要通过 setuptools 运行<a class="headerlink" href="#setuptools" title="Link to this heading">¶</a></h2>
+<p><strong>Do not run via setuptools</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-7-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-7-7-0" name="7-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-7-7-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-1" name="7-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-7-7-0" class="sphinx-tabs-panel" id="panel-7-7-0" name="7-0" role="tabpanel" tabindex="0"><p>与 setuptools 的集成 <strong>不推荐</strong>，即您不应使用 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">test</span></code> 或 <code class="docutils literal notranslate"><span class="pre">pytest-runner</span></code>，并且未来可能会停止工作。</p>
+<p>这是不推荐使用的，因为它依赖于 setuptools 的已弃用功能，并依赖于破坏 pip 安全机制的功能。例如，’setup_requires’ 和 ‘tests_require’ 绕过了 <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">--require-hashes</span></code>。有关更多信息和迁移说明，请参见 <a class="reference external" href="https://github.com/pytest-dev/pytest-runner#deprecation-notice">pytest-runner notice</a>。另请参见 <a class="reference external" href="https://github.com/pypa/setuptools/issues/1684">pypa/setuptools#1684</a>。</p>
+<p>setuptools 打算 <a class="reference external" href="https://github.com/pypa/setuptools/issues/931">移除测试命令</a>。</p>
+</div><div aria-labelledby="tab-7-7-1" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-1" name="7-1" role="tabpanel" tabindex="0"><p>Integration with setuptools is <strong>not recommended</strong>,
+i.e. you should not be using <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">test</span></code> or <code class="docutils literal notranslate"><span class="pre">pytest-runner</span></code>,
+and may stop working in the future.</p>
+<p>This is deprecated since it depends on deprecated features of setuptools
+and relies on features that break security mechanisms in pip.
+For example ‘setup_requires’ and ‘tests_require’ bypass <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">--require-hashes</span></code>.
+For more information and migration instructions,
+see the <a class="reference external" href="https://github.com/pytest-dev/pytest-runner#deprecation-notice">pytest-runner notice</a>.
+See also <a class="reference external" href="https://github.com/pypa/setuptools/issues/1684">pypa/setuptools#1684</a>.</p>
+<p>setuptools intends to
+<a class="reference external" href="https://github.com/pypa/setuptools/issues/931">remove the test command</a>.</p>
+</div></div>
+</section>
+<section id="flake8-pytest-style">
+<h2>使用 flake8-pytest-style 进行检查<a class="headerlink" href="#flake8-pytest-style" title="Link to this heading">¶</a></h2>
+<p><strong>Checking with flake8-pytest-style</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-8-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-8-8-0" name="8-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-8-8-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-8-8-1" name="8-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-8-8-0" class="sphinx-tabs-panel" id="panel-8-8-0" name="8-0" role="tabpanel" tabindex="0"><p>为了确保在您的项目中正确使用 pytest，使用 <a class="reference external" href="https://github.com/m-burst/flake8-pytest-style">flake8-pytest-style</a> flake8 插件是非常有帮助的。</p>
+<p>flake8-pytest-style 检查 pytest 代码中的常见错误和编码风格违规，例如不正确使用 fixtures、测试函数名称和标记。通过使用此插件，您可以在开发过程中及早捕获这些错误，并确保您的 pytest 代码一致且易于维护。</p>
+<p>在其 <a class="reference external" href="https://pypi.org/project/flake8-pytest-style/">PyPI 页面</a> 上可以找到 flake8-pytest-style 检测到的 lint 列表。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>flake8-pytest-style 不是官方的 pytest 项目。某些规则强制执行特定的风格选择，例如使用 <code class="docutils literal notranslate"><span class="pre">&#64;pytest.fixture()</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">&#64;pytest.fixture</span></code>，但您可以配置插件以适应您喜欢的风格。</p>
+</div>
+</div><div aria-labelledby="tab-8-8-1" class="sphinx-tabs-panel" hidden="true" id="panel-8-8-1" name="8-1" role="tabpanel" tabindex="0"><p>In order to ensure that pytest is being used correctly in your project,
+it can be helpful to use the <a class="reference external" href="https://github.com/m-burst/flake8-pytest-style">flake8-pytest-style</a> flake8 plugin.</p>
+<p>flake8-pytest-style checks for common mistakes and coding style violations in pytest code,
+such as incorrect use of fixtures, test function names, and markers.
+By using this plugin, you can catch these errors early in the development process
+and ensure that your pytest code is consistent and easy to maintain.</p>
+<p>A list of the lints detected by flake8-pytest-style can be found on its <a class="reference external" href="https://pypi.org/project/flake8-pytest-style/">PyPI page</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>flake8-pytest-style is not an official pytest project. Some of the rules enforce certain style choices, such as using <code class="docutils literal notranslate"><span class="pre">&#64;pytest.fixture()</span></code> over <code class="docutils literal notranslate"><span class="pre">&#64;pytest.fixture</span></code>, but you can configure the plugin to fit your preferred style.</p>
+</div>
+</div></div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="pythonpath.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="fixtures.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">关于 fixtures</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">良好的集成实践</a><ul>
+<li><a class="reference internal" href="#pip">使用 pip 安装软件包</a></li>
+<li><a class="reference internal" href="#python">Python 测试发现的约定</a></li>
+<li><a class="reference internal" href="#test-layout">选择测试布局</a><ul>
+<li><a class="reference internal" href="#id3">在应用程序代码之外进行测试</a></li>
+<li><a class="reference internal" href="#id6">作为应用程序代码的一部分进行测试</a></li>
+<li><a class="reference internal" href="#which-import-mode">选择导入模式</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tox">tox</a></li>
+<li><a class="reference internal" href="#setuptools">不要通过 setuptools 运行</a></li>
+<li><a class="reference internal" href="#flake8-pytest-style">使用 flake8-pytest-style 进行检查</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

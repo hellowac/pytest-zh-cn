@@ -1,0 +1,1676 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="使用自定义标记" href="markers.html" /><link rel="prev" title="基本模式和示例" href="simple.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/example/parametrize.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>参数化测试 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">入门</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how-to/index.html">操作指南</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">示例和自定义技巧</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple.html">基本模式和示例</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="paramexamples">
+<span id="id1"></span><h1>参数化测试<a class="headerlink" href="#paramexamples" title="Link to this heading">¶</a></h1>
+<p><strong>Parametrizing tests</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> 允许轻松参数化测试函数。有关基本文档，请参阅：ref:<code class="docutils literal notranslate"><span class="pre">parametrize-basics</span></code>。</p>
+<p>下面我们提供了一些使用内置机制的示例。</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> allows to easily parametrize test functions. For basic docs, see <a class="reference internal" href="../how-to/parametrize.html#parametrize-basics"><span class="std std-ref">如何参数化fixtures和测试函数</span></a>.</p>
+<p>In the following we provide some examples using the builtin mechanisms.</p>
+</div></div>
+<section id="id2">
+<h2>根据命令行生成参数组合<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p><strong>Generating parameters combinations, depending on command line</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>假设我们想要使用不同的计算参数执行测试，并且参数范围应由命令行参数确定。首先，我们写一个简单的（无操作）计算测试：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_compute.py</span>
+
+
+<span class="k">def</span> <span class="nf">test_compute</span><span class="p">(</span><span class="n">param1</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">param1</span> <span class="o">&lt;</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>现在我们添加一个测试配置，如下所示：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_addoption</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span><span class="s2">&quot;--all&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;run all combinations&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;param1&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">):</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;param1&quot;</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>这意味着如果不传递 <code class="docutils literal notranslate"><span class="pre">--all</span></code>，我们只运行 2 个测试：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_compute.py
+<span class=" -Color -Color-Green">..</span>                                                                   <span class=" -Color -Color-Green">[100%]</span>
+<span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.12s</span>
+</pre></div>
+</div>
+<p>我们只运行了两个计算，所以看到两个点。现在让我们运行全部组合：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q --all
+<span class=" -Color -Color-Green">....</span><span class=" -Color -Color-Red">F</span>                                                                <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________________ test_compute[4] ______________________________</span>
+
+param1 = 4
+
+    def test_compute(param1):
+&gt;       assert param1 &lt; 4
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 4 &lt; 4</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_compute.py</span>:4: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_compute.py::<span class=" -Color -Color-Bold">test_compute[4]</span> - assert 4 &lt; 4
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">4 passed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+<p>正如预期的那样，当运行 <code class="docutils literal notranslate"><span class="pre">param1</span></code> 值的全范围时，最后一个值会出错。</p>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>Let’s say we want to execute a test with different computation
+parameters and the parameter range shall be determined by a command
+line argument.  Let’s first write a simple (do-nothing) computation test:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_compute.py</span>
+
+
+<span class="k">def</span> <span class="nf">test_compute</span><span class="p">(</span><span class="n">param1</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">param1</span> <span class="o">&lt;</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>Now we add a test configuration like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_addoption</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span><span class="s2">&quot;--all&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;run all combinations&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;param1&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">):</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;param1&quot;</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This means that we only run 2 tests if we do not pass <code class="docutils literal notranslate"><span class="pre">--all</span></code>:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_compute.py
+<span class=" -Color -Color-Green">..</span>                                                                   <span class=" -Color -Color-Green">[100%]</span>
+<span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.12s</span>
+</pre></div>
+</div>
+<p>We run only two computations, so we see two dots.
+let’s run the full monty:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q --all
+<span class=" -Color -Color-Green">....</span><span class=" -Color -Color-Red">F</span>                                                                <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________________ test_compute[4] ______________________________</span>
+
+param1 = 4
+
+    def test_compute(param1):
+&gt;       assert param1 &lt; 4
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 4 &lt; 4</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_compute.py</span>:4: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_compute.py::<span class=" -Color -Color-Bold">test_compute[4]</span> - assert 4 &lt; 4
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">4 passed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+<p>As expected when running the full range of <code class="docutils literal notranslate"><span class="pre">param1</span></code> values we’ll get an error on the last one.</p>
+</div></div>
+</section>
+<section id="id">
+<h2>测试 ID 的不同选项<a class="headerlink" href="#id" title="Link to this heading">¶</a></h2>
+<p><strong>Different options for test IDs</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p>pytest 将为参数化测试中的每组值构建一个字符串，作为测试 ID。这些 ID 可以与 <code class="docutils literal notranslate"><span class="pre">-k</span></code> 一起使用，以选择特定的用例进行运行，并且在某个用例失败时，它们也会标识出具体的用例。使用 <code class="docutils literal notranslate"><span class="pre">--collect-only</span></code> 运行 pytest 将显示生成的 ID。</p>
+<p>数字、字符串、布尔值和 None 将使用它们通常的字符串表示形式来构建测试 ID。对于其他对象，pytest 将基于参数名称生成字符串：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_time.py</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="n">testdata</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">timedelta</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
+<span class="p">]</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;a,b,expected&quot;</span><span class="p">,</span> <span class="n">testdata</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_timedistance_v0</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    <span class="k">assert</span> <span class="n">diff</span> <span class="o">==</span> <span class="n">expected</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;a,b,expected&quot;</span><span class="p">,</span> <span class="n">testdata</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;forward&quot;</span><span class="p">,</span> <span class="s2">&quot;backward&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_timedistance_v1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    <span class="k">assert</span> <span class="n">diff</span> <span class="o">==</span> <span class="n">expected</span>
+
+
+<span class="k">def</span> <span class="nf">idfn</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="n">datetime</span><span class="p">,)):</span>
+        <span class="c1"># 注意这不会显示任何小时/分钟/秒</span>
+        <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;a,b,expected&quot;</span><span class="p">,</span> <span class="n">testdata</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">idfn</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_timedistance_v2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    <span class="k">assert</span> <span class="n">diff</span> <span class="o">==</span> <span class="n">expected</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">&quot;a,b,expected&quot;</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;forward&quot;</span>
+        <span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">timedelta</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;backward&quot;</span>
+        <span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_timedistance_v3</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    <span class="k">assert</span> <span class="n">diff</span> <span class="o">==</span> <span class="n">expected</span>
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">test_timedistance_v0</span></code> 中，我们让 pytest 生成测试 ID。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">test_timedistance_v1</span></code> 中，我们将 <code class="docutils literal notranslate"><span class="pre">ids</span></code> 指定为字符串列表，这些字符串被用作测试 ID。这些 ID 简洁，但维护起来可能会很麻烦。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">test_timedistance_v2</span></code> 中，我们将 <code class="docutils literal notranslate"><span class="pre">ids</span></code> 指定为一个函数，该函数可以生成字符串表示形式，以构成测试 ID 的一部分。因此，我们的 <code class="docutils literal notranslate"><span class="pre">datetime</span></code> 值使用 <code class="docutils literal notranslate"><span class="pre">idfn</span></code> 生成的标签，但由于我们没有为 <code class="docutils literal notranslate"><span class="pre">timedelta</span></code> 对象生成标签，它们仍然使用默认的 pytest 表示：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest test_time.py --collect-only
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 8 items
+
+&lt;Dir parametrize.rst-204&gt;
+&lt;Module test_time.py&gt;
+    &lt;Function test_timedistance_v0[a0-b0-expected0]&gt;
+    &lt;Function test_timedistance_v0[a1-b1-expected1]&gt;
+    &lt;Function test_timedistance_v1[forward]&gt;
+    &lt;Function test_timedistance_v1[backward]&gt;
+    &lt;Function test_timedistance_v2[20011212-20011211-expected0]&gt;
+    &lt;Function test_timedistance_v2[20011211-20011212-expected1]&gt;
+    &lt;Function test_timedistance_v3[forward]&gt;
+    &lt;Function test_timedistance_v3[backward]&gt;
+
+======================== 8 tests collected in 0.12s ========================
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">test_timedistance_v3</span></code> 中，我们使用 <code class="docutils literal notranslate"><span class="pre">pytest.param</span></code> 一起指定测试 ID 和实际数据，而不是将它们单独列出。</p>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p>pytest will build a string that is the test ID for each set of values in a
+parametrized test. These IDs can be used with <code class="docutils literal notranslate"><span class="pre">-k</span></code> to select specific cases
+to run, and they will also identify the specific case when one is failing.
+Running pytest with <code class="docutils literal notranslate"><span class="pre">--collect-only</span></code> will show the generated IDs.</p>
+<p>Numbers, strings, booleans and None will have their usual string representation
+used in the test ID. For other objects, pytest will make a string based on
+the argument name:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_time.py</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="n">testdata</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
+    <span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">timedelta</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
+<span class="p">]</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;a,b,expected&quot;</span><span class="p">,</span> <span class="n">testdata</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_timedistance_v0</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    <span class="k">assert</span> <span class="n">diff</span> <span class="o">==</span> <span class="n">expected</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;a,b,expected&quot;</span><span class="p">,</span> <span class="n">testdata</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;forward&quot;</span><span class="p">,</span> <span class="s2">&quot;backward&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_timedistance_v1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    <span class="k">assert</span> <span class="n">diff</span> <span class="o">==</span> <span class="n">expected</span>
+
+
+<span class="k">def</span> <span class="nf">idfn</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="n">datetime</span><span class="p">,)):</span>
+        <span class="c1"># note this wouldn&#39;t show any hours/minutes/seconds</span>
+        <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;a,b,expected&quot;</span><span class="p">,</span> <span class="n">testdata</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">idfn</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_timedistance_v2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    <span class="k">assert</span> <span class="n">diff</span> <span class="o">==</span> <span class="n">expected</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">&quot;a,b,expected&quot;</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;forward&quot;</span>
+        <span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">timedelta</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;backward&quot;</span>
+        <span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_timedistance_v3</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    <span class="k">assert</span> <span class="n">diff</span> <span class="o">==</span> <span class="n">expected</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">test_timedistance_v0</span></code>, we let pytest generate the test IDs.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">test_timedistance_v1</span></code>, we specified <code class="docutils literal notranslate"><span class="pre">ids</span></code> as a list of strings which were
+used as the test IDs. These are succinct, but can be a pain to maintain.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">test_timedistance_v2</span></code>, we specified <code class="docutils literal notranslate"><span class="pre">ids</span></code> as a function that can generate a
+string representation to make part of the test ID. So our <code class="docutils literal notranslate"><span class="pre">datetime</span></code> values use the
+label generated by <code class="docutils literal notranslate"><span class="pre">idfn</span></code>, but because we didn’t generate a label for <code class="docutils literal notranslate"><span class="pre">timedelta</span></code>
+objects, they are still using the default pytest representation:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest test_time.py --collect-only
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 8 items
+
+&lt;Dir parametrize.rst-204&gt;
+&lt;Module test_time.py&gt;
+    &lt;Function test_timedistance_v0[a0-b0-expected0]&gt;
+    &lt;Function test_timedistance_v0[a1-b1-expected1]&gt;
+    &lt;Function test_timedistance_v1[forward]&gt;
+    &lt;Function test_timedistance_v1[backward]&gt;
+    &lt;Function test_timedistance_v2[20011212-20011211-expected0]&gt;
+    &lt;Function test_timedistance_v2[20011211-20011212-expected1]&gt;
+    &lt;Function test_timedistance_v3[forward]&gt;
+    &lt;Function test_timedistance_v3[backward]&gt;
+
+======================== 8 tests collected in 0.12s ========================
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">test_timedistance_v3</span></code>, we used <code class="docutils literal notranslate"><span class="pre">pytest.param</span></code> to specify the test IDs
+together with the actual data, instead of listing them separately.</p>
+</div></div>
+</section>
+<section id="id3">
+<h2>“测试场景”的快速移植<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p><strong>A quick port of “testscenarios”</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p>这是一个快速移植，用于运行使用 <a class="reference external" href="https://pypi.org/project/testscenarios">testscenarios</a> 配置的测试，这是 Robert Collins 为标准 unittest 框架提供的一个附加组件。我们只需稍微处理一下，以构造适合 pytest 的 <a class="reference internal" href="../reference/reference.html#pytest.Metafunc.parametrize" title="pytest.Metafunc.parametrize"><code class="xref py py-func docutils literal notranslate"><span class="pre">Metafunc.parametrize</span></code></a> 的正确参数：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_scenarios.py</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+    <span class="n">idlist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">argvalues</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">cls</span><span class="o">.</span><span class="n">scenarios</span><span class="p">:</span>
+        <span class="n">idlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scenario</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">scenario</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="n">argnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span>
+        <span class="n">argvalues</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">items</span><span class="p">])</span>
+    <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="n">argnames</span><span class="p">,</span> <span class="n">argvalues</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">idlist</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+
+
+<span class="n">scenario1</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;basic&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;attribute&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">})</span>
+<span class="n">scenario2</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;advanced&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;attribute&quot;</span><span class="p">:</span> <span class="s2">&quot;value2&quot;</span><span class="p">})</span>
+
+
+<span class="k">class</span> <span class="nc">TestSampleWithScenarios</span><span class="p">:</span>
+    <span class="n">scenarios</span> <span class="o">=</span> <span class="p">[</span><span class="n">scenario1</span><span class="p">,</span> <span class="n">scenario2</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">test_demo1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_demo2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这是一个完全自包含的示例，您可以通过以下方式运行：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest test_scenarios.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items
+
+test_scenarios.py <span class=" -Color -Color-Green">....</span>                                               <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">4 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p>如果您只收集测试，您还会看到 ‘advanced’ 和 ‘basic’ 作为测试函数的变体：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --collect-only test_scenarios.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items
+
+&lt;Dir parametrize.rst-204&gt;
+&lt;Module test_scenarios.py&gt;
+    &lt;Class TestSampleWithScenarios&gt;
+    &lt;Function test_demo1[basic]&gt;
+    &lt;Function test_demo2[basic]&gt;
+    &lt;Function test_demo1[advanced]&gt;
+    &lt;Function test_demo2[advanced]&gt;
+
+======================== 4 tests collected in 0.12s ========================
+</pre></div>
+</div>
+<p>请注意，我们告诉 <code class="docutils literal notranslate"><span class="pre">metafunc.parametrize()</span></code>，您的场景值应被视为类范围。使用 pytest-2.3，这将导致基于资源的排序。</p>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>Here is a quick port to run tests configured with <a class="reference external" href="https://pypi.org/project/testscenarios">testscenarios</a>,
+an add-on from Robert Collins for the standard unittest framework. We
+only have to work a bit to construct the correct arguments for pytest’s
+<a class="reference internal" href="../reference/reference.html#pytest.Metafunc.parametrize" title="pytest.Metafunc.parametrize"><code class="xref py py-func docutils literal notranslate"><span class="pre">Metafunc.parametrize</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_scenarios.py</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+    <span class="n">idlist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">argvalues</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">cls</span><span class="o">.</span><span class="n">scenarios</span><span class="p">:</span>
+        <span class="n">idlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scenario</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">scenario</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="n">argnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span>
+        <span class="n">argvalues</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">items</span><span class="p">])</span>
+    <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="n">argnames</span><span class="p">,</span> <span class="n">argvalues</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">idlist</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+
+
+<span class="n">scenario1</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;basic&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;attribute&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">})</span>
+<span class="n">scenario2</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;advanced&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;attribute&quot;</span><span class="p">:</span> <span class="s2">&quot;value2&quot;</span><span class="p">})</span>
+
+
+<span class="k">class</span> <span class="nc">TestSampleWithScenarios</span><span class="p">:</span>
+    <span class="n">scenarios</span> <span class="o">=</span> <span class="p">[</span><span class="n">scenario1</span><span class="p">,</span> <span class="n">scenario2</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">test_demo1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_demo2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>this is a fully self-contained example which you can run with:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest test_scenarios.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items
+
+test_scenarios.py <span class=" -Color -Color-Green">....</span>                                               <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">4 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p>If you just collect tests you’ll also nicely see ‘advanced’ and ‘basic’ as variants for the test function:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --collect-only test_scenarios.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items
+
+&lt;Dir parametrize.rst-204&gt;
+&lt;Module test_scenarios.py&gt;
+    &lt;Class TestSampleWithScenarios&gt;
+    &lt;Function test_demo1[basic]&gt;
+    &lt;Function test_demo2[basic]&gt;
+    &lt;Function test_demo1[advanced]&gt;
+    &lt;Function test_demo2[advanced]&gt;
+
+======================== 4 tests collected in 0.12s ========================
+</pre></div>
+</div>
+<p>Note that we told <code class="docutils literal notranslate"><span class="pre">metafunc.parametrize()</span></code> that your scenario values
+should be considered class-scoped.  With pytest-2.3 this leads to a
+resource-based ordering.</p>
+</div></div>
+</section>
+<section id="id4">
+<h2>推迟参数化资源的设置<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<p><strong>Deferring the setup of parametrized resources</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>测试函数的参数化发生在收集阶段。最好在实际测试运行时设置昂贵的资源，例如数据库连接或子进程。以下是一个简单的示例，展示了如何实现这一点。这个测试需要一个 <code class="docutils literal notranslate"><span class="pre">db</span></code> 对象夹具：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_backends.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">test_db_initialized</span><span class="p">(</span><span class="n">db</span><span class="p">):</span>
+    <span class="c1"># 一个虚拟测试</span>
+    <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;DB2&quot;</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="s2">&quot;出于演示目的故意失败&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>现在我们可以添加一个测试配置，该配置生成两次对 <code class="docutils literal notranslate"><span class="pre">test_db_initialized</span></code> 函数的调用，并且实现一个工厂，创建用于实际测试调用的数据库对象：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;db&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
+        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;db&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;d1&quot;</span><span class="p">,</span> <span class="s2">&quot;d2&quot;</span><span class="p">],</span> <span class="n">indirect</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DB1</span><span class="p">:</span>
+    <span class="s2">&quot;一个数据库对象&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">DB2</span><span class="p">:</span>
+    <span class="s2">&quot;替代数据库对象&quot;</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">db</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">param</span> <span class="o">==</span> <span class="s2">&quot;d1&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DB1</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">param</span> <span class="o">==</span> <span class="s2">&quot;d2&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DB2</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;无效的内部测试配置&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>让我们先看看收集阶段的情况：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest test_backends.py --collect-only
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 2 items
+
+&lt;Dir parametrize.rst-204&gt;
+&lt;Module test_backends.py&gt;
+    &lt;Function test_db_initialized[d1]&gt;
+    &lt;Function test_db_initialized[d2]&gt;
+
+======================== 2 tests collected in 0.12s ========================
+</pre></div>
+</div>
+<p>然后当我们运行测试时：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_backends.py
+<span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">F</span>                                                                   <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________________________ test_db_initialized[d2] __________________________</span>
+
+db = &lt;conftest.DB2 object at 0xdeadbeef0001&gt;
+
+    def test_db_initialized(db):
+        # 一个虚拟测试
+        if db.__class__.__name__ == &quot;DB2&quot;:
+&gt;           pytest.fail(&quot;出于演示目的故意失败&quot;)
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           Failed: deliberately failing for demo purposes</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_backends.py</span>:8: Failed
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_backends.py::<span class=" -Color -Color-Bold">test_db_initialized[d2]</span> - Failed: deliberately f...
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+<p>第一次调用 <code class="docutils literal notranslate"><span class="pre">db</span> <span class="pre">==</span> <span class="pre">&quot;DB1&quot;</span></code> 通过，而第二次调用 <code class="docutils literal notranslate"><span class="pre">db</span> <span class="pre">==</span> <span class="pre">&quot;DB2&quot;</span></code> 失败。我们的 <code class="docutils literal notranslate"><span class="pre">db</span></code> 夹具函数在设置阶段实例化了每个 DB 值，而 <code class="docutils literal notranslate"><span class="pre">pytest_generate_tests</span></code> 在收集阶段生成了两次对 <code class="docutils literal notranslate"><span class="pre">test_db_initialized</span></code> 的调用。</p>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><p>The parametrization of test functions happens at collection
+time.  It is a good idea to setup expensive resources like DB
+connections or subprocess only when the actual test is run.
+Here is a simple example how you can achieve that. This test
+requires a <code class="docutils literal notranslate"><span class="pre">db</span></code> object fixture:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_backends.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">test_db_initialized</span><span class="p">(</span><span class="n">db</span><span class="p">):</span>
+    <span class="c1"># a dummy test</span>
+    <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;DB2&quot;</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="s2">&quot;deliberately failing for demo purposes&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can now add a test configuration that generates two invocations of
+the <code class="docutils literal notranslate"><span class="pre">test_db_initialized</span></code> function and also implements a factory that
+creates a database object for the actual test invocations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;db&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
+        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;db&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;d1&quot;</span><span class="p">,</span> <span class="s2">&quot;d2&quot;</span><span class="p">],</span> <span class="n">indirect</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DB1</span><span class="p">:</span>
+    <span class="s2">&quot;one database object&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">DB2</span><span class="p">:</span>
+    <span class="s2">&quot;alternative database object&quot;</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">db</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">param</span> <span class="o">==</span> <span class="s2">&quot;d1&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DB1</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">param</span> <span class="o">==</span> <span class="s2">&quot;d2&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DB2</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;invalid internal test config&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s first see how it looks like at collection time:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest test_backends.py --collect-only
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 2 items
+
+&lt;Dir parametrize.rst-204&gt;
+&lt;Module test_backends.py&gt;
+    &lt;Function test_db_initialized[d1]&gt;
+    &lt;Function test_db_initialized[d2]&gt;
+
+======================== 2 tests collected in 0.12s ========================
+</pre></div>
+</div>
+<p>And then when we run the test:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q test_backends.py
+<span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">F</span>                                                                   <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________________________ test_db_initialized[d2] __________________________</span>
+
+db = &lt;conftest.DB2 object at 0xdeadbeef0001&gt;
+
+    def test_db_initialized(db):
+        # a dummy test
+        if db.__class__.__name__ == &quot;DB2&quot;:
+&gt;           pytest.fail(&quot;deliberately failing for demo purposes&quot;)
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           Failed: deliberately failing for demo purposes</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_backends.py</span>:8: Failed
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_backends.py::<span class=" -Color -Color-Bold">test_db_initialized[d2]</span> - Failed: deliberately f...
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+<p>The first invocation with <code class="docutils literal notranslate"><span class="pre">db</span> <span class="pre">==</span> <span class="pre">&quot;DB1&quot;</span></code> passed while the second with <code class="docutils literal notranslate"><span class="pre">db</span> <span class="pre">==</span> <span class="pre">&quot;DB2&quot;</span></code> failed.  Our <code class="docutils literal notranslate"><span class="pre">db</span></code> fixture function has instantiated each of the DB values during the setup phase while the <code class="docutils literal notranslate"><span class="pre">pytest_generate_tests</span></code> generated two according calls to the <code class="docutils literal notranslate"><span class="pre">test_db_initialized</span></code> during the collection phase.</p>
+</div></div>
+</section>
+<section id="id5">
+<h2>间接参数化<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<p><strong>Indirect parametrization</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><p>使用 <code class="docutils literal notranslate"><span class="pre">indirect=True</span></code> 参数进行测试参数化时，可以在将值传递给测试之前，通过夹具参数化测试：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">fixt</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">param</span> <span class="o">*</span> <span class="mi">3</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;fixt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">],</span> <span class="n">indirect</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_indirect</span><span class="p">(</span><span class="n">fixt</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fixt</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>这可以用来在测试运行时在夹具中进行更昂贵的设置，而不是在收集阶段执行这些设置步骤。</p>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><p>Using the <code class="docutils literal notranslate"><span class="pre">indirect=True</span></code> parameter when parametrizing a test allows to
+parametrize a test with a fixture receiving the values before passing them to a
+test:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">fixt</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">param</span> <span class="o">*</span> <span class="mi">3</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;fixt&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">],</span> <span class="n">indirect</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_indirect</span><span class="p">(</span><span class="n">fixt</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fixt</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>This can be used, for example, to do more expensive setup at test run time in
+the fixture, rather than having to run those setup steps at collection time.</p>
+</div></div>
+</section>
+<section id="id6">
+<h2>对特定参数应用间接参数化<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<p><strong>Apply indirect on particular arguments</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><p>参数化通常使用多个参数名。可以对特定参数应用 <code class="docutils literal notranslate"><span class="pre">indirect</span></code> 参数。通过将参数名的列表或元组传递给 <code class="docutils literal notranslate"><span class="pre">indirect</span></code> 来实现。在下面的示例中，有一个函数 <code class="docutils literal notranslate"><span class="pre">test_indirect</span></code> 使用了两个夹具：<code class="docutils literal notranslate"><span class="pre">x</span></code> 和 <code class="docutils literal notranslate"><span class="pre">y</span></code>。这里我们将夹具 <code class="docutils literal notranslate"><span class="pre">x</span></code> 的名称列表传递给 indirect 参数。这个参数只会应用于该参数，而值 <code class="docutils literal notranslate"><span class="pre">a</span></code> 将传递给相应的夹具函数：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_indirect_list.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;function&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">param</span> <span class="o">*</span> <span class="mi">3</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;function&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">param</span> <span class="o">*</span> <span class="mi">2</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;x, y&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">)],</span> <span class="n">indirect</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_indirect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;aaa&quot;</span>
+    <span class="k">assert</span> <span class="n">y</span> <span class="o">==</span> <span class="s2">&quot;b&quot;</span>
+</pre></div>
+</div>
+<p>这个测试的结果将是成功的：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v test_indirect_list.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 1 item
+
+test_indirect_list.py::test_indirect[a-b] <span class=" -Color -Color-Green">PASSED</span>                     <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><p>Very often parametrization uses more than one argument name. There is opportunity to apply <code class="docutils literal notranslate"><span class="pre">indirect</span></code>
+parameter on particular arguments. It can be done by passing list or tuple of
+arguments’ names to <code class="docutils literal notranslate"><span class="pre">indirect</span></code>. In the example below there is a function <code class="docutils literal notranslate"><span class="pre">test_indirect</span></code> which uses
+two fixtures: <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>. Here we give to indirect the list, which contains the name of the
+fixture <code class="docutils literal notranslate"><span class="pre">x</span></code>. The indirect parameter will be applied to this argument only, and the value <code class="docutils literal notranslate"><span class="pre">a</span></code>
+will be passed to respective fixture function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_indirect_list.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;function&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">param</span> <span class="o">*</span> <span class="mi">3</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;function&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">param</span> <span class="o">*</span> <span class="mi">2</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;x, y&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">)],</span> <span class="n">indirect</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_indirect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;aaa&quot;</span>
+    <span class="k">assert</span> <span class="n">y</span> <span class="o">==</span> <span class="s2">&quot;b&quot;</span>
+</pre></div>
+</div>
+<p>The result of this test will be successful:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v test_indirect_list.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 1 item
+
+test_indirect_list.py::test_indirect[a-b] <span class=" -Color -Color-Green">PASSED</span>                     <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="id7">
+<h2>通过每个类配置参数化测试方法<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
+<p><strong>Parametrizing test methods through per-class configuration</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-7-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-7-7-0" name="7-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-7-7-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-1" name="7-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-7-7-0" class="sphinx-tabs-panel" id="panel-7-7-0" name="7-0" role="tabpanel" tabindex="0"><p>这是一个实现了参数化方案的 <code class="docutils literal notranslate"><span class="pre">pytest_generate_tests</span></code> 函数，类似于 Michael Foord 的 <a class="reference external" href="https://github.com/testing-cabal/unittest-ext/blob/master/params.py">unittest parametrizer</a>，但代码量要少得多：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of ./test_parametrize.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+    <span class="c1"># 每个测试函数调用一次</span>
+    <span class="n">funcarglist</span> <span class="o">=</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">cls</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">metafunc</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+    <span class="n">argnames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">funcarglist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+        <span class="n">argnames</span><span class="p">,</span> <span class="p">[[</span><span class="n">funcargs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">argnames</span><span class="p">]</span> <span class="k">for</span> <span class="n">funcargs</span> <span class="ow">in</span> <span class="n">funcarglist</span><span class="p">]</span>
+    <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="c1"># 显示每个测试方法的多个参数集的映射</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;test_equals&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">)],</span>
+        <span class="s2">&quot;test_zerodivision&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">)],</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">test_equals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+
+    <span class="k">def</span> <span class="nf">test_zerodivision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ZeroDivisionError</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">/</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>我们的测试生成器查找一个类级别的定义，指定每个测试函数使用的参数集。让我们运行它：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q
+<span class=" -Color -Color-Red">F</span><span class=" -Color -Color-Green">..</span>                                                                  <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________________ TestClass.test_equals[1-2] ________________________</span>
+
+self = &lt;test_parametrize.TestClass object at 0xdeadbeef0002&gt;, a = 1, b = 2
+
+    def test_equals(self, a, b):
+&gt;       assert a == b
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 1 == 2</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_parametrize.py</span>:21: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_parametrize.py::<span class=" -Color -Color-Bold">TestClass::test_equals[1-2]</span> - assert 1 == 2
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">2 passed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-7-7-1" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-1" name="7-1" role="tabpanel" tabindex="0"><p>Here is an example <code class="docutils literal notranslate"><span class="pre">pytest_generate_tests</span></code> function implementing a
+parametrization scheme similar to Michael Foord’s <a class="reference external" href="https://github.com/testing-cabal/unittest-ext/blob/master/params.py">unittest
+parametrizer</a> but in a lot less code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of ./test_parametrize.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+    <span class="c1"># called once per each test function</span>
+    <span class="n">funcarglist</span> <span class="o">=</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">cls</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">metafunc</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+    <span class="n">argnames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">funcarglist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+        <span class="n">argnames</span><span class="p">,</span> <span class="p">[[</span><span class="n">funcargs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">argnames</span><span class="p">]</span> <span class="k">for</span> <span class="n">funcargs</span> <span class="ow">in</span> <span class="n">funcarglist</span><span class="p">]</span>
+    <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="c1"># a map specifying multiple argument sets for a test method</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;test_equals&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">)],</span>
+        <span class="s2">&quot;test_zerodivision&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">)],</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">test_equals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+
+    <span class="k">def</span> <span class="nf">test_zerodivision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ZeroDivisionError</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">/</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>Our test generator looks up a class-level definition which specifies which
+argument sets to use for each test function.  Let’s run it:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q
+<span class=" -Color -Color-Red">F</span><span class=" -Color -Color-Green">..</span>                                                                  <span class=" -Color -Color-Red">[100%]</span>
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________________ TestClass.test_equals[1-2] ________________________</span>
+
+self = &lt;test_parametrize.TestClass object at 0xdeadbeef0002&gt;, a = 1, b = 2
+
+    def test_equals(self, a, b):
+&gt;       assert a == b
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 1 == 2</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_parametrize.py</span>:21: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_parametrize.py::<span class=" -Color -Color-Bold">TestClass::test_equals[1-2]</span> - assert 1 == 2
+<span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">2 passed</span><span class=" -Color -Color-Red"> in 0.12s</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="id8">
+<h2>使用多个装置进行参数化<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h2>
+<p><strong>Parametrization with multiple fixtures</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-8-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-8-8-0" name="8-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-8-8-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-8-8-1" name="8-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-8-8-0" class="sphinx-tabs-panel" id="panel-8-8-0" name="8-0" role="tabpanel" tabindex="0"><p>这是一个简化的现实生活示例，使用参数化测试来测试对象在不同 Python 解释器之间的序列化。我们定义了一个 <code class="docutils literal notranslate"><span class="pre">test_basic_objects</span></code> 函数，针对其三个参数运行不同的参数集：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">python1</span></code>: 第一个 Python 解释器，用于将对象 pickle-dump 到文件</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python2</span></code>: 第二个解释器，用于从文件 pickle-load 对象</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">obj</span></code>: 要被转储/加载的对象</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Module containing a parametrized tests testing cross-python serialization</span>
+<span class="sd">via the pickle module.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="n">pythonlist</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;python3.9&quot;</span><span class="p">,</span> <span class="s2">&quot;python3.10&quot;</span><span class="p">,</span> <span class="s2">&quot;python3.11&quot;</span><span class="p">]</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">pythonlist</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">python1</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">picklefile</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;data.pickle&quot;</span>
+    <span class="k">return</span> <span class="n">Python</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">param</span><span class="p">,</span> <span class="n">picklefile</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">pythonlist</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">python2</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">python1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Python</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">param</span><span class="p">,</span> <span class="n">python1</span><span class="o">.</span><span class="n">picklefile</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Python</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">picklefile</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pythonpath</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pythonpath</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">version</span><span class="si">!r}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picklefile</span> <span class="o">=</span> <span class="n">picklefile</span>
+
+    <span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="n">dumpfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">picklefile</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;dump.py&quot;</span><span class="p">)</span>
+        <span class="n">dumpfile</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
+            <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
+                <span class="sa">rf</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                import pickle</span>
+<span class="s2">                f = open(</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">picklefile</span><span class="p">)</span><span class="si">!r}</span><span class="s2">, &#39;wb&#39;)</span>
+<span class="s2">                s = pickle.dump(</span><span class="si">{</span><span class="n">obj</span><span class="si">!r}</span><span class="s2">, f, protocol=2)</span>
+<span class="s2">                f.close()</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">pythonpath</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">dumpfile</span><span class="p">)),</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load_and_is_true</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
+        <span class="n">loadfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">picklefile</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;load.py&quot;</span><span class="p">)</span>
+        <span class="n">loadfile</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
+            <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
+                <span class="sa">rf</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                import pickle</span>
+<span class="s2">                f = open(</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">picklefile</span><span class="p">)</span><span class="si">!r}</span><span class="s2">, &#39;rb&#39;)</span>
+<span class="s2">                obj = pickle.load(f)</span>
+<span class="s2">                f.close()</span>
+<span class="s2">                res = eval(</span><span class="si">{</span><span class="n">expression</span><span class="si">!r}</span><span class="s2">)</span>
+<span class="s2">                if not res:</span>
+<span class="s2">                    raise SystemExit(1)</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">loadfile</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">pythonpath</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">loadfile</span><span class="p">)),</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;obj&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">42</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">3</span><span class="p">}])</span>
+<span class="k">def</span> <span class="nf">test_basic_objects</span><span class="p">(</span><span class="n">python1</span><span class="p">,</span> <span class="n">python2</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="n">python1</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="n">python2</span><span class="o">.</span><span class="n">load_and_is_true</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;obj == </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>运行该测试时，如果我们没有安装所有的 Python 解释器，会有一些跳过的测试，否则将运行所有组合（3 个解释器 × 3 个解释器 × 3 个要序列化/反序列化的对象）：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>. $ pytest -rs -q multipython.py
+<span class=" -Color -Color-Yellow">ssssssssssss</span><span class=" -Color -Color-Green">...</span><span class=" -Color -Color-Yellow">ssssssssssss</span>                                          <span class=" -Color -Color-Yellow">[100%]</span>
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Yellow">SKIPPED</span> [12] multipython.py:67: &#39;python3.9&#39; not found
+<span class=" -Color -Color-Yellow">SKIPPED</span> [12] multipython.py:67: &#39;python3.11&#39; not found
+<span class=" -Color -Color-Green">3 passed</span>, <span class=" -Color -Color-Bold -Color-Bold-Yellow">24 skipped</span><span class=" -Color -Color-Yellow"> in 0.12s</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-8-8-1" class="sphinx-tabs-panel" hidden="true" id="panel-8-8-1" name="8-1" role="tabpanel" tabindex="0"><p>Here is a stripped down real-life example of using parametrized
+testing for testing serialization of objects between different python
+interpreters.  We define a <code class="docutils literal notranslate"><span class="pre">test_basic_objects</span></code> function which
+is to be run with different sets of arguments for its three arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">python1</span></code>: first python interpreter, run to pickle-dump an object to a file</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python2</span></code>: second interpreter, run to pickle-load an object from a file</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">obj</span></code>: object to be dumped/loaded</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Module containing a parametrized tests testing cross-python serialization</span>
+<span class="sd">via the pickle module.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="n">pythonlist</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;python3.9&quot;</span><span class="p">,</span> <span class="s2">&quot;python3.10&quot;</span><span class="p">,</span> <span class="s2">&quot;python3.11&quot;</span><span class="p">]</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">pythonlist</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">python1</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">picklefile</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;data.pickle&quot;</span>
+    <span class="k">return</span> <span class="n">Python</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">param</span><span class="p">,</span> <span class="n">picklefile</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">pythonlist</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">python2</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">python1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Python</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">param</span><span class="p">,</span> <span class="n">python1</span><span class="o">.</span><span class="n">picklefile</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Python</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">picklefile</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pythonpath</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pythonpath</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">version</span><span class="si">!r}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picklefile</span> <span class="o">=</span> <span class="n">picklefile</span>
+
+    <span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="n">dumpfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">picklefile</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;dump.py&quot;</span><span class="p">)</span>
+        <span class="n">dumpfile</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
+            <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
+                <span class="sa">rf</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                import pickle</span>
+<span class="s2">                f = open(</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">picklefile</span><span class="p">)</span><span class="si">!r}</span><span class="s2">, &#39;wb&#39;)</span>
+<span class="s2">                s = pickle.dump(</span><span class="si">{</span><span class="n">obj</span><span class="si">!r}</span><span class="s2">, f, protocol=2)</span>
+<span class="s2">                f.close()</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">pythonpath</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">dumpfile</span><span class="p">)),</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load_and_is_true</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
+        <span class="n">loadfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">picklefile</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;load.py&quot;</span><span class="p">)</span>
+        <span class="n">loadfile</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
+            <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
+                <span class="sa">rf</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                import pickle</span>
+<span class="s2">                f = open(</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">picklefile</span><span class="p">)</span><span class="si">!r}</span><span class="s2">, &#39;rb&#39;)</span>
+<span class="s2">                obj = pickle.load(f)</span>
+<span class="s2">                f.close()</span>
+<span class="s2">                res = eval(</span><span class="si">{</span><span class="n">expression</span><span class="si">!r}</span><span class="s2">)</span>
+<span class="s2">                if not res:</span>
+<span class="s2">                    raise SystemExit(1)</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">loadfile</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">pythonpath</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">loadfile</span><span class="p">)),</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;obj&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">42</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">3</span><span class="p">}])</span>
+<span class="k">def</span> <span class="nf">test_basic_objects</span><span class="p">(</span><span class="n">python1</span><span class="p">,</span> <span class="n">python2</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="n">python1</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="n">python2</span><span class="o">.</span><span class="n">load_and_is_true</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;obj == </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Running it results in some skips if we don’t have all the python interpreters installed and otherwise runs all combinations (3 interpreters times 3 interpreters times 3 objects to serialize/deserialize):</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>. $ pytest -rs -q multipython.py
+<span class=" -Color -Color-Yellow">ssssssssssss</span><span class=" -Color -Color-Green">...</span><span class=" -Color -Color-Yellow">ssssssssssss</span>                                          <span class=" -Color -Color-Yellow">[100%]</span>
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Yellow">SKIPPED</span> [12] multipython.py:67: &#39;python3.9&#39; not found
+<span class=" -Color -Color-Yellow">SKIPPED</span> [12] multipython.py:67: &#39;python3.11&#39; not found
+<span class=" -Color -Color-Green">3 passed</span>, <span class=" -Color -Color-Bold -Color-Bold-Yellow">24 skipped</span><span class=" -Color -Color-Yellow"> in 0.12s</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="id9">
+<h2>可选实现/导入的参数化<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h2>
+<p><strong>Parametrization of optional implementations/imports</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-9-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-9-9-0" name="9-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-9-9-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-9-9-1" name="9-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-9-9-0" class="sphinx-tabs-panel" id="panel-9-9-0" name="9-0" role="tabpanel" tabindex="0"><p>如果你想比较多个实现同一 API 的结果，可以编写测试函数，这些函数接收已经导入的实现，并在实现不可导入/不可用时跳过测试。假设我们有一个“基础”实现，而其他（可能是优化过的实现）需要提供相似的结果：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">basemod</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pytest</span><span class="o">.</span><span class="n">importorskip</span><span class="p">(</span><span class="s2">&quot;base&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;opt1&quot;</span><span class="p">,</span> <span class="s2">&quot;opt2&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">optmod</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pytest</span><span class="o">.</span><span class="n">importorskip</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>然后是一个简单函数的基础实现：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of base.py</span>
+<span class="k">def</span> <span class="nf">func1</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>以及一个优化版本：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of opt1.py</span>
+<span class="k">def</span> <span class="nf">func1</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mf">1.0001</span>
+</pre></div>
+</div>
+<p>最后是一个小的测试模块：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_module.py</span>
+
+<span class="k">def</span> <span class="nf">test_func1</span><span class="p">(</span><span class="n">basemod</span><span class="p">,</span> <span class="n">optmod</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="n">basemod</span><span class="o">.</span><span class="n">func1</span><span class="p">(),</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="nb">round</span><span class="p">(</span><span class="n">optmod</span><span class="o">.</span><span class="n">func1</span><span class="p">(),</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果你运行这个并启用跳过报告：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -rs test_module.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 2 items
+
+test_module.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Yellow">s</span>                                                    <span class=" -Color -Color-Yellow">[100%]</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Yellow">SKIPPED</span> [1] test_module.py:3: could not import &#39;opt2&#39;: No module named &#39;opt2&#39;
+<span class=" -Color -Color-Yellow">======================= </span><span class=" -Color -Color-Green">1 passed</span>, <span class=" -Color -Color-Bold -Color-Bold-Yellow">1 skipped</span><span class=" -Color -Color-Yellow"> in 0.12s =======================</span>
+</pre></div>
+</div>
+<p>你会看到我们没有 <code class="docutils literal notranslate"><span class="pre">opt2</span></code> 模块，因此我们的 <code class="docutils literal notranslate"><span class="pre">test_func1</span></code> 的第二次测试运行被跳过。几点说明：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> 文件中的 fixture 函数是“会话级别”的，因为我们只需要导入一次。</p></li>
+<li><p>如果你有多个测试函数和一个被跳过的导入，你会看到报告中的 <code class="docutils literal notranslate"><span class="pre">[1]</span></code> 计数增加。</p></li>
+<li><p>你可以在测试函数上使用 <a class="reference internal" href="../how-to/parametrize.html#pytest-mark-parametrize"><span class="std std-ref">&#64;pytest.mark.parametrize</span></a> 风格的参数化来对输入/输出值进行参数化。</p></li>
+</ul>
+</div><div aria-labelledby="tab-9-9-1" class="sphinx-tabs-panel" hidden="true" id="panel-9-9-1" name="9-1" role="tabpanel" tabindex="0"><p>If you want to compare the outcomes of several implementations of a given
+API, you can write test functions that receive the already imported implementations
+and get skipped in case the implementation is not importable/available.  Let’s
+say we have a “base” implementation and the other (possibly optimized ones)
+need to provide similar results:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">basemod</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pytest</span><span class="o">.</span><span class="n">importorskip</span><span class="p">(</span><span class="s2">&quot;base&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;opt1&quot;</span><span class="p">,</span> <span class="s2">&quot;opt2&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">optmod</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pytest</span><span class="o">.</span><span class="n">importorskip</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And then a base implementation of a simple function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of base.py</span>
+<span class="k">def</span> <span class="nf">func1</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>And an optimized version:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of opt1.py</span>
+<span class="k">def</span> <span class="nf">func1</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mf">1.0001</span>
+</pre></div>
+</div>
+<p>And finally a little test module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_module.py</span>
+
+
+<span class="k">def</span> <span class="nf">test_func1</span><span class="p">(</span><span class="n">basemod</span><span class="p">,</span> <span class="n">optmod</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="n">basemod</span><span class="o">.</span><span class="n">func1</span><span class="p">(),</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="nb">round</span><span class="p">(</span><span class="n">optmod</span><span class="o">.</span><span class="n">func1</span><span class="p">(),</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you run this with reporting for skips enabled:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -rs test_module.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 2 items
+
+test_module.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Yellow">s</span>                                                    <span class=" -Color -Color-Yellow">[100%]</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Yellow">SKIPPED</span> [1] test_module.py:3: could not import &#39;opt2&#39;: No module named &#39;opt2&#39;
+<span class=" -Color -Color-Yellow">======================= </span><span class=" -Color -Color-Green">1 passed</span>, <span class=" -Color -Color-Bold -Color-Bold-Yellow">1 skipped</span><span class=" -Color -Color-Yellow"> in 0.12s =======================</span>
+</pre></div>
+</div>
+<p>You’ll see that we don’t have an <code class="docutils literal notranslate"><span class="pre">opt2</span></code> module and thus the second test run of our <code class="docutils literal notranslate"><span class="pre">test_func1</span></code> was skipped.  A few notes:</p>
+<ul class="simple">
+<li><p>the fixture functions in the <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> file are “session-scoped” because we don’t need to import more than once</p></li>
+<li><p>if you have multiple test functions and a skipped import, you will see the <code class="docutils literal notranslate"><span class="pre">[1]</span></code> count increasing in the report</p></li>
+<li><p>you can put <a class="reference internal" href="../how-to/parametrize.html#pytest-mark-parametrize"><span class="std std-ref">&#64;pytest.mark.parametrize</span></a> style parametrization on the test functions to parametrize input/output values as well.</p></li>
+</ul>
+</div></div>
+</section>
+<section id="id10">
+<h2>为单个参数化测试设置标记或测试 ID<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h2>
+<p><strong>Set marks or test ID for individual parametrized test</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-10-10-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-10-10-0" name="10-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-10-10-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-1" name="10-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-10-10-0" class="sphinx-tabs-panel" id="panel-10-10-0" name="10-0" role="tabpanel" tabindex="0"><p>使用 <code class="docutils literal notranslate"><span class="pre">pytest.param</span></code> 可以将标记或测试 ID 应用到单个参数化测试。例如：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_pytest_param_example.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">&quot;test_input,expected&quot;</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;3+5&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;1+7&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">marks</span><span class="o">=</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">basic</span><span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;2+4&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">marks</span><span class="o">=</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">basic</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;basic_2+4&quot;</span><span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="s2">&quot;6*9&quot;</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="n">marks</span><span class="o">=</span><span class="p">[</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">basic</span><span class="p">,</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">xfail</span><span class="p">],</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;basic_6*9&quot;</span>
+        <span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_eval</span><span class="p">(</span><span class="n">test_input</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">eval</span><span class="p">(</span><span class="n">test_input</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span>
+</pre></div>
+</div>
+<p>在这个例子中，我们有 4 个参数化测试。除了第一个测试外，其余三个参数化测试都使用了自定义标记 <code class="docutils literal notranslate"><span class="pre">basic</span></code>，而对于第四个测试，我们还使用了内置标记 <code class="docutils literal notranslate"><span class="pre">xfail</span></code> 来表示该测试预期会失败。为了清晰起见，我们为某些测试设置了测试 ID。</p>
+<p>然后以详细模式运行 <code class="docutils literal notranslate"><span class="pre">pytest</span></code>，并只选择 <code class="docutils literal notranslate"><span class="pre">basic</span></code> 标记：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v -m basic
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 24 items / 21 deselected / 3 selected
+
+test_pytest_param_example.py::test_eval[1+7-8] <span class=" -Color -Color-Green">PASSED</span>                <span class=" -Color -Color-Green">[ 33%]</span>
+test_pytest_param_example.py::test_eval[basic_2+4] <span class=" -Color -Color-Green">PASSED</span>            <span class=" -Color -Color-Green">[ 66%]</span>
+test_pytest_param_example.py::test_eval[basic_6*9] <span class=" -Color -Color-Yellow">XFAIL</span>             <span class=" -Color -Color-Yellow">[100%]</span>
+
+<span class=" -Color -Color-Yellow">=============== </span><span class=" -Color -Color-Green">2 passed</span>, <span class=" -Color -Color-Bold -Color-Bold-Yellow">21 deselected</span>, <span class=" -Color -Color-Bold -Color-Bold-Yellow">1 xfailed</span><span class=" -Color -Color-Yellow"> in 0.12s ================</span>
+</pre></div>
+</div>
+<p>结果如下：</p>
+<ul class="simple">
+<li><p>收集了四个测试</p></li>
+<li><p>一个测试被排除，因为它没有 <code class="docutils literal notranslate"><span class="pre">basic</span></code> 标记。</p></li>
+<li><p>选择了三个带有 <code class="docutils literal notranslate"><span class="pre">basic</span></code> 标记的测试。</p></li>
+<li><p>测试 <code class="docutils literal notranslate"><span class="pre">test_eval[1+7-8]</span></code> 通过，但名称是自动生成的，可能会让人困惑。</p></li>
+<li><p>测试 <code class="docutils literal notranslate"><span class="pre">test_eval[basic_2+4]</span></code> 通过。</p></li>
+<li><p>测试 <code class="docutils literal notranslate"><span class="pre">test_eval[basic_6*9]</span></code> 被预期为失败，并且确实失败了。</p></li>
+</ul>
+</div><div aria-labelledby="tab-10-10-1" class="sphinx-tabs-panel" hidden="true" id="panel-10-10-1" name="10-1" role="tabpanel" tabindex="0"><p>Use <code class="docutils literal notranslate"><span class="pre">pytest.param</span></code> to apply marks or set test ID to individual parametrized test.
+For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_pytest_param_example.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">&quot;test_input,expected&quot;</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;3+5&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;1+7&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">marks</span><span class="o">=</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">basic</span><span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;2+4&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">marks</span><span class="o">=</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">basic</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;basic_2+4&quot;</span><span class="p">),</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span>
+            <span class="s2">&quot;6*9&quot;</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="n">marks</span><span class="o">=</span><span class="p">[</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">basic</span><span class="p">,</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">xfail</span><span class="p">],</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;basic_6*9&quot;</span>
+        <span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_eval</span><span class="p">(</span><span class="n">test_input</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">eval</span><span class="p">(</span><span class="n">test_input</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span>
+</pre></div>
+</div>
+<p>In this example, we have 4 parametrized tests. Except for the first test,
+we mark the rest three parametrized tests with the custom marker <code class="docutils literal notranslate"><span class="pre">basic</span></code>,
+and for the fourth test we also use the built-in mark <code class="docutils literal notranslate"><span class="pre">xfail</span></code> to indicate this
+test is expected to fail. For explicitness, we set test ids for some tests.</p>
+<p>Then run <code class="docutils literal notranslate"><span class="pre">pytest</span></code> with verbose mode and with only the <code class="docutils literal notranslate"><span class="pre">basic</span></code> marker:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v -m basic
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 24 items / 21 deselected / 3 selected
+
+test_pytest_param_example.py::test_eval[1+7-8] <span class=" -Color -Color-Green">PASSED</span>                <span class=" -Color -Color-Green">[ 33%]</span>
+test_pytest_param_example.py::test_eval[basic_2+4] <span class=" -Color -Color-Green">PASSED</span>            <span class=" -Color -Color-Green">[ 66%]</span>
+test_pytest_param_example.py::test_eval[basic_6*9] <span class=" -Color -Color-Yellow">XFAIL</span>             <span class=" -Color -Color-Yellow">[100%]</span>
+
+<span class=" -Color -Color-Yellow">=============== </span><span class=" -Color -Color-Green">2 passed</span>, <span class=" -Color -Color-Bold -Color-Bold-Yellow">21 deselected</span>, <span class=" -Color -Color-Bold -Color-Bold-Yellow">1 xfailed</span><span class=" -Color -Color-Yellow"> in 0.12s ================</span>
+</pre></div>
+</div>
+<p>As the result:</p>
+<ul class="simple">
+<li><p>Four tests were collected</p></li>
+<li><p>One test was deselected because it doesn’t have the <code class="docutils literal notranslate"><span class="pre">basic</span></code> mark.</p></li>
+<li><p>Three tests with the <code class="docutils literal notranslate"><span class="pre">basic</span></code> mark was selected.</p></li>
+<li><p>The test <code class="docutils literal notranslate"><span class="pre">test_eval[1+7-8]</span></code> passed, but the name is autogenerated and confusing.</p></li>
+<li><p>The test <code class="docutils literal notranslate"><span class="pre">test_eval[basic_2+4]</span></code> passed.</p></li>
+<li><p>The test <code class="docutils literal notranslate"><span class="pre">test_eval[basic_6*9]</span></code> was expected to fail and did fail.</p></li>
+</ul>
+</div></div>
+</section>
+<section id="parametrizing-conditional-raising">
+<span id="id11"></span><h2>参数化条件提升<a class="headerlink" href="#parametrizing-conditional-raising" title="Link to this heading">¶</a></h2>
+<p><strong>Parametrizing conditional raising</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-11-11-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-11-11-0" name="11-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-11-11-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-11-11-1" name="11-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-11-11-0" class="sphinx-tabs-panel" id="panel-11-11-0" name="11-0" role="tabpanel" tabindex="0"><p>使用 <a class="reference internal" href="../reference/reference.html#pytest.raises" title="pytest.raises"><code class="xref py py-func docutils literal notranslate"><span class="pre">pytest.raises()</span></code></a> 与 <a class="reference internal" href="../reference/reference.html#pytest-mark-parametrize-ref"><span class="std std-ref">pytest.mark.parametrize</span></a> 装饰器编写参数化测试，其中某些测试会引发异常，而其他测试则不会。</p>
+<p><code class="docutils literal notranslate"><span class="pre">contextlib.nullcontext</span></code> 可用于测试那些不预期引发异常但应返回某个值的情况。该值通过 <code class="docutils literal notranslate"><span class="pre">enter_result</span></code> 参数提供，并将作为 <code class="docutils literal notranslate"><span class="pre">with</span></code> 语句的目标（在下面的示例中为 <code class="docutils literal notranslate"><span class="pre">e</span></code>）。</p>
+<p>例如：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">nullcontext</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">&quot;example_input,expectation&quot;</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">nullcontext</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nullcontext</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nullcontext</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ZeroDivisionError</span><span class="p">)),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_division</span><span class="p">(</span><span class="n">example_input</span><span class="p">,</span> <span class="n">expectation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;测试我对除法的了解。&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">expectation</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="mi">6</span> <span class="o">/</span> <span class="n">example_input</span><span class="p">)</span> <span class="o">==</span> <span class="n">e</span>
+</pre></div>
+</div>
+<p>在上述示例中，前三个测试用例应正常运行而不引发任何异常，而第四个测试用例应引发 <code class="docutils literal notranslate"><span class="pre">ZeroDivisionError</span></code> 异常，这符合 pytest 的预期。</p>
+</div><div aria-labelledby="tab-11-11-1" class="sphinx-tabs-panel" hidden="true" id="panel-11-11-1" name="11-1" role="tabpanel" tabindex="0"><p>Use <a class="reference internal" href="../reference/reference.html#pytest.raises" title="pytest.raises"><code class="xref py py-func docutils literal notranslate"><span class="pre">pytest.raises()</span></code></a> with the
+<a class="reference internal" href="../reference/reference.html#pytest-mark-parametrize-ref"><span class="std std-ref">pytest.mark.parametrize</span></a> decorator to write parametrized tests
+in which some tests raise exceptions and others do not.</p>
+<p><code class="docutils literal notranslate"><span class="pre">contextlib.nullcontext</span></code> can be used to test cases that are not expected to
+raise exceptions but that should result in some value. The value is given as the
+<code class="docutils literal notranslate"><span class="pre">enter_result</span></code> parameter, which will be available as the <code class="docutils literal notranslate"><span class="pre">with</span></code> statement’s
+target (<code class="docutils literal notranslate"><span class="pre">e</span></code> in the example below).</p>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">nullcontext</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">&quot;example_input,expectation&quot;</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">nullcontext</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nullcontext</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nullcontext</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ZeroDivisionError</span><span class="p">)),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_division</span><span class="p">(</span><span class="n">example_input</span><span class="p">,</span> <span class="n">expectation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test how much I know division.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">expectation</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="mi">6</span> <span class="o">/</span> <span class="n">example_input</span><span class="p">)</span> <span class="o">==</span> <span class="n">e</span>
+</pre></div>
+</div>
+<p>In the example above, the first three test cases should run without any
+exceptions, while the fourth should raise a <code class="docutils literal notranslate"><span class="pre">ZeroDivisionError</span></code> exception,
+which is expected by pytest.</p>
+</div></div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="markers.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">使用自定义标记</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="simple.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">基本模式和示例</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">参数化测试</a><ul>
+<li><a class="reference internal" href="#id2">根据命令行生成参数组合</a></li>
+<li><a class="reference internal" href="#id">测试 ID 的不同选项</a></li>
+<li><a class="reference internal" href="#id3">“测试场景”的快速移植</a></li>
+<li><a class="reference internal" href="#id4">推迟参数化资源的设置</a></li>
+<li><a class="reference internal" href="#id5">间接参数化</a></li>
+<li><a class="reference internal" href="#id6">对特定参数应用间接参数化</a></li>
+<li><a class="reference internal" href="#id7">通过每个类配置参数化测试方法</a></li>
+<li><a class="reference internal" href="#id8">使用多个装置进行参数化</a></li>
+<li><a class="reference internal" href="#id9">可选实现/导入的参数化</a></li>
+<li><a class="reference internal" href="#id10">为单个参数化测试设置标记或测试 ID</a></li>
+<li><a class="reference internal" href="#parametrizing-conditional-raising">参数化条件提升</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

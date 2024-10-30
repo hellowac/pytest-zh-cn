@@ -1,0 +1,1817 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="如何管理日志记录" href="logging.html" /><link rel="prev" title="如何处理测试失败" href="failures.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/how-to/output.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>管理 pytest 的输出 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">入门</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">操作指南</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example/index.html">示例和自定义技巧</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../example/reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../example/customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="pytest">
+<span id="how-to-manage-output"></span><h1>管理 pytest 的输出<a class="headerlink" href="#pytest" title="Link to this heading">¶</a></h1>
+<p><strong>Managing pytest’s output</strong></p>
+<section id="python">
+<span id="how-to-modifying-python-tb-printing"></span><h2>修改 Python 回溯打印<a class="headerlink" href="#python" title="Link to this heading">¶</a></h2>
+<p><strong>Modifying Python traceback printing</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>以下是用于修改回溯打印的示例：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--showlocals<span class="w">     </span><span class="c1"># 在回溯中显示局部变量</span>
+pytest<span class="w"> </span>-l<span class="w">               </span><span class="c1"># 显示局部变量（快捷方式）</span>
+pytest<span class="w"> </span>--no-showlocals<span class="w">  </span><span class="c1"># 隐藏局部变量（如果 addopts 启用了它们）</span>
+
+pytest<span class="w"> </span>--capture<span class="o">=</span>fd<span class="w">     </span><span class="c1"># 默认设置，在文件描述符级别捕获</span>
+pytest<span class="w"> </span>--capture<span class="o">=</span>sys<span class="w">    </span><span class="c1"># 在 sys 级别捕获</span>
+pytest<span class="w"> </span>--capture<span class="o">=</span>no<span class="w">     </span><span class="c1"># 不捕获</span>
+pytest<span class="w"> </span>-s<span class="w">               </span><span class="c1"># 不捕获（快捷方式）</span>
+pytest<span class="w"> </span>--capture<span class="o">=</span>tee-sys<span class="w"> </span><span class="c1"># 捕获日志并输出到 sys 级别流</span>
+
+pytest<span class="w"> </span>--tb<span class="o">=</span>auto<span class="w">    </span><span class="c1"># （默认）对第一个和最后一个条目使用“长”回溯，</span>
+<span class="w">                    </span><span class="c1"># 对其他条目使用“短”格式</span>
+pytest<span class="w"> </span>--tb<span class="o">=</span>long<span class="w">    </span><span class="c1"># 全面、信息丰富的回溯格式</span>
+pytest<span class="w"> </span>--tb<span class="o">=</span>short<span class="w">   </span><span class="c1"># 更简短的回溯格式</span>
+pytest<span class="w"> </span>--tb<span class="o">=</span>line<span class="w">    </span><span class="c1"># 每个失败仅一行</span>
+pytest<span class="w"> </span>--tb<span class="o">=</span>native<span class="w">  </span><span class="c1"># Python 标准库格式</span>
+pytest<span class="w"> </span>--tb<span class="o">=</span>no<span class="w">      </span><span class="c1"># 不显示回溯</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--full-trace</span></code> 选项会在出错时打印出更长的回溯信息（比 <code class="docutils literal notranslate"><span class="pre">--tb=long</span></code> 还要长）。它还可以确保在 <a href="#id1"><span class="problematic" id="id2">**</span></a>KeyboardInterrupt**（Ctrl+C）时打印堆栈跟踪。</p>
+<p>当测试运行时间过长且您通过 Ctrl+C 中断时，这非常有用，以便查明测试*卡在了*哪里。默认情况下，不会显示输出（因为 KeyboardInterrupt 被 pytest 捕获）。使用此选项可以确保显示回溯。</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>Examples for modifying traceback printing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--showlocals<span class="w">     </span><span class="c1"># show local variables in tracebacks</span>
+pytest<span class="w"> </span>-l<span class="w">               </span><span class="c1"># show local variables (shortcut)</span>
+pytest<span class="w"> </span>--no-showlocals<span class="w">  </span><span class="c1"># hide local variables (if addopts enables them)</span>
+
+pytest<span class="w"> </span>--capture<span class="o">=</span>fd<span class="w">  </span><span class="c1"># default, capture at the file descriptor level</span>
+pytest<span class="w"> </span>--capture<span class="o">=</span>sys<span class="w"> </span><span class="c1"># capture at the sys level</span>
+pytest<span class="w"> </span>--capture<span class="o">=</span>no<span class="w">  </span><span class="c1"># don&#39;t capture</span>
+pytest<span class="w"> </span>-s<span class="w">            </span><span class="c1"># don&#39;t capture (shortcut)</span>
+pytest<span class="w"> </span>--capture<span class="o">=</span>tee-sys<span class="w"> </span><span class="c1"># capture to logs but also output to sys level streams</span>
+
+pytest<span class="w"> </span>--tb<span class="o">=</span>auto<span class="w">    </span><span class="c1"># (default) &#39;long&#39; tracebacks for the first and last</span>
+<span class="w">                    </span><span class="c1"># entry, but &#39;short&#39; style for the other entries</span>
+pytest<span class="w"> </span>--tb<span class="o">=</span>long<span class="w">    </span><span class="c1"># exhaustive, informative traceback formatting</span>
+pytest<span class="w"> </span>--tb<span class="o">=</span>short<span class="w">   </span><span class="c1"># shorter traceback format</span>
+pytest<span class="w"> </span>--tb<span class="o">=</span>line<span class="w">    </span><span class="c1"># only one line per failure</span>
+pytest<span class="w"> </span>--tb<span class="o">=</span>native<span class="w">  </span><span class="c1"># Python standard library formatting</span>
+pytest<span class="w"> </span>--tb<span class="o">=</span>no<span class="w">      </span><span class="c1"># no traceback at all</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--full-trace</span></code> causes very long traces to be printed on error (longer
+than <code class="docutils literal notranslate"><span class="pre">--tb=long</span></code>). It also ensures that a stack trace is printed on
+<strong>KeyboardInterrupt</strong> (Ctrl+C).
+This is very useful if the tests are taking too long and you interrupt them
+with Ctrl+C to find out where the tests are <em>hanging</em>. By default no output
+will be shown (because KeyboardInterrupt is caught by pytest). By using this
+option you make sure a trace is shown.</p>
+</div></div>
+</section>
+<section id="id3">
+<h2>冗长详细<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p><strong>Verbosity</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>以下是用于修改打印详细程度的示例：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--quiet<span class="w">          </span><span class="c1"># 安静模式 - 较少的输出</span>
+pytest<span class="w"> </span>-q<span class="w">               </span><span class="c1"># 安静模式（快捷方式）</span>
+pytest<span class="w"> </span>-v<span class="w">               </span><span class="c1"># 增加详细信息，显示每个测试名称</span>
+pytest<span class="w"> </span>-vv<span class="w">              </span><span class="c1"># 更详细，显示更多测试输出细节</span>
+pytest<span class="w"> </span>-vvv<span class="w">             </span><span class="c1"># 非标准选项，但在某些配置中可用于显示更多细节</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">-v</span></code> 标志控制 pytest 输出的详细程度，包括测试会话进度、测试失败时的断言细节、使用 <code class="docutils literal notranslate"><span class="pre">--fixtures</span></code> 时的夹具详细信息等。</p>
+<p>以下是一个简单文件的示例：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># test_verbosity_example.py 的内容</span>
+<span class="k">def</span> <span class="nf">test_ok</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">test_words_fail</span><span class="p">():</span>
+    <span class="n">fruits1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;banana&quot;</span><span class="p">,</span> <span class="s2">&quot;apple&quot;</span><span class="p">,</span> <span class="s2">&quot;grapes&quot;</span><span class="p">,</span> <span class="s2">&quot;melon&quot;</span><span class="p">,</span> <span class="s2">&quot;kiwi&quot;</span><span class="p">]</span>
+    <span class="n">fruits2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;banana&quot;</span><span class="p">,</span> <span class="s2">&quot;apple&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="s2">&quot;melon&quot;</span><span class="p">,</span> <span class="s2">&quot;kiwi&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">fruits1</span> <span class="o">==</span> <span class="n">fruits2</span>
+
+
+<span class="k">def</span> <span class="nf">test_numbers_fail</span><span class="p">():</span>
+    <span class="n">number_to_text1</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span>
+    <span class="n">number_to_text2</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">10</span><span class="p">):</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span>
+    <span class="k">assert</span> <span class="n">number_to_text1</span> <span class="o">==</span> <span class="n">number_to_text2</span>
+
+
+<span class="k">def</span> <span class="nf">test_long_text_fail</span><span class="p">():</span>
+    <span class="n">long_text</span> <span class="o">=</span> <span class="s2">&quot;Lorem ipsum dolor sit amet &quot;</span> <span class="o">*</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="s2">&quot;hello world&quot;</span> <span class="ow">in</span> <span class="n">long_text</span>
+</pre></div>
+</div>
+<p>正常执行 pytest 会给出以下输出（此处省略了标题以聚焦于主要内容）：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --no-header
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+collected 4 items
+
+test_verbosity_example.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">FFF</span>                                       <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________________ test_words_fail ______________________________</span>
+
+    def test_words_fail():
+        fruits1 = [&quot;banana&quot;, &quot;apple&quot;, &quot;grapes&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+        fruits2 = [&quot;banana&quot;, &quot;apple&quot;, &quot;orange&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+&gt;       assert fruits1 == fruits2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert [&#39;banana&#39;, &#39;a...elon&#39;, &#39;kiwi&#39;] == [&#39;banana&#39;, &#39;a...elon&#39;, &#39;kiwi&#39;]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         在索引 2 处的差异: &#39;grapes&#39; != &#39;orange&#39;</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         使用 -v 获取更多差异信息</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:8: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________________ test_numbers_fail _____________________________</span>
+
+    def test_numbers_fail():
+        number_to_text1 = {str(x): x for x in range(5)}
+        number_to_text2 = {str(x * 10): x * 10 for x in range(5)}
+&gt;       assert number_to_text1 == number_to_text2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert {&#39;0&#39;: 0, &#39;1&#39;:..., &#39;3&#39;: 3, ...} == {&#39;0&#39;: 0, &#39;10&#39;...&#39;30&#39;: 30, ...}</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         忽略 1 个相同项，使用 -vv 查看</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         左边包含 4 个额外项:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         右边包含 4 个额外项:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         使用 -v 获取更多差异信息</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:14: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ test_long_text_fail ____________________________</span>
+
+    def test_long_text_fail():
+        long_text = &quot;Lorem ipsum dolor sit amet &quot; * 10
+&gt;       assert &quot;hello world&quot; in long_text
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;hello world&#39; in &#39;Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ips... sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet &#39;</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:19: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_words_fail</span> - AssertionError: asser...
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_numbers_fail</span> - AssertionError: ass...
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_long_text_fail</span> - AssertionError: a...
+<span class=" -Color -Color-Red">======================= </span><span class=" -Color -Color-Bold -Color-Bold-Red">3 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s ========================</span>
+</pre></div>
+</div>
+<p>注意事项：</p>
+<ul class="simple">
+<li><p>文件中的每个测试在输出中以单个字符表示：通过的显示为 <code class="docutils literal notranslate"><span class="pre">.</span></code>, 失败的显示为 <code class="docutils literal notranslate"><span class="pre">F</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_words_fail</span></code> 失败了，输出显示两个列表在索引 2 处不相同。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_numbers_fail</span></code> 失败了，输出显示字典项在左侧和右侧的差异。相同的项被省略。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_long_text_fail</span></code> 失败了，<code class="docutils literal notranslate"><span class="pre">in</span></code> 语句的右侧被使用 <code class="docutils literal notranslate"><span class="pre">...</span></code> 截断，因为其长度超过了内部阈值（当前为 240 个字符）。</p></li>
+</ul>
+<p>现在我们可以增加 pytest 的详细程度：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --no-header -v
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items
+
+test_verbosity_example.py::test_ok <span class=" -Color -Color-Green">PASSED</span>                            <span class=" -Color -Color-Green">[ 25%]</span>
+test_verbosity_example.py::test_words_fail <span class=" -Color -Color-Red">FAILED</span>                    <span class=" -Color -Color-Red">[ 50%]</span>
+test_verbosity_example.py::test_numbers_fail <span class=" -Color -Color-Red">FAILED</span>                  <span class=" -Color -Color-Red">[ 75%]</span>
+test_verbosity_example.py::test_long_text_fail <span class=" -Color -Color-Red">FAILED</span>                <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________________ test_words_fail ______________________________</span>
+
+    def test_words_fail():
+        fruits1 = [&quot;banana&quot;, &quot;apple&quot;, &quot;grapes&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+        fruits2 = [&quot;banana&quot;, &quot;apple&quot;, &quot;orange&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+&gt;       assert fruits1 == fruits2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert [&#39;banana&#39;, &#39;a...elon&#39;, &#39;kiwi&#39;] == [&#39;banana&#39;, &#39;a...elon&#39;, &#39;kiwi&#39;]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         在索引 2 处的差异: &#39;grapes&#39; != &#39;orange&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         完整差异:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           [</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;banana&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;apple&#39;,...</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ...完整输出被截断（隐藏了 7 行），使用 &#39;-vv&#39; 显示</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:8: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________________ test_numbers_fail _____________________________</span>
+
+    def test_numbers_fail():
+        number_to_text1 = {str(x): x for x in range(5)}
+        number_to_text2 = {str(x * 10): x * 10 for x in range(5)}
+&gt;       assert number_to_text1 == number_to_text2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert {&#39;0&#39;: 0, &#39;1&#39;:..., &#39;3&#39;: 3, ...} == {&#39;0&#39;: 0, &#39;10&#39;...&#39;30&#39;: 30, ...}</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         忽略 1 个相同项，使用 -vv 显示</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         左边包含 4 个额外项:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         右边包含 4 个额外项:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ...</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ...完整输出被截断（隐藏了 16 行），使用 &#39;-vv&#39; 显示</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:14: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ test_long_text_fail ____________________________</span>
+
+    def test_long_text_fail():
+        long_text = &quot;Lorem ipsum dolor sit amet &quot; * 10
+&gt;       assert &quot;hello world&quot; in long_text
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;hello world&#39; in &#39;Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet &#39;</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:19: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_words_fail</span> - AssertionError: asser...
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_numbers_fail</span> - AssertionError: ass...
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_long_text_fail</span> - AssertionError: a...
+<span class=" -Color -Color-Red">======================= </span><span class=" -Color -Color-Bold -Color-Bold-Red">3 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s ========================</span>
+</pre></div>
+</div>
+<p>现在请注意：</p>
+<ul class="simple">
+<li><p>文件中的每个测试在输出中都占据了自己的行。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_words_fail</span></code> 现在显示了两个失败列表的完整内容，以及不同的索引。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_numbers_fail</span></code> 现在显示了两个字典的文本差异，内容被截断。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_long_text_fail</span></code> 不再截断 <code class="docutils literal notranslate"><span class="pre">in</span></code> 语句的右侧，因为内部截断阈值现在增大了（当前为 2400 个字符）。</p></li>
+</ul>
+<p>现在如果我们进一步增加详细程度：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --no-header -vv
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items
+
+test_verbosity_example.py::test_ok <span class=" -Color -Color-Green">PASSED</span>                            <span class=" -Color -Color-Green">[ 25%]</span>
+test_verbosity_example.py::test_words_fail <span class=" -Color -Color-Red">FAILED</span>                    <span class=" -Color -Color-Red">[ 50%]</span>
+test_verbosity_example.py::test_numbers_fail <span class=" -Color -Color-Red">FAILED</span>                  <span class=" -Color -Color-Red">[ 75%]</span>
+test_verbosity_example.py::test_long_text_fail <span class=" -Color -Color-Red">FAILED</span>                <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________________ test_words_fail ______________________________</span>
+
+    def test_words_fail():
+        fruits1 = [&quot;banana&quot;, &quot;apple&quot;, &quot;grapes&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+        fruits2 = [&quot;banana&quot;, &quot;apple&quot;, &quot;orange&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+&gt;       assert fruits1 == fruits2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert [&#39;banana&#39;, &#39;apple&#39;, &#39;grapes&#39;, &#39;melon&#39;, &#39;kiwi&#39;] == [&#39;banana&#39;, &#39;apple&#39;, &#39;orange&#39;, &#39;melon&#39;, &#39;kiwi&#39;]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         在索引 2 处的差异: &#39;grapes&#39; != &#39;orange&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         完整差异:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           [</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;banana&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;apple&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         -     &#39;orange&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?      ^  ^^</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         +     &#39;grapes&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?      ^  ^ +</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;melon&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;kiwi&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           ]</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:8: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________________ test_numbers_fail _____________________________</span>
+
+    def test_numbers_fail():
+        number_to_text1 = {str(x): x for x in range(5)}
+        number_to_text2 = {str(x * 10): x * 10 for x in range(5)}
+&gt;       assert number_to_text1 == number_to_text2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert {&#39;0&#39;: 0, &#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4} == {&#39;0&#39;: 0, &#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         共同项:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;0&#39;: 0}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         左边包含 4 个额外项:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         右边包含 4 个额外项:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         完整差异:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           {</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;0&#39;: 0,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         -     &#39;10&#39;: 10,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?       -    -</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         +     &#39;1&#39;: 1,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         -     &#39;20&#39;: 20,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?       -    -</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         +     &#39;2&#39;: 2,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         -     &#39;30&#39;: 30,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?       -    -</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         +     &#39;3&#39;: 3,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         -     &#39;40&#39;: 40,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?       -    -</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         +     &#39;4&#39;: 4,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           }</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:14: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ test_long_text_fail ____________________________</span>
+
+    def test_long_text_fail():
+        long_text = &quot;Lorem ipsum dolor sit amet &quot; * 10
+&gt;       assert &quot;hello world&quot; in long_text
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;hello world&#39; in &#39;Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet &#39;</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:19: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_words_fail</span> - AssertionError: assert [&#39;banana&#39;, &#39;apple&#39;, &#39;grapes&#39;, &#39;melon&#39;, &#39;kiwi&#39;] == [&#39;banana&#39;, &#39;apple&#39;, &#39;orange&#39;, &#39;melon&#39;, &#39;kiwi&#39;]
+
+在索引 2 处的差异: &#39;grapes&#39; != &#39;orange&#39;
+
+完整差异:
+    [
+        &#39;banana&#39;,
+        &#39;apple&#39;,
+-     &#39;orange&#39;,
+?      ^  ^^
++     &#39;grapes&#39;,
+?      ^  ^ +
+        &#39;melon&#39;,
+        &#39;kiwi&#39;,
+    ]
+FAILED test_verbosity_example.py::test_numbers_fail - AssertionError: assert {&#39;0&#39;: 0, &#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4} == {&#39;0&#39;: 0, &#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}
+
+共同项:
+{&#39;0&#39;: 0}
+左边包含 4 个额外项:
+{&#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4}
+右边包含 4 个额外项:
+{&#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}
+
+完整差异:
+    {
+        &#39;0&#39;: 0,
+-     &#39;10&#39;: 10,
+?       -    -
++     &#39;1&#39;: 1,
+-     &#39;20&#39;: 20,
+?       -    -
++     &#39;2&#39;: 2,
+-     &#39;30&#39;: 30,
+?       -    -
++     &#39;3&#39;: 3,
+-     &#39;40&#39;: 40,
+?       -    -
++     &#39;4&#39;: 4,
+    }
+FAILED test_verbosity_example.py::test_long_text_fail - AssertionError: assert &#39;hello world&#39; in &#39;Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet &#39;
+<span class=" -Color -Color-Red">======================= </span><span class=" -Color -Color-Bold -Color-Bold-Red">3 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s ========================</span>
+</pre></div>
+</div>
+<p>现在请注意：</p>
+<ul class="simple">
+<li><p>文件中的每个测试在输出中都占据了自己的行。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_words_fail</span></code> 在这种情况下给出的输出与之前相同。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_numbers_fail</span></code> 现在显示了两个字典的完整文本差异。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_long_text_fail</span></code> 也不再在右侧截断，pytest 现在不会截断任何文本，无论其大小。</p></li>
+</ul>
+<p>这些是详细程度如何影响正常测试会话输出的示例，但详细程度也用于其他情况，例如，如果您使用 <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--fixtures</span> <span class="pre">-v</span></code>，则会显示以 <code class="docutils literal notranslate"><span class="pre">_</span></code> 开头的所有 fixtures。</p>
+<p>支持更高的详细级别（<code class="docutils literal notranslate"><span class="pre">-vvv</span></code>, <code class="docutils literal notranslate"><span class="pre">-vvvv</span></code>, …），但目前对 pytest 本身没有影响，然而一些插件可能会利用更高的详细程度。</p>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>Examples for modifying printing verbosity:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--quiet<span class="w">          </span><span class="c1"># quiet - less verbose - mode</span>
+pytest<span class="w"> </span>-q<span class="w">               </span><span class="c1"># quiet - less verbose - mode (shortcut)</span>
+pytest<span class="w"> </span>-v<span class="w">               </span><span class="c1"># increase verbosity, display individual test names</span>
+pytest<span class="w"> </span>-vv<span class="w">              </span><span class="c1"># more verbose, display more details from the test output</span>
+pytest<span class="w"> </span>-vvv<span class="w">             </span><span class="c1"># not a standard , but may be used for even more detail in certain setups</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-v</span></code> flag controls the verbosity of pytest output in various aspects: test session progress, assertion
+details when tests fail, fixtures details with <code class="docutils literal notranslate"><span class="pre">--fixtures</span></code>, etc.</p>
+<p>Consider this simple file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_verbosity_example.py</span>
+<span class="k">def</span> <span class="nf">test_ok</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">test_words_fail</span><span class="p">():</span>
+    <span class="n">fruits1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;banana&quot;</span><span class="p">,</span> <span class="s2">&quot;apple&quot;</span><span class="p">,</span> <span class="s2">&quot;grapes&quot;</span><span class="p">,</span> <span class="s2">&quot;melon&quot;</span><span class="p">,</span> <span class="s2">&quot;kiwi&quot;</span><span class="p">]</span>
+    <span class="n">fruits2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;banana&quot;</span><span class="p">,</span> <span class="s2">&quot;apple&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="s2">&quot;melon&quot;</span><span class="p">,</span> <span class="s2">&quot;kiwi&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">fruits1</span> <span class="o">==</span> <span class="n">fruits2</span>
+
+
+<span class="k">def</span> <span class="nf">test_numbers_fail</span><span class="p">():</span>
+    <span class="n">number_to_text1</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span>
+    <span class="n">number_to_text2</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">10</span><span class="p">):</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span>
+    <span class="k">assert</span> <span class="n">number_to_text1</span> <span class="o">==</span> <span class="n">number_to_text2</span>
+
+
+<span class="k">def</span> <span class="nf">test_long_text_fail</span><span class="p">():</span>
+    <span class="n">long_text</span> <span class="o">=</span> <span class="s2">&quot;Lorem ipsum dolor sit amet &quot;</span> <span class="o">*</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="s2">&quot;hello world&quot;</span> <span class="ow">in</span> <span class="n">long_text</span>
+</pre></div>
+</div>
+<p>Executing pytest normally gives us this output (we are skipping the header to focus on the rest):</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --no-header
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+collected 4 items
+
+test_verbosity_example.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">FFF</span>                                       <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________________ test_words_fail ______________________________</span>
+
+    def test_words_fail():
+        fruits1 = [&quot;banana&quot;, &quot;apple&quot;, &quot;grapes&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+        fruits2 = [&quot;banana&quot;, &quot;apple&quot;, &quot;orange&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+&gt;       assert fruits1 == fruits2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert [&#39;banana&#39;, &#39;a...elon&#39;, &#39;kiwi&#39;] == [&#39;banana&#39;, &#39;a...elon&#39;, &#39;kiwi&#39;]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         At index 2 diff: &#39;grapes&#39; != &#39;orange&#39;</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Use -v to get more diff</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:8: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________________ test_numbers_fail _____________________________</span>
+
+    def test_numbers_fail():
+        number_to_text1 = {str(x): x for x in range(5)}
+        number_to_text2 = {str(x * 10): x * 10 for x in range(5)}
+&gt;       assert number_to_text1 == number_to_text2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert {&#39;0&#39;: 0, &#39;1&#39;:..., &#39;3&#39;: 3, ...} == {&#39;0&#39;: 0, &#39;10&#39;...&#39;30&#39;: 30, ...}</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Omitting 1 identical items, use -vv to show</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Left contains 4 more items:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Right contains 4 more items:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Use -v to get more diff</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:14: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ test_long_text_fail ____________________________</span>
+
+    def test_long_text_fail():
+        long_text = &quot;Lorem ipsum dolor sit amet &quot; * 10
+&gt;       assert &quot;hello world&quot; in long_text
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;hello world&#39; in &#39;Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ips... sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet &#39;</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:19: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_words_fail</span> - AssertionError: asser...
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_numbers_fail</span> - AssertionError: ass...
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_long_text_fail</span> - AssertionError: a...
+<span class=" -Color -Color-Red">======================= </span><span class=" -Color -Color-Bold -Color-Bold-Red">3 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s ========================</span>
+</pre></div>
+</div>
+<p>Notice that:</p>
+<ul class="simple">
+<li><p>Each test inside the file is shown by a single character in the output: <code class="docutils literal notranslate"><span class="pre">.</span></code> for passing, <code class="docutils literal notranslate"><span class="pre">F</span></code> for failure.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_words_fail</span></code> failed, and we are shown a short summary indicating the index 2 of the two lists differ.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_numbers_fail</span></code> failed, and we are shown a summary of left/right differences on dictionary items. Identical items are omitted.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_long_text_fail</span></code> failed, and the right hand side of the <code class="docutils literal notranslate"><span class="pre">in</span></code> statement is truncated using <code class="docutils literal notranslate"><span class="pre">...`</span></code></p></li>
+</ul>
+<p>because it is longer than an internal threshold (240 characters currently).</p>
+<p>Now we can increase pytest’s verbosity:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --no-header -v
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items
+
+test_verbosity_example.py::test_ok <span class=" -Color -Color-Green">PASSED</span>                            <span class=" -Color -Color-Green">[ 25%]</span>
+test_verbosity_example.py::test_words_fail <span class=" -Color -Color-Red">FAILED</span>                    <span class=" -Color -Color-Red">[ 50%]</span>
+test_verbosity_example.py::test_numbers_fail <span class=" -Color -Color-Red">FAILED</span>                  <span class=" -Color -Color-Red">[ 75%]</span>
+test_verbosity_example.py::test_long_text_fail <span class=" -Color -Color-Red">FAILED</span>                <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________________ test_words_fail ______________________________</span>
+
+    def test_words_fail():
+        fruits1 = [&quot;banana&quot;, &quot;apple&quot;, &quot;grapes&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+        fruits2 = [&quot;banana&quot;, &quot;apple&quot;, &quot;orange&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+&gt;       assert fruits1 == fruits2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert [&#39;banana&#39;, &#39;a...elon&#39;, &#39;kiwi&#39;] == [&#39;banana&#39;, &#39;a...elon&#39;, &#39;kiwi&#39;]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         At index 2 diff: &#39;grapes&#39; != &#39;orange&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Full diff:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           [</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;banana&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;apple&#39;,...</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ...Full output truncated (7 lines hidden), use &#39;-vv&#39; to show</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:8: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________________ test_numbers_fail _____________________________</span>
+
+    def test_numbers_fail():
+        number_to_text1 = {str(x): x for x in range(5)}
+        number_to_text2 = {str(x * 10): x * 10 for x in range(5)}
+&gt;       assert number_to_text1 == number_to_text2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert {&#39;0&#39;: 0, &#39;1&#39;:..., &#39;3&#39;: 3, ...} == {&#39;0&#39;: 0, &#39;10&#39;...&#39;30&#39;: 30, ...}</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Omitting 1 identical items, use -vv to show</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Left contains 4 more items:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Right contains 4 more items:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ...</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ...Full output truncated (16 lines hidden), use &#39;-vv&#39; to show</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:14: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ test_long_text_fail ____________________________</span>
+
+    def test_long_text_fail():
+        long_text = &quot;Lorem ipsum dolor sit amet &quot; * 10
+&gt;       assert &quot;hello world&quot; in long_text
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;hello world&#39; in &#39;Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet &#39;</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:19: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_words_fail</span> - AssertionError: asser...
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_numbers_fail</span> - AssertionError: ass...
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_long_text_fail</span> - AssertionError: a...
+<span class=" -Color -Color-Red">======================= </span><span class=" -Color -Color-Bold -Color-Bold-Red">3 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s ========================</span>
+</pre></div>
+</div>
+<p>Notice now that:</p>
+<ul class="simple">
+<li><p>Each test inside the file gets its own line in the output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_words_fail</span></code> now shows the two failing lists in full, in addition to which index differs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_numbers_fail</span></code> now shows a text diff of the two dictionaries, truncated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_long_text_fail</span></code> no longer truncates the right hand side of the <code class="docutils literal notranslate"><span class="pre">in</span></code> statement, because the internal</p></li>
+</ul>
+<p>threshold for truncation is larger now (2400 characters currently).</p>
+<p>Now if we increase verbosity even more:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --no-header -vv
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items
+
+test_verbosity_example.py::test_ok <span class=" -Color -Color-Green">PASSED</span>                            <span class=" -Color -Color-Green">[ 25%]</span>
+test_verbosity_example.py::test_words_fail <span class=" -Color -Color-Red">FAILED</span>                    <span class=" -Color -Color-Red">[ 50%]</span>
+test_verbosity_example.py::test_numbers_fail <span class=" -Color -Color-Red">FAILED</span>                  <span class=" -Color -Color-Red">[ 75%]</span>
+test_verbosity_example.py::test_long_text_fail <span class=" -Color -Color-Red">FAILED</span>                <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________________ test_words_fail ______________________________</span>
+
+    def test_words_fail():
+        fruits1 = [&quot;banana&quot;, &quot;apple&quot;, &quot;grapes&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+        fruits2 = [&quot;banana&quot;, &quot;apple&quot;, &quot;orange&quot;, &quot;melon&quot;, &quot;kiwi&quot;]
+&gt;       assert fruits1 == fruits2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert [&#39;banana&#39;, &#39;apple&#39;, &#39;grapes&#39;, &#39;melon&#39;, &#39;kiwi&#39;] == [&#39;banana&#39;, &#39;apple&#39;, &#39;orange&#39;, &#39;melon&#39;, &#39;kiwi&#39;]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         At index 2 diff: &#39;grapes&#39; != &#39;orange&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Full diff:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           [</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;banana&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;apple&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         -     &#39;orange&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?      ^  ^^</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         +     &#39;grapes&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?      ^  ^ +</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;melon&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;kiwi&#39;,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           ]</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:8: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________________ test_numbers_fail _____________________________</span>
+
+    def test_numbers_fail():
+        number_to_text1 = {str(x): x for x in range(5)}
+        number_to_text2 = {str(x * 10): x * 10 for x in range(5)}
+&gt;       assert number_to_text1 == number_to_text2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert {&#39;0&#39;: 0, &#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4} == {&#39;0&#39;: 0, &#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Common items:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;0&#39;: 0}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Left contains 4 more items:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Right contains 4 more items:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Full diff:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           {</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E               &#39;0&#39;: 0,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         -     &#39;10&#39;: 10,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?       -    -</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         +     &#39;1&#39;: 1,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         -     &#39;20&#39;: 20,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?       -    -</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         +     &#39;2&#39;: 2,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         -     &#39;30&#39;: 30,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?       -    -</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         +     &#39;3&#39;: 3,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         -     &#39;40&#39;: 40,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?       -    -</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         +     &#39;4&#39;: 4,</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           }</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:14: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ test_long_text_fail ____________________________</span>
+
+    def test_long_text_fail():
+        long_text = &quot;Lorem ipsum dolor sit amet &quot; * 10
+&gt;       assert &quot;hello world&quot; in long_text
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;hello world&#39; in &#39;Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet &#39;</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_verbosity_example.py</span>:19: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_verbosity_example.py::<span class=" -Color -Color-Bold">test_words_fail</span> - AssertionError: assert [&#39;banana&#39;, &#39;apple&#39;, &#39;grapes&#39;, &#39;melon&#39;, &#39;kiwi&#39;] == [&#39;banana&#39;, &#39;apple&#39;, &#39;orange&#39;, &#39;melon&#39;, &#39;kiwi&#39;]
+
+At index 2 diff: &#39;grapes&#39; != &#39;orange&#39;
+
+Full diff:
+    [
+        &#39;banana&#39;,
+        &#39;apple&#39;,
+-     &#39;orange&#39;,
+?      ^  ^^
++     &#39;grapes&#39;,
+?      ^  ^ +
+        &#39;melon&#39;,
+        &#39;kiwi&#39;,
+    ]
+FAILED test_verbosity_example.py::test_numbers_fail - AssertionError: assert {&#39;0&#39;: 0, &#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4} == {&#39;0&#39;: 0, &#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}
+
+Common items:
+{&#39;0&#39;: 0}
+Left contains 4 more items:
+{&#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3, &#39;4&#39;: 4}
+Right contains 4 more items:
+{&#39;10&#39;: 10, &#39;20&#39;: 20, &#39;30&#39;: 30, &#39;40&#39;: 40}
+
+Full diff:
+    {
+        &#39;0&#39;: 0,
+-     &#39;10&#39;: 10,
+?       -    -
++     &#39;1&#39;: 1,
+-     &#39;20&#39;: 20,
+?       -    -
++     &#39;2&#39;: 2,
+-     &#39;30&#39;: 30,
+?       -    -
++     &#39;3&#39;: 3,
+-     &#39;40&#39;: 40,
+?       -    -
++     &#39;4&#39;: 4,
+    }
+FAILED test_verbosity_example.py::test_long_text_fail - AssertionError: assert &#39;hello world&#39; in &#39;Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet &#39;
+<span class=" -Color -Color-Red">======================= </span><span class=" -Color -Color-Bold -Color-Bold-Red">3 failed</span>, <span class=" -Color -Color-Green">1 passed</span><span class=" -Color -Color-Red"> in 0.12s ========================</span>
+</pre></div>
+</div>
+<p>Notice now that:</p>
+<ul class="simple">
+<li><p>Each test inside the file gets its own line in the output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_words_fail</span></code> gives the same output as before in this case.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_numbers_fail</span></code> now shows a full text diff of the two dictionaries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_long_text_fail</span></code> also doesn’t truncate on the right hand side as before, but now pytest won’t truncate any</p></li>
+</ul>
+<p>text at all, regardless of its size.</p>
+<p>Those were examples of how verbosity affects normal test session output, but verbosity also is used in other
+situations, for example you are shown even fixtures that start with <code class="docutils literal notranslate"><span class="pre">_</span></code> if you use <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--fixtures</span> <span class="pre">-v</span></code>.</p>
+<p>Using higher verbosity levels (<code class="docutils literal notranslate"><span class="pre">-vvv</span></code>, <code class="docutils literal notranslate"><span class="pre">-vvvv</span></code>, …) is supported, but has no effect in pytest itself at the moment,
+however some plugins might make use of higher verbosity.</p>
+</div></div>
+<section id="pytest-fine-grained-verbosity">
+<span id="id4"></span><h3>细粒度的详细程度<a class="headerlink" href="#pytest-fine-grained-verbosity" title="Link to this heading">¶</a></h3>
+<p><strong>Fine-grained verbosity</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p>除了指定应用程序的全局详细程度外，还可以独立控制特定方面。这是通过在配置文件中为输出的特定方面设置详细程度级别来完成的。</p>
+<p><a class="reference internal" href="../reference/reference.html#confval-41"><code class="xref std std-confval docutils literal notranslate"><span class="pre">verbosity_assertions</span></code></a>: 控制在执行 pytest 时断言输出的详细程度。使用值为 <code class="docutils literal notranslate"><span class="pre">2</span></code> 运行 <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--no-header</span></code> 将产生与前一个示例相同的输出，但文件中的每个测试在输出中仅用一个字符表示。</p>
+<p><a class="reference internal" href="../reference/reference.html#confval-42"><code class="xref std std-confval docutils literal notranslate"><span class="pre">verbosity_test_cases</span></code></a>: 控制在执行 pytest 时测试执行输出的详细程度。使用值为 <code class="docutils literal notranslate"><span class="pre">2</span></code> 运行 <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--no-header</span></code> 将产生与第一个详细程度示例相同的输出，但文件中的每个测试在输出中都占据了自己的一行。</p>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p>In addition to specifying the application wide verbosity level, it is possible to control specific aspects independently.
+This is done by setting a verbosity level in the configuration file for the specific aspect of the output.</p>
+<p><a class="reference internal" href="../reference/reference.html#confval-41"><code class="xref std std-confval docutils literal notranslate"><span class="pre">verbosity_assertions</span></code></a>: Controls how verbose the assertion output should be when pytest is executed. Running
+<code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--no-header</span></code> with a value of <code class="docutils literal notranslate"><span class="pre">2</span></code> would have the same output as the previous example, but each test inside
+the file is shown by a single character in the output.</p>
+<p><a class="reference internal" href="../reference/reference.html#confval-42"><code class="xref std std-confval docutils literal notranslate"><span class="pre">verbosity_test_cases</span></code></a>: Controls how verbose the test execution output should be when pytest is executed.
+Running <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--no-header</span></code> with a value of <code class="docutils literal notranslate"><span class="pre">2</span></code> would have the same output as the first verbosity example, but each
+test inside the file gets its own line in the output.</p>
+</div></div>
+</section>
+</section>
+<section id="pytest-detailed-failed-tests-usage">
+<span id="id5"></span><h2>制作详细的摘要报告<a class="headerlink" href="#pytest-detailed-failed-tests-usage" title="Link to this heading">¶</a></h2>
+<p><strong>Producing a detailed summary report</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p><code class="docutils literal notranslate"><span class="pre">-r</span></code> 标志可用于在测试会话结束时显示“短测试摘要信息”，使得在大型测试套件中轻松获取所有失败、跳过、预期失败等情况的清晰图像。</p>
+<p>默认情况下，它为 <code class="docutils literal notranslate"><span class="pre">fE</span></code>，用于列出失败和错误。</p>
+<p>示例：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_example.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">error_fixture</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">test_ok</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ok&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_fail</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">test_error</span><span class="p">(</span><span class="n">error_fixture</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">test_skip</span><span class="p">():</span>
+    <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;skipping this test&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_xfail</span><span class="p">():</span>
+    <span class="n">pytest</span><span class="o">.</span><span class="n">xfail</span><span class="p">(</span><span class="s2">&quot;xfailing this test&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">xfail</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s2">&quot;always xfail&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_xpass</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -ra
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 6 items
+
+test_example.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">FE</span><span class=" -Color -Color-Yellow">sxX</span>                                               <span class=" -Color -Color-Red">[100%]</span>
+
+================================== ERRORS ==================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_______________________ ERROR at setup of test_error _______________________</span>
+
+    @pytest.fixture
+    def error_fixture():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:6: AssertionError
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________________________ test_fail _________________________________</span>
+
+    def test_fail():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:14: AssertionError
+================================= XPASSES ==================================
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Yellow">SKIPPED</span> [1] test_example.py:22: skipping this test
+XFAIL test_example.py::<span class=" -Color -Color-Bold">test_xfail</span> - reason: xfailing this test
+<span class=" -Color -Color-Yellow">XPASS</span> test_example.py::<span class=" -Color -Color-Bold">test_xpass</span> - always xfail
+<span class=" -Color -Color-Red">ERROR</span> test_example.py::<span class=" -Color -Color-Bold">test_error</span> - assert 0
+<span class=" -Color -Color-Red">FAILED</span> test_example.py::<span class=" -Color -Color-Bold">test_fail</span> - assert 0
+<span class=" -Color -Color-Red">== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span>, <span class=" -Color -Color-Yellow">1 skipped</span>, <span class=" -Color -Color-Yellow">1 xfailed</span>, <span class=" -Color -Color-Yellow">1 xpassed</span>, <span class=" -Color -Color-Bold -Color-Bold-Red">1 error</span><span class=" -Color -Color-Red"> in 0.12s ===</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">-r</span></code> 选项接受多个字符，前面的 <code class="docutils literal notranslate"><span class="pre">a</span></code> 意味着“除了通过的测试”。</p>
+<p>以下是可用字符的完整列表：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span></code> - 失败</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">E</span></code> - 错误</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code> - 跳过</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> - 预期失败</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">X</span></code> - 预期通过</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code> - 通过</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">P</span></code> - 带输出的通过</p></li>
+</ul>
+<p>用于（去）选择组的特殊字符：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code> - 除了 <code class="docutils literal notranslate"><span class="pre">pP</span></code> 的所有</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">A</span></code> - 所有</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N</span></code> - 无，这可以用来显示无（因为 <code class="docutils literal notranslate"><span class="pre">fE</span></code> 是默认值）</p></li>
+</ul>
+<p>可以使用多个字符，因此例如要仅查看失败和跳过的测试，可以执行：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -rfs
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 6 items
+
+test_example.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">FE</span><span class=" -Color -Color-Yellow">sxX</span>                                               <span class=" -Color -Color-Red">[100%]</span>
+
+================================== ERRORS ==================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_______________________ ERROR at setup of test_error _______________________</span>
+
+    @pytest.fixture
+    def error_fixture():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:6: AssertionError
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________________________ test_fail _________________________________</span>
+
+    def test_fail():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:14: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_example.py::<span class=" -Color -Color-Bold">test_fail</span> - assert 0
+<span class=" -Color -Color-Yellow">SKIPPED</span> [1] test_example.py:22: skipping this test
+<span class=" -Color -Color-Red">== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span>, <span class=" -Color -Color-Yellow">1 skipped</span>, <span class=" -Color -Color-Yellow">1 xfailed</span>, <span class=" -Color -Color-Yellow">1 xpassed</span>, <span class=" -Color -Color-Bold -Color-Bold-Red">1 error</span><span class=" -Color -Color-Red"> in 0.12s ===</span>
+</pre></div>
+</div>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">p</span></code> 列出通过的测试，而 <code class="docutils literal notranslate"><span class="pre">P</span></code> 则添加额外的“通过”部分，包含那些通过但有捕获输出的测试：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -rpP
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 6 items
+
+test_example.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">FE</span><span class=" -Color -Color-Yellow">sxX</span>                                               <span class=" -Color -Color-Red">[100%]</span>
+
+================================== ERRORS ==================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_______________________ ERROR at setup of test_error _______________________</span>
+
+    @pytest.fixture
+    def error_fixture():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:6: AssertionError
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________________________ test_fail _________________________________</span>
+
+    def test_fail():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:14: AssertionError
+================================== PASSES ==================================
+_________________________________ test_ok __________________________________
+--------------------------- Captured stdout call ---------------------------
+ok
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Green">PASSED</span> test_example.py::test_ok
+<span class=" -Color -Color-Red">== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span>, <span class=" -Color -Color-Yellow">1 skipped</span>, <span class=" -Color -Color-Yellow">1 xfailed</span>, <span class=" -Color -Color-Yellow">1 xpassed</span>, <span class=" -Color -Color-Bold -Color-Bold-Red">1 error</span><span class=" -Color -Color-Red"> in 0.12s ===</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>默认情况下，如果跳过测试的参数化变体共享相同的跳过原因，则它们会被分组在一起。您可以使用 <code class="docutils literal notranslate"><span class="pre">--no-fold-skipped</span></code> 单独打印每个跳过的测试。</p>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>The <code class="docutils literal notranslate"><span class="pre">-r</span></code> flag can be used to display a “short test summary info” at the end of the test session,
+making it easy in large test suites to get a clear picture of all failures, skips, xfails, etc.</p>
+<p>It defaults to <code class="docutils literal notranslate"><span class="pre">fE</span></code> to list failures and errors.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_example.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">error_fixture</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">test_ok</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ok&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_fail</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">test_error</span><span class="p">(</span><span class="n">error_fixture</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">test_skip</span><span class="p">():</span>
+    <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;skipping this test&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_xfail</span><span class="p">():</span>
+    <span class="n">pytest</span><span class="o">.</span><span class="n">xfail</span><span class="p">(</span><span class="s2">&quot;xfailing this test&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">xfail</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s2">&quot;always xfail&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_xpass</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -ra
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 6 items
+
+test_example.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">FE</span><span class=" -Color -Color-Yellow">sxX</span>                                               <span class=" -Color -Color-Red">[100%]</span>
+
+================================== ERRORS ==================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_______________________ ERROR at setup of test_error _______________________</span>
+
+    @pytest.fixture
+    def error_fixture():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:6: AssertionError
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________________________ test_fail _________________________________</span>
+
+    def test_fail():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:14: AssertionError
+================================= XPASSES ==================================
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Yellow">SKIPPED</span> [1] test_example.py:22: skipping this test
+XFAIL test_example.py::<span class=" -Color -Color-Bold">test_xfail</span> - reason: xfailing this test
+<span class=" -Color -Color-Yellow">XPASS</span> test_example.py::<span class=" -Color -Color-Bold">test_xpass</span> - always xfail
+<span class=" -Color -Color-Red">ERROR</span> test_example.py::<span class=" -Color -Color-Bold">test_error</span> - assert 0
+<span class=" -Color -Color-Red">FAILED</span> test_example.py::<span class=" -Color -Color-Bold">test_fail</span> - assert 0
+<span class=" -Color -Color-Red">== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span>, <span class=" -Color -Color-Yellow">1 skipped</span>, <span class=" -Color -Color-Yellow">1 xfailed</span>, <span class=" -Color -Color-Yellow">1 xpassed</span>, <span class=" -Color -Color-Bold -Color-Bold-Red">1 error</span><span class=" -Color -Color-Red"> in 0.12s ===</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-r</span></code> options accepts a number of characters after it, with <code class="docutils literal notranslate"><span class="pre">a</span></code> used
+above meaning “all except passes”.</p>
+<p>Here is the full list of available characters that can be used:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span></code> - failed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">E</span></code> - error</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code> - skipped</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> - xfailed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">X</span></code> - xpassed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code> - passed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">P</span></code> - passed with output</p></li>
+</ul>
+<p>Special characters for (de)selection of groups:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code> - all except <code class="docutils literal notranslate"><span class="pre">pP</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">A</span></code> - all</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N</span></code> - none, this can be used to display nothing (since <code class="docutils literal notranslate"><span class="pre">fE</span></code> is the default)</p></li>
+</ul>
+<p>More than one character can be used, so for example to only see failed and skipped tests, you can execute:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -rfs
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 6 items
+
+test_example.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">FE</span><span class=" -Color -Color-Yellow">sxX</span>                                               <span class=" -Color -Color-Red">[100%]</span>
+
+================================== ERRORS ==================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_______________________ ERROR at setup of test_error _______________________</span>
+
+    @pytest.fixture
+    def error_fixture():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:6: AssertionError
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________________________ test_fail _________________________________</span>
+
+    def test_fail():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:14: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_example.py::<span class=" -Color -Color-Bold">test_fail</span> - assert 0
+<span class=" -Color -Color-Yellow">SKIPPED</span> [1] test_example.py:22: skipping this test
+<span class=" -Color -Color-Red">== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span>, <span class=" -Color -Color-Yellow">1 skipped</span>, <span class=" -Color -Color-Yellow">1 xfailed</span>, <span class=" -Color -Color-Yellow">1 xpassed</span>, <span class=" -Color -Color-Bold -Color-Bold-Red">1 error</span><span class=" -Color -Color-Red"> in 0.12s ===</span>
+</pre></div>
+</div>
+<p>Using <code class="docutils literal notranslate"><span class="pre">p</span></code> lists the passing tests, whilst <code class="docutils literal notranslate"><span class="pre">P</span></code> adds an extra section “PASSES” with those tests that passed but had
+captured output:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -rpP
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 6 items
+
+test_example.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">FE</span><span class=" -Color -Color-Yellow">sxX</span>                                               <span class=" -Color -Color-Red">[100%]</span>
+
+================================== ERRORS ==================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">_______________________ ERROR at setup of test_error _______________________</span>
+
+    @pytest.fixture
+    def error_fixture():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:6: AssertionError
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________________________ test_fail _________________________________</span>
+
+    def test_fail():
+&gt;       assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_example.py</span>:14: AssertionError
+================================== PASSES ==================================
+_________________________________ test_ok __________________________________
+--------------------------- Captured stdout call ---------------------------
+ok
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Green">PASSED</span> test_example.py::test_ok
+<span class=" -Color -Color-Red">== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">1 passed</span>, <span class=" -Color -Color-Yellow">1 skipped</span>, <span class=" -Color -Color-Yellow">1 xfailed</span>, <span class=" -Color -Color-Yellow">1 xpassed</span>, <span class=" -Color -Color-Bold -Color-Bold-Red">1 error</span><span class=" -Color -Color-Red"> in 0.12s ===</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, parametrized variants of skipped tests are grouped together if
+they share the same skip reason. You can use <code class="docutils literal notranslate"><span class="pre">--no-fold-skipped</span></code> to print each skipped test separately.</p>
+</div>
+</div></div>
+</section>
+<section id="truncation-params">
+<span id="id6"></span><h2>修改截断限制<a class="headerlink" href="#truncation-params" title="Link to this heading">¶</a></h2>
+<p><strong>Modifying truncation limits</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>默认的截断限制为 8 行或 640 个字符，以先到者为准。要设置自定义截断限制，您可以使用以下 <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> 文件选项：</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">truncation_limit_lines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+<span class="na">truncation_limit_chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">90</span>
+</pre></div>
+</div>
+<p>这将导致 pytest 将断言截断为 10 行或 90 个字符，以先到者为准。</p>
+<p>将 <a class="reference internal" href="../reference/reference.html#confval-39"><code class="xref std std-confval docutils literal notranslate"><span class="pre">truncation_limit_lines</span></code></a> 和 <a class="reference internal" href="../reference/reference.html#confval-38"><code class="xref std std-confval docutils literal notranslate"><span class="pre">truncation_limit_chars</span></code></a> 均设置为 <code class="docutils literal notranslate"><span class="pre">0</span></code> 将禁用截断。但是，仅设置其中一个值将禁用一种截断模式，而保留另一种模式。</p>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><p>Default truncation limits are 8 lines or 640 characters, whichever comes first.
+To set custom truncation limits you can use following <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> file options:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">truncation_limit_lines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+<span class="na">truncation_limit_chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">90</span>
+</pre></div>
+</div>
+<p>That will cause pytest to truncate the assertions to 10 lines or 90 characters, whichever comes first.</p>
+<p>Setting both <a class="reference internal" href="../reference/reference.html#confval-39"><code class="xref std std-confval docutils literal notranslate"><span class="pre">truncation_limit_lines</span></code></a> and <a class="reference internal" href="../reference/reference.html#confval-38"><code class="xref std std-confval docutils literal notranslate"><span class="pre">truncation_limit_chars</span></code></a> to <code class="docutils literal notranslate"><span class="pre">0</span></code> will disable the truncation.
+However, setting only one of those values will disable one truncation mode, but will leave the other one intact.</p>
+</div></div>
+</section>
+<section id="id7">
+<h2>创建结果日志格式文件<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
+<p><strong>Creating resultlog format files</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><p>要创建纯文本的机器可读结果文件，您可以执行：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--resultlog<span class="o">=</span>path
+</pre></div>
+</div>
+<p>然后查看 <code class="docutils literal notranslate"><span class="pre">path</span></code> 位置的内容。这种文件被例如 <a class="reference external" href="http://buildbot.pypy.org/summary">PyPy-test</a> 网页用于显示多个版本的测试结果。</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>此选项很少使用，并计划在 pytest 6.0 中移除。</p>
+<p>如果您使用此选项，请考虑使用新的 <a class="reference external" href="https://github.com/pytest-dev/pytest-reportlog">pytest-reportlog</a> 插件。</p>
+<p>有关更多信息，请参见 <a class="reference internal" href="../deprecations.html#resultlog-deprecated"><span class="std std-ref">弃用文档</span></a>。</p>
+</div>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><p>To create plain-text machine-readable result files you can issue:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--resultlog<span class="o">=</span>path
+</pre></div>
+</div>
+<p>and look at the content at the <code class="docutils literal notranslate"><span class="pre">path</span></code> location.  Such files are used e.g.
+by the <a class="reference external" href="http://buildbot.pypy.org/summary">PyPy-test</a> web page to show test results over several revisions.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This option is rarely used and is scheduled for removal in pytest 6.0.</p>
+<p>If you use this option, consider using the new <a class="reference external" href="https://github.com/pytest-dev/pytest-reportlog">pytest-reportlog</a> plugin instead.</p>
+<p>See <a class="reference internal" href="../deprecations.html#resultlog-deprecated"><span class="std std-ref">the deprecation docs</span></a> for more information.</p>
+</div>
+</div></div>
+</section>
+<section id="junitxml">
+<h2>创建 JUnitXML 格式文件<a class="headerlink" href="#junitxml" title="Link to this heading">¶</a></h2>
+<p><strong>Creating JUnitXML format files</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><p>要创建可以被 <a class="reference external" href="https://jenkins-ci.org">Jenkins</a> 或其他持续集成服务器读取的结果文件，请使用以下命令：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--junit-xml<span class="o">=</span>path
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">path</span></code> 位置创建一个 XML 文件。</p>
+<p>要设置根测试套件 XML 项的名称，您可以在配置文件中配置 <code class="docutils literal notranslate"><span class="pre">junit_suite_name</span></code> 选项：</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">junit_suite_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">my_suite</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 4.0.</span></p>
+</div>
+<p>JUnit XML 规范似乎指示 <code class="docutils literal notranslate"><span class="pre">&quot;time&quot;</span></code> 属性应报告总的测试执行时间，包括设置和拆卸
+(<a class="reference external" href="http://windyroad.com.au/dl/Open%20Source/JUnit.xsd">1</a>, <a class="reference external" href="https://www.ibm.com/support/knowledgecenter/en/SSQ2R2_14.1.0/com.ibm.rsar.analysis.codereview.cobol.doc/topics/cac_useresults_junit.html">2</a>)。
+这是 pytest 的默认行为。要仅报告调用持续时间，请像这样配置 <code class="docutils literal notranslate"><span class="pre">junit_duration_report</span></code> 选项：</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">junit_duration_report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">call</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><p>To create result files which can be read by <a class="reference external" href="https://jenkins-ci.org">Jenkins</a> or other Continuous
+integration servers, use this invocation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--junit-xml<span class="o">=</span>path
+</pre></div>
+</div>
+<p>to create an XML file at <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p>
+<p>To set the name of the root test suite xml item, you can configure the <code class="docutils literal notranslate"><span class="pre">junit_suite_name</span></code> option in your config file:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">junit_suite_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">my_suite</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 4.0.</span></p>
+</div>
+<p>JUnit XML specification seems to indicate that <code class="docutils literal notranslate"><span class="pre">&quot;time&quot;</span></code> attribute
+should report total test execution times, including setup and teardown
+(<a class="reference external" href="http://windyroad.com.au/dl/Open%20Source/JUnit.xsd">1</a>, <a class="reference external" href="https://www.ibm.com/support/knowledgecenter/en/SSQ2R2_14.1.0/com.ibm.rsar.analysis.codereview.cobol.doc/topics/cac_useresults_junit.html">2</a>).
+It is the default pytest behavior. To report just call durations
+instead, configure the <code class="docutils literal notranslate"><span class="pre">junit_duration_report</span></code> option like this:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">junit_duration_report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">call</span>
+</pre></div>
+</div>
+</div></div>
+<section id="record-property-fixture">
+<span id="record-property-example"></span><h3><code class="docutils literal notranslate"><span class="pre">record_property</span></code> fixture<a class="headerlink" href="#record-property-fixture" title="Link to this heading">¶</a></h3>
+<p><strong>record_property</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-7-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-7-7-0" name="7-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-7-7-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-1" name="7-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-7-7-0" class="sphinx-tabs-panel" id="panel-7-7-0" name="7-0" role="tabpanel" tabindex="0"><p>如果您想为测试记录额外的信息，可以使用 <code class="docutils literal notranslate"><span class="pre">record_property</span></code> 固件：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_function</span><span class="p">(</span><span class="n">record_property</span><span class="p">):</span>
+    <span class="n">record_property</span><span class="p">(</span><span class="s2">&quot;example_key&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>这将向生成的 <code class="docutils literal notranslate"><span class="pre">testcase</span></code> 标签添加一个额外的属性 <code class="docutils literal notranslate"><span class="pre">example_key=&quot;1&quot;</span></code>：</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;testcase</span><span class="w"> </span><span class="na">classname=</span><span class="s">&quot;test_function&quot;</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;test_function.py&quot;</span><span class="w"> </span><span class="na">line=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;test_function&quot;</span><span class="w"> </span><span class="na">time=</span><span class="s">&quot;0.0009&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;properties&gt;</span>
+<span class="w">    </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;example_key&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/properties&gt;</span>
+<span class="nt">&lt;/testcase&gt;</span>
+</pre></div>
+</div>
+<p>另外，您可以将此功能与自定义标记集成：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+<span class="k">def</span> <span class="nf">pytest_collection_modifyitems</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_id&quot;</span><span class="p">):</span>
+            <span class="n">test_id</span> <span class="o">=</span> <span class="n">marker</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">user_properties</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;test_id&quot;</span><span class="p">,</span> <span class="n">test_id</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>在您的测试中：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_function.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">test_id</span><span class="p">(</span><span class="mi">1501</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_function</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>将会得到：</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;testcase</span><span class="w"> </span><span class="na">classname=</span><span class="s">&quot;test_function&quot;</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;test_function.py&quot;</span><span class="w"> </span><span class="na">line=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;test_function&quot;</span><span class="w"> </span><span class="na">time=</span><span class="s">&quot;0.0009&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;properties&gt;</span>
+<span class="w">    </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;test_id&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1501&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/properties&gt;</span>
+<span class="nt">&lt;/testcase&gt;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>请注意，使用此功能将会破坏最新 JUnitXML 模式的模式验证。
+这在某些 CI 服务器上使用时可能会成为一个问题。</p>
+</div>
+</div><div aria-labelledby="tab-7-7-1" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-1" name="7-1" role="tabpanel" tabindex="0"><p>If you want to log additional information for a test, you can use the
+<code class="docutils literal notranslate"><span class="pre">record_property</span></code> fixture:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_function</span><span class="p">(</span><span class="n">record_property</span><span class="p">):</span>
+    <span class="n">record_property</span><span class="p">(</span><span class="s2">&quot;example_key&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>This will add an extra property <code class="docutils literal notranslate"><span class="pre">example_key=&quot;1&quot;</span></code> to the generated
+<code class="docutils literal notranslate"><span class="pre">testcase</span></code> tag:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;testcase</span><span class="w"> </span><span class="na">classname=</span><span class="s">&quot;test_function&quot;</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;test_function.py&quot;</span><span class="w"> </span><span class="na">line=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;test_function&quot;</span><span class="w"> </span><span class="na">time=</span><span class="s">&quot;0.0009&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;properties&gt;</span>
+<span class="w">    </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;example_key&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/properties&gt;</span>
+<span class="nt">&lt;/testcase&gt;</span>
+</pre></div>
+</div>
+<p>Alternatively, you can integrate this functionality with custom markers:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_collection_modifyitems</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_id&quot;</span><span class="p">):</span>
+            <span class="n">test_id</span> <span class="o">=</span> <span class="n">marker</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">user_properties</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;test_id&quot;</span><span class="p">,</span> <span class="n">test_id</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>And in your tests:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_function.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">test_id</span><span class="p">(</span><span class="mi">1501</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_function</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>Will result in:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;testcase</span><span class="w"> </span><span class="na">classname=</span><span class="s">&quot;test_function&quot;</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;test_function.py&quot;</span><span class="w"> </span><span class="na">line=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;test_function&quot;</span><span class="w"> </span><span class="na">time=</span><span class="s">&quot;0.0009&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;properties&gt;</span>
+<span class="w">    </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;test_id&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;1501&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/properties&gt;</span>
+<span class="nt">&lt;/testcase&gt;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please note that using this feature will break schema verifications for the latest JUnitXML schema.
+This might be a problem when used with some CI servers.</p>
+</div>
+</div></div>
+</section>
+<section id="record-xml-attribute-fixture">
+<h3><code class="docutils literal notranslate"><span class="pre">record_xml_attribute</span></code> fixture<a class="headerlink" href="#record-xml-attribute-fixture" title="Link to this heading">¶</a></h3>
+<p><strong>record_xml_attribute</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-8-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-8-8-0" name="8-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-8-8-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-8-8-1" name="8-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-8-8-0" class="sphinx-tabs-panel" id="panel-8-8-0" name="8-0" role="tabpanel" tabindex="0"><p>要向 testcase 元素添加额外的 xml 属性，可以使用 <code class="docutils literal notranslate"><span class="pre">record_xml_attribute</span></code> 固件。这也可以用来覆盖现有值：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_function</span><span class="p">(</span><span class="n">record_xml_attribute</span><span class="p">):</span>
+    <span class="n">record_xml_attribute</span><span class="p">(</span><span class="s2">&quot;assertions&quot;</span><span class="p">,</span> <span class="s2">&quot;REQ-1234&quot;</span><span class="p">)</span>
+    <span class="n">record_xml_attribute</span><span class="p">(</span><span class="s2">&quot;classname&quot;</span><span class="p">,</span> <span class="s2">&quot;custom_classname&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>与 <code class="docutils literal notranslate"><span class="pre">record_property</span></code> 不同，这不会添加一个新的子元素。
+相反，这将在生成的 <code class="docutils literal notranslate"><span class="pre">testcase</span></code> 标签内添加一个属性 <code class="docutils literal notranslate"><span class="pre">assertions=&quot;REQ-1234&quot;</span></code>，并将默认的 <code class="docutils literal notranslate"><span class="pre">classname</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">&quot;classname=custom_classname&quot;</span></code>：</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;testcase</span><span class="w"> </span><span class="na">classname=</span><span class="s">&quot;custom_classname&quot;</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;test_function.py&quot;</span><span class="w"> </span><span class="na">line=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;test_function&quot;</span><span class="w"> </span><span class="na">time=</span><span class="s">&quot;0.003&quot;</span><span class="w"> </span><span class="na">assertions=</span><span class="s">&quot;REQ-1234&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;system-out&gt;</span>
+<span class="w">        </span>hello<span class="w"> </span>world
+<span class="w">    </span><span class="nt">&lt;/system-out&gt;</span>
+<span class="nt">&lt;/testcase&gt;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">record_xml_attribute</span></code> 是一个实验性功能，其接口可能在未来版本中被更强大和通用的内容所替代。
+然而，该功能本身将被保留。</p>
+<p>使用这个功能而不是 <code class="docutils literal notranslate"><span class="pre">record_xml_property</span></code> 可以在使用 ci 工具解析 xml 报告时提供帮助。
+然而，一些解析器对于允许的元素和属性非常严格。
+许多工具使用 xsd 模式（如下例所示）来验证传入的 xml。
+请确保您使用的属性名称是解析器允许的。</p>
+<p>以下是 Jenkins 用于验证 XML 报告的方案：</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;testcase&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;xs:complexType&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:sequence&gt;</span>
+<span class="w">            </span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;skipped&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;error&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;failure&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;system-out&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;system-err&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/xs:sequence&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;name&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="w"> </span><span class="na">use=</span><span class="s">&quot;required&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;assertions&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="w"> </span><span class="na">use=</span><span class="s">&quot;optional&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;time&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="w"> </span><span class="na">use=</span><span class="s">&quot;optional&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;classname&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="w"> </span><span class="na">use=</span><span class="s">&quot;optional&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;status&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="w"> </span><span class="na">use=</span><span class="s">&quot;optional&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/xs:complexType&gt;</span>
+<span class="nt">&lt;/xs:element&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>请注意，使用此功能将会破坏最新 JUnitXML 模式的模式验证。
+这在某些 CI 服务器上使用时可能会成为一个问题。</p>
+</div>
+</div><div aria-labelledby="tab-8-8-1" class="sphinx-tabs-panel" hidden="true" id="panel-8-8-1" name="8-1" role="tabpanel" tabindex="0"><p>To add an additional xml attribute to a testcase element, you can use
+<code class="docutils literal notranslate"><span class="pre">record_xml_attribute</span></code> fixture. This can also be used to override existing values:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_function</span><span class="p">(</span><span class="n">record_xml_attribute</span><span class="p">):</span>
+    <span class="n">record_xml_attribute</span><span class="p">(</span><span class="s2">&quot;assertions&quot;</span><span class="p">,</span> <span class="s2">&quot;REQ-1234&quot;</span><span class="p">)</span>
+    <span class="n">record_xml_attribute</span><span class="p">(</span><span class="s2">&quot;classname&quot;</span><span class="p">,</span> <span class="s2">&quot;custom_classname&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>Unlike <code class="docutils literal notranslate"><span class="pre">record_property</span></code>, this will not add a new child element.
+Instead, this will add an attribute <code class="docutils literal notranslate"><span class="pre">assertions=&quot;REQ-1234&quot;</span></code> inside the generated
+<code class="docutils literal notranslate"><span class="pre">testcase</span></code> tag and override the default <code class="docutils literal notranslate"><span class="pre">classname</span></code> with <code class="docutils literal notranslate"><span class="pre">&quot;classname=custom_classname&quot;</span></code>:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;testcase</span><span class="w"> </span><span class="na">classname=</span><span class="s">&quot;custom_classname&quot;</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;test_function.py&quot;</span><span class="w"> </span><span class="na">line=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;test_function&quot;</span><span class="w"> </span><span class="na">time=</span><span class="s">&quot;0.003&quot;</span><span class="w"> </span><span class="na">assertions=</span><span class="s">&quot;REQ-1234&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;system-out&gt;</span>
+<span class="w">        </span>hello<span class="w"> </span>world
+<span class="w">    </span><span class="nt">&lt;/system-out&gt;</span>
+<span class="nt">&lt;/testcase&gt;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">record_xml_attribute</span></code> is an experimental feature, and its interface might be replaced
+by something more powerful and general in future versions. The
+functionality per-se will be kept, however.</p>
+<p>Using this over <code class="docutils literal notranslate"><span class="pre">record_xml_property</span></code> can help when using ci tools to parse the xml report.
+However, some parsers are quite strict about the elements and attributes that are allowed.
+Many tools use an xsd schema (like the example below) to validate incoming xml.
+Make sure you are using attribute names that are allowed by your parser.</p>
+<p>Below is the Scheme used by Jenkins to validate the XML report:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;testcase&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;xs:complexType&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:sequence&gt;</span>
+<span class="w">            </span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;skipped&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;error&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;failure&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;system-out&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;system-err&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/xs:sequence&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;name&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="w"> </span><span class="na">use=</span><span class="s">&quot;required&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;assertions&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="w"> </span><span class="na">use=</span><span class="s">&quot;optional&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;time&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="w"> </span><span class="na">use=</span><span class="s">&quot;optional&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;classname&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="w"> </span><span class="na">use=</span><span class="s">&quot;optional&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;xs:attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;status&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;xs:string&quot;</span><span class="w"> </span><span class="na">use=</span><span class="s">&quot;optional&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/xs:complexType&gt;</span>
+<span class="nt">&lt;/xs:element&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please note that using this feature will break schema verifications for the latest JUnitXML schema.
+This might be a problem when used with some CI servers.</p>
+</div>
+</div></div>
+<section id="record-testsuite-property-fixture">
+<span id="record-testsuite-property-example"></span><h4><code class="docutils literal notranslate"><span class="pre">record_testsuite_property</span></code> fixture<a class="headerlink" href="#record-testsuite-property-fixture" title="Link to this heading">¶</a></h4>
+<p><strong>record_testsuite_property</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-9-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-9-9-0" name="9-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-9-9-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-9-9-1" name="9-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-9-9-0" class="sphinx-tabs-panel" id="panel-9-9-0" name="9-0" role="tabpanel" tabindex="0"><div class="versionadded">
+<p><span class="versionmodified added">Added in version 4.5.</span></p>
+</div>
+<p>如果您想在测试套件级别添加一个属性节点，该节点可能包含与所有测试相关的属性，可以使用 <code class="docutils literal notranslate"><span class="pre">record_testsuite_property</span></code> 会话范围的固件：</p>
+<p><code class="docutils literal notranslate"><span class="pre">record_testsuite_property</span></code> 会话范围的固件可用于添加与所有测试相关的属性。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">log_global_env_facts</span><span class="p">(</span><span class="n">record_testsuite_property</span><span class="p">):</span>
+    <span class="n">record_testsuite_property</span><span class="p">(</span><span class="s2">&quot;ARCH&quot;</span><span class="p">,</span> <span class="s2">&quot;PPC&quot;</span><span class="p">)</span>
+    <span class="n">record_testsuite_property</span><span class="p">(</span><span class="s2">&quot;STORAGE_TYPE&quot;</span><span class="p">,</span> <span class="s2">&quot;CEPH&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TestMe</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">test_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>该固件是一个可调用对象，接收 <code class="docutils literal notranslate"><span class="pre">&lt;property&gt;</span></code> 标签的 <code class="docutils literal notranslate"><span class="pre">name</span></code> 和 <code class="docutils literal notranslate"><span class="pre">value</span></code>，这些标签在生成的 XML 的测试套件级别添加：</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;testsuite</span><span class="w"> </span><span class="na">errors=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">failures=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;pytest&quot;</span><span class="w"> </span><span class="na">skipped=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">tests=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">time=</span><span class="s">&quot;0.006&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;properties&gt;</span>
+<span class="w">    </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;ARCH&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;PPC&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;STORAGE_TYPE&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;CEPH&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/properties&gt;</span>
+<span class="nt">&lt;testcase</span><span class="w"> </span><span class="na">classname=</span><span class="s">&quot;test_me.TestMe&quot;</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;test_me.py&quot;</span><span class="w"> </span><span class="na">line=</span><span class="s">&quot;16&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;test_foo&quot;</span><span class="w"> </span><span class="na">time=</span><span class="s">&quot;0.000243663787842&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/testsuite&gt;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">name</span></code> 必须是一个字符串，<code class="docutils literal notranslate"><span class="pre">value</span></code> 将被转换为字符串并正确地进行 XML 转义。</p>
+<p>生成的 XML 与最新的 <code class="docutils literal notranslate"><span class="pre">xunit</span></code> 标准兼容，这与 <a href="#id12"><span class="problematic" id="id13">`record_property`_</span></a> 和 <a href="#id14"><span class="problematic" id="id15">`record_xml_attribute`_</span></a> 相反。</p>
+</div><div aria-labelledby="tab-9-9-1" class="sphinx-tabs-panel" hidden="true" id="panel-9-9-1" name="9-1" role="tabpanel" tabindex="0"><div class="versionadded">
+<p><span class="versionmodified added">Added in version 4.5.</span></p>
+</div>
+<p>If you want to add a properties node at the test-suite level, which may contains properties that are relevant to all tests, you can use the <code class="docutils literal notranslate"><span class="pre">record_testsuite_property</span></code> session-scoped fixture:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">record_testsuite_property</span></code> session-scoped fixture can be used to add properties relevant to all tests.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">log_global_env_facts</span><span class="p">(</span><span class="n">record_testsuite_property</span><span class="p">):</span>
+    <span class="n">record_testsuite_property</span><span class="p">(</span><span class="s2">&quot;ARCH&quot;</span><span class="p">,</span> <span class="s2">&quot;PPC&quot;</span><span class="p">)</span>
+    <span class="n">record_testsuite_property</span><span class="p">(</span><span class="s2">&quot;STORAGE_TYPE&quot;</span><span class="p">,</span> <span class="s2">&quot;CEPH&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TestMe</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">test_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>The fixture is a callable which receives <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">value</span></code> of a <code class="docutils literal notranslate"><span class="pre">&lt;property&gt;</span></code> tag added at the test-suite level of the generated xml:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;testsuite</span><span class="w"> </span><span class="na">errors=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">failures=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;pytest&quot;</span><span class="w"> </span><span class="na">skipped=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">tests=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">time=</span><span class="s">&quot;0.006&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;properties&gt;</span>
+<span class="w">    </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;ARCH&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;PPC&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;property</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;STORAGE_TYPE&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;CEPH&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/properties&gt;</span>
+<span class="nt">&lt;testcase</span><span class="w"> </span><span class="na">classname=</span><span class="s">&quot;test_me.TestMe&quot;</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;test_me.py&quot;</span><span class="w"> </span><span class="na">line=</span><span class="s">&quot;16&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;test_foo&quot;</span><span class="w"> </span><span class="na">time=</span><span class="s">&quot;0.000243663787842&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/testsuite&gt;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">name</span></code> must be a string, <code class="docutils literal notranslate"><span class="pre">value</span></code> will be converted to a string and properly xml-escaped.</p>
+<p>The generated XML is compatible with the latest <code class="docutils literal notranslate"><span class="pre">xunit</span></code> standard, contrary to <a href="#id16"><span class="problematic" id="id17">`record_property`_</span></a> and <a href="#id18"><span class="problematic" id="id19">`record_xml_attribute`_</span></a>.</p>
+</div></div>
+</section>
+</section>
+</section>
+<section id="pastebin">
+<h2>将测试报告发送至在线 pastebin 服务<a class="headerlink" href="#pastebin" title="Link to this heading">¶</a></h2>
+<p><strong>Sending test report to an online pastebin service</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-10-10-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-10-10-0" name="10-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-10-10-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-1" name="10-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-10-10-0" class="sphinx-tabs-panel" id="panel-10-10-0" name="10-0" role="tabpanel" tabindex="0"><p><strong>为每个测试失败创建 URL</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--pastebin<span class="o">=</span>failed
+</pre></div>
+</div>
+<p>这将把测试运行信息提交到远程 Paste 服务，并为每个失败提供一个 URL。您可以像往常一样选择测试，或者例如添加 <code class="docutils literal notranslate"><span class="pre">-x</span></code>，如果您只想发送一个特定的失败。</p>
+<p><strong>为整个测试会话日志创建 URL</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--pastebin<span class="o">=</span>all
+</pre></div>
+</div>
+<p>目前只实现了将内容粘贴到 <a class="reference external" href="https://bpaste.net/">https://bpaste.net/</a> 服务。</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 5.2.</span></p>
+</div>
+<p>如果因任何原因创建 URL 失败，将生成警告，而不是使整个测试套件失败。</p>
+</div><div aria-labelledby="tab-10-10-1" class="sphinx-tabs-panel" hidden="true" id="panel-10-10-1" name="10-1" role="tabpanel" tabindex="0"><p><strong>Creating a URL for each test failure</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--pastebin<span class="o">=</span>failed
+</pre></div>
+</div>
+<p>This will submit test run information to a remote Paste service and provide a URL for each failure.  You may select tests as usual or add for example <code class="docutils literal notranslate"><span class="pre">-x</span></code> if you only want to send one particular failure.</p>
+<p><strong>Creating a URL for a whole test session log</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--pastebin<span class="o">=</span>all
+</pre></div>
+</div>
+<p>Currently only pasting to the <a class="reference external" href="https://bpaste.net/">https://bpaste.net/</a> service is implemented.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 5.2.</span></p>
+</div>
+<p>If creating the URL fails for any reason, a warning is generated instead of failing the entire test suite.</p>
+</div></div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="logging.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">如何管理日志记录</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="failures.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">如何处理测试失败</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">管理 pytest 的输出</a><ul>
+<li><a class="reference internal" href="#python">修改 Python 回溯打印</a></li>
+<li><a class="reference internal" href="#id3">冗长详细</a><ul>
+<li><a class="reference internal" href="#pytest-fine-grained-verbosity">细粒度的详细程度</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pytest-detailed-failed-tests-usage">制作详细的摘要报告</a></li>
+<li><a class="reference internal" href="#truncation-params">修改截断限制</a></li>
+<li><a class="reference internal" href="#id7">创建结果日志格式文件</a></li>
+<li><a class="reference internal" href="#junitxml">创建 JUnitXML 格式文件</a><ul>
+<li><a class="reference internal" href="#record-property-fixture"><code class="docutils literal notranslate"><span class="pre">record_property</span></code> fixture</a></li>
+<li><a class="reference internal" href="#record-xml-attribute-fixture"><code class="docutils literal notranslate"><span class="pre">record_xml_attribute</span></code> fixture</a><ul>
+<li><a class="reference internal" href="#record-testsuite-property-fixture"><code class="docutils literal notranslate"><span class="pre">record_testsuite_property</span></code> fixture</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pastebin">将测试报告发送至在线 pastebin 服务</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

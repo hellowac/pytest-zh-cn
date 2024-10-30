@@ -1,0 +1,1109 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="search" title="Search" href="../../search.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/_modules/_pytest/doctest.html" />
+
+    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>_pytest.doctest - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">入门</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../how-to/index.html">操作指南</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../how-to/bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../example/index.html">示例和自定义技巧</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../example/reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for _pytest.doctest</h1><div class="highlight"><pre>
+<span></span><span class="c1"># mypy: allow-untyped-defs</span>
+<span class="sd">&quot;&quot;&quot;Discover and run doctests in modules and test files.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">bdb</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">types</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Generator</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Pattern</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">_pytest</span> <span class="kn">import</span> <span class="n">outcomes</span>
+<span class="kn">from</span> <span class="nn">_pytest._code.code</span> <span class="kn">import</span> <span class="n">ExceptionInfo</span>
+<span class="kn">from</span> <span class="nn">_pytest._code.code</span> <span class="kn">import</span> <span class="n">ReprFileLocation</span>
+<span class="kn">from</span> <span class="nn">_pytest._code.code</span> <span class="kn">import</span> <span class="n">TerminalRepr</span>
+<span class="kn">from</span> <span class="nn">_pytest._io</span> <span class="kn">import</span> <span class="n">TerminalWriter</span>
+<span class="kn">from</span> <span class="nn">_pytest.compat</span> <span class="kn">import</span> <span class="n">safe_getattr</span>
+<span class="kn">from</span> <span class="nn">_pytest.config</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">_pytest.config.argparsing</span> <span class="kn">import</span> <span class="n">Parser</span>
+<span class="kn">from</span> <span class="nn">_pytest.fixtures</span> <span class="kn">import</span> <span class="n">fixture</span>
+<span class="kn">from</span> <span class="nn">_pytest.fixtures</span> <span class="kn">import</span> <span class="n">TopRequest</span>
+<span class="kn">from</span> <span class="nn">_pytest.nodes</span> <span class="kn">import</span> <span class="n">Collector</span>
+<span class="kn">from</span> <span class="nn">_pytest.nodes</span> <span class="kn">import</span> <span class="n">Item</span>
+<span class="kn">from</span> <span class="nn">_pytest.outcomes</span> <span class="kn">import</span> <span class="n">OutcomeException</span>
+<span class="kn">from</span> <span class="nn">_pytest.outcomes</span> <span class="kn">import</span> <span class="n">skip</span>
+<span class="kn">from</span> <span class="nn">_pytest.pathlib</span> <span class="kn">import</span> <span class="n">fnmatch_ex</span>
+<span class="kn">from</span> <span class="nn">_pytest.python</span> <span class="kn">import</span> <span class="n">Module</span>
+<span class="kn">from</span> <span class="nn">_pytest.python_api</span> <span class="kn">import</span> <span class="n">approx</span>
+<span class="kn">from</span> <span class="nn">_pytest.warning_types</span> <span class="kn">import</span> <span class="n">PytestWarning</span>
+
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Self</span>
+
+<span class="n">DOCTEST_REPORT_CHOICE_NONE</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+<span class="n">DOCTEST_REPORT_CHOICE_CDIFF</span> <span class="o">=</span> <span class="s2">&quot;cdiff&quot;</span>
+<span class="n">DOCTEST_REPORT_CHOICE_NDIFF</span> <span class="o">=</span> <span class="s2">&quot;ndiff&quot;</span>
+<span class="n">DOCTEST_REPORT_CHOICE_UDIFF</span> <span class="o">=</span> <span class="s2">&quot;udiff&quot;</span>
+<span class="n">DOCTEST_REPORT_CHOICE_ONLY_FIRST_FAILURE</span> <span class="o">=</span> <span class="s2">&quot;only_first_failure&quot;</span>
+
+<span class="n">DOCTEST_REPORT_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">DOCTEST_REPORT_CHOICE_NONE</span><span class="p">,</span>
+    <span class="n">DOCTEST_REPORT_CHOICE_CDIFF</span><span class="p">,</span>
+    <span class="n">DOCTEST_REPORT_CHOICE_NDIFF</span><span class="p">,</span>
+    <span class="n">DOCTEST_REPORT_CHOICE_UDIFF</span><span class="p">,</span>
+    <span class="n">DOCTEST_REPORT_CHOICE_ONLY_FIRST_FAILURE</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Lazy definition of runner class</span>
+<span class="n">RUNNER_CLASS</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="c1"># Lazy definition of output checker class</span>
+<span class="n">CHECKER_CLASS</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">doctest</span><span class="o">.</span><span class="n">OutputChecker</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_addoption</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">Parser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">addini</span><span class="p">(</span>
+        <span class="s2">&quot;doctest_optionflags&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Option flags for doctests&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;args&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ELLIPSIS&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">addini</span><span class="p">(</span>
+        <span class="s2">&quot;doctest_encoding&quot;</span><span class="p">,</span> <span class="s2">&quot;Encoding used for doctest files&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span>
+    <span class="p">)</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">getgroup</span><span class="p">(</span><span class="s2">&quot;collect&quot;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span>
+        <span class="s2">&quot;--doctest-modules&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Run doctests in all .py modules&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;doctestmodules&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span>
+        <span class="s2">&quot;--doctest-report&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;udiff&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Choose another output format for diffs on doctest failure&quot;</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="n">DOCTEST_REPORT_CHOICES</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;doctestreport&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span>
+        <span class="s2">&quot;--doctest-glob&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;pat&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Doctests file matching pattern, default: test*.txt&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;doctestglob&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span>
+        <span class="s2">&quot;--doctest-ignore-import-errors&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Ignore doctest collection errors&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;doctest_ignore_import_errors&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span>
+        <span class="s2">&quot;--doctest-continue-on-failure&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;For a given doctest, continue to run after the first failure&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;doctest_continue_on_failure&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_unconfigure</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">global</span> <span class="n">RUNNER_CLASS</span>
+
+    <span class="n">RUNNER_CLASS</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_collect_file</span><span class="p">(</span>
+    <span class="n">file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">parent</span><span class="p">:</span> <span class="n">Collector</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DoctestModule</span> <span class="o">|</span> <span class="n">DoctestTextfile</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">config</span>
+    <span class="k">if</span> <span class="n">file_path</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">doctestmodules</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">_is_setup_py</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="n">_is_main_py</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">DoctestModule</span><span class="o">.</span><span class="n">from_parent</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">_is_doctest</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DoctestTextfile</span><span class="o">.</span><span class="n">from_parent</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_is_setup_py</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;setup.py&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">()</span>
+    <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;setuptools&quot;</span> <span class="ow">in</span> <span class="n">contents</span> <span class="ow">or</span> <span class="sa">b</span><span class="s2">&quot;distutils&quot;</span> <span class="ow">in</span> <span class="n">contents</span>
+
+
+<span class="k">def</span> <span class="nf">_is_doctest</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Collector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">suffix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;.rst&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">parent</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">isinitpath</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="n">globs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;doctestglob&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">&quot;test*.txt&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">fnmatch_ex</span><span class="p">(</span><span class="n">glob</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">glob</span> <span class="ow">in</span> <span class="n">globs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_is_main_py</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;__main__.py&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">ReprFailDoctest</span><span class="p">(</span><span class="n">TerminalRepr</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">reprlocation_lines</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">ReprFileLocation</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reprlocation_lines</span> <span class="o">=</span> <span class="n">reprlocation_lines</span>
+
+    <span class="k">def</span> <span class="nf">toterminal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tw</span><span class="p">:</span> <span class="n">TerminalWriter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">reprlocation</span><span class="p">,</span> <span class="n">lines</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reprlocation_lines</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">tw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="n">reprlocation</span><span class="o">.</span><span class="n">toterminal</span><span class="p">(</span><span class="n">tw</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">MultipleDoctestFailures</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failures</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">doctest</span><span class="o">.</span><span class="n">DocTestFailure</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">failures</span> <span class="o">=</span> <span class="n">failures</span>
+
+
+<span class="k">def</span> <span class="nf">_init_runner_class</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">doctest</span><span class="o">.</span><span class="n">DocTestRunner</span><span class="p">]:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="k">class</span> <span class="nc">PytestDoctestRunner</span><span class="p">(</span><span class="n">doctest</span><span class="o">.</span><span class="n">DebugRunner</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runner to collect failures.</span>
+
+<span class="sd">        Note that the out variable in this case is a list instead of a</span>
+<span class="sd">        stdout-like object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">checker</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">OutputChecker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">optionflags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">continue_on_failure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">checker</span><span class="o">=</span><span class="n">checker</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">optionflags</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">continue_on_failure</span> <span class="o">=</span> <span class="n">continue_on_failure</span>
+
+        <span class="k">def</span> <span class="nf">report_failure</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">out</span><span class="p">,</span>
+            <span class="n">test</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTest</span><span class="p">,</span>
+            <span class="n">example</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">Example</span><span class="p">,</span>
+            <span class="n">got</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">failure</span> <span class="o">=</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTestFailure</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">example</span><span class="p">,</span> <span class="n">got</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">continue_on_failure</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">failure</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">failure</span>
+
+        <span class="k">def</span> <span class="nf">report_unexpected_exception</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">out</span><span class="p">,</span>
+            <span class="n">test</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTest</span><span class="p">,</span>
+            <span class="n">example</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">Example</span><span class="p">,</span>
+            <span class="n">exc_info</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">TracebackType</span><span class="p">],</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc_info</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">OutcomeException</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">exc_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc_info</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bdb</span><span class="o">.</span><span class="n">BdbQuit</span><span class="p">):</span>
+                <span class="n">outcomes</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;Quitting debugger&quot;</span><span class="p">)</span>
+            <span class="n">failure</span> <span class="o">=</span> <span class="n">doctest</span><span class="o">.</span><span class="n">UnexpectedException</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">example</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">continue_on_failure</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">failure</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">failure</span>
+
+    <span class="k">return</span> <span class="n">PytestDoctestRunner</span>
+
+
+<span class="k">def</span> <span class="nf">_get_runner</span><span class="p">(</span>
+    <span class="n">checker</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">OutputChecker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">optionflags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">continue_on_failure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTestRunner</span><span class="p">:</span>
+    <span class="c1"># We need this in order to do a lazy import on doctest</span>
+    <span class="k">global</span> <span class="n">RUNNER_CLASS</span>
+    <span class="k">if</span> <span class="n">RUNNER_CLASS</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">RUNNER_CLASS</span> <span class="o">=</span> <span class="n">_init_runner_class</span><span class="p">()</span>
+    <span class="c1"># Type ignored because the continue_on_failure argument is only defined on</span>
+    <span class="c1"># PytestDoctestRunner, which is lazily defined so can&#39;t be used as a type.</span>
+    <span class="k">return</span> <span class="n">RUNNER_CLASS</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="n">checker</span><span class="o">=</span><span class="n">checker</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="n">optionflags</span><span class="o">=</span><span class="n">optionflags</span><span class="p">,</span>
+        <span class="n">continue_on_failure</span><span class="o">=</span><span class="n">continue_on_failure</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DoctestItem</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">parent</span><span class="p">:</span> <span class="n">DoctestTextfile</span> <span class="o">|</span> <span class="n">DoctestModule</span><span class="p">,</span>
+        <span class="n">runner</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTestRunner</span><span class="p">,</span>
+        <span class="n">dtest</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTest</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">runner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtest</span> <span class="o">=</span> <span class="n">dtest</span>
+
+        <span class="c1"># Stuff needed for fixture support.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">fm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">_fixturemanager</span>
+        <span class="n">fixtureinfo</span> <span class="o">=</span> <span class="n">fm</span><span class="o">.</span><span class="n">getfixtureinfo</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fixtureinfo</span> <span class="o">=</span> <span class="n">fixtureinfo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixturenames</span> <span class="o">=</span> <span class="n">fixtureinfo</span><span class="o">.</span><span class="n">names_closure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initrequest</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_parent</span><span class="p">(</span>  <span class="c1"># type: ignore[override]</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">parent</span><span class="p">:</span> <span class="n">DoctestTextfile</span> <span class="o">|</span> <span class="n">DoctestModule</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">runner</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTestRunner</span><span class="p">,</span>
+        <span class="n">dtest</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTest</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="c1"># incompatible signature due to imposed limits on subclass</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The public named constructor.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">from_parent</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">runner</span><span class="o">=</span><span class="n">runner</span><span class="p">,</span> <span class="n">dtest</span><span class="o">=</span><span class="n">dtest</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_initrequest</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">funcargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_request</span> <span class="o">=</span> <span class="n">TopRequest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_ispytest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="o">.</span><span class="n">_fillfixtures</span><span class="p">()</span>
+        <span class="n">globs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">getfixture</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="o">.</span><span class="n">getfixturevalue</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="o">.</span><span class="n">getfixturevalue</span><span class="p">(</span><span class="s2">&quot;doctest_namespace&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">globs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtest</span><span class="o">.</span><span class="n">globs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">globs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">runtest</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_check_all_skipped</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtest</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_disable_output_capturing_for_darwin</span><span class="p">()</span>
+        <span class="n">failures</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">doctest</span><span class="o">.</span><span class="n">DocTestFailure</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Type ignored because we change the type of `out` from what</span>
+        <span class="c1"># doctest expects.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtest</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">failures</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="k">if</span> <span class="n">failures</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MultipleDoctestFailures</span><span class="p">(</span><span class="n">failures</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_disable_output_capturing_for_darwin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Disable output capturing. Otherwise, stdout is lost to doctest (#985).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">capman</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">pluginmanager</span><span class="o">.</span><span class="n">getplugin</span><span class="p">(</span><span class="s2">&quot;capturemanager&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">capman</span><span class="p">:</span>
+            <span class="n">capman</span><span class="o">.</span><span class="n">suspend_global_capture</span><span class="p">(</span><span class="n">in_</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capman</span><span class="o">.</span><span class="n">read_global_capture</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+
+    <span class="c1"># TODO: Type ignored -- breaks Liskov Substitution.</span>
+    <span class="k">def</span> <span class="nf">repr_failure</span><span class="p">(</span>  <span class="c1"># type: ignore[override]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">excinfo</span><span class="p">:</span> <span class="n">ExceptionInfo</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">TerminalRepr</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">doctest</span>
+
+        <span class="n">failures</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">Sequence</span><span class="p">[</span><span class="n">doctest</span><span class="o">.</span><span class="n">DocTestFailure</span> <span class="o">|</span> <span class="n">doctest</span><span class="o">.</span><span class="n">UnexpectedException</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">excinfo</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">doctest</span><span class="o">.</span><span class="n">DocTestFailure</span><span class="p">,</span> <span class="n">doctest</span><span class="o">.</span><span class="n">UnexpectedException</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">failures</span> <span class="o">=</span> <span class="p">[</span><span class="n">excinfo</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">excinfo</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">MultipleDoctestFailures</span><span class="p">):</span>
+            <span class="n">failures</span> <span class="o">=</span> <span class="n">excinfo</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">failures</span>
+
+        <span class="k">if</span> <span class="n">failures</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">repr_failure</span><span class="p">(</span><span class="n">excinfo</span><span class="p">)</span>
+
+        <span class="n">reprlocation_lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">failure</span> <span class="ow">in</span> <span class="n">failures</span><span class="p">:</span>
+            <span class="n">example</span> <span class="o">=</span> <span class="n">failure</span><span class="o">.</span><span class="n">example</span>
+            <span class="n">test</span> <span class="o">=</span> <span class="n">failure</span><span class="o">.</span><span class="n">test</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">filename</span>
+            <span class="k">if</span> <span class="n">test</span><span class="o">.</span><span class="n">lineno</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">lineno</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lineno</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">lineno</span> <span class="o">+</span> <span class="n">example</span><span class="o">.</span><span class="n">lineno</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">failure</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="c1"># TODO: ReprFileLocation doesn&#39;t expect a None lineno.</span>
+            <span class="n">reprlocation</span> <span class="o">=</span> <span class="n">ReprFileLocation</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+            <span class="n">checker</span> <span class="o">=</span> <span class="n">_get_checker</span><span class="p">()</span>
+            <span class="n">report_choice</span> <span class="o">=</span> <span class="n">_get_report_choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;doctestreport&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">lineno</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">failure</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">docstring</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">failure</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">docstring</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="c1"># add line numbers to the left of the error message</span>
+                <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">lineno</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="s2">&quot;</span><span class="si">%03d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">test</span><span class="o">.</span><span class="n">lineno</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+                <span class="p">]</span>
+                <span class="c1"># trim docstring error lines to 10</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">example</span><span class="o">.</span><span class="n">lineno</span> <span class="o">-</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">:</span> <span class="n">example</span><span class="o">.</span><span class="n">lineno</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="s2">&quot;EXAMPLE LOCATION UNKNOWN, not showing all tests of that example&quot;</span>
+                <span class="p">]</span>
+                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;&gt;&gt;&gt;&quot;</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">example</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;??? </span><span class="si">{</span><span class="n">indent</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">failure</span><span class="p">,</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTestFailure</span><span class="p">):</span>
+                <span class="n">lines</span> <span class="o">+=</span> <span class="n">checker</span><span class="o">.</span><span class="n">output_difference</span><span class="p">(</span>
+                    <span class="n">example</span><span class="p">,</span> <span class="n">failure</span><span class="o">.</span><span class="n">got</span><span class="p">,</span> <span class="n">report_choice</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">inner_excinfo</span> <span class="o">=</span> <span class="n">ExceptionInfo</span><span class="o">.</span><span class="n">from_exc_info</span><span class="p">(</span><span class="n">failure</span><span class="o">.</span><span class="n">exc_info</span><span class="p">)</span>
+                <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;UNEXPECTED EXCEPTION: </span><span class="si">{</span><span class="n">inner_excinfo</span><span class="o">.</span><span class="n">value</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">]</span>
+                <span class="n">lines</span> <span class="o">+=</span> <span class="p">[</span>
+                    <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="o">*</span><span class="n">failure</span><span class="o">.</span><span class="n">exc_info</span><span class="p">)</span>
+                <span class="p">]</span>
+            <span class="n">reprlocation_lines</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">reprlocation</span><span class="p">,</span> <span class="n">lines</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ReprFailDoctest</span><span class="p">(</span><span class="n">reprlocation_lines</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reportinfo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtest</span><span class="o">.</span><span class="n">lineno</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;[doctest] </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_get_flag_lookup</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">DONT_ACCEPT_TRUE_FOR_1</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">DONT_ACCEPT_TRUE_FOR_1</span><span class="p">,</span>
+        <span class="n">DONT_ACCEPT_BLANKLINE</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">DONT_ACCEPT_BLANKLINE</span><span class="p">,</span>
+        <span class="n">NORMALIZE_WHITESPACE</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">NORMALIZE_WHITESPACE</span><span class="p">,</span>
+        <span class="n">ELLIPSIS</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">,</span>
+        <span class="n">IGNORE_EXCEPTION_DETAIL</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">IGNORE_EXCEPTION_DETAIL</span><span class="p">,</span>
+        <span class="n">COMPARISON_FLAGS</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">COMPARISON_FLAGS</span><span class="p">,</span>
+        <span class="n">ALLOW_UNICODE</span><span class="o">=</span><span class="n">_get_allow_unicode_flag</span><span class="p">(),</span>
+        <span class="n">ALLOW_BYTES</span><span class="o">=</span><span class="n">_get_allow_bytes_flag</span><span class="p">(),</span>
+        <span class="n">NUMBER</span><span class="o">=</span><span class="n">_get_number_flag</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_optionflags</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">optionflags_str</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getini</span><span class="p">(</span><span class="s2">&quot;doctest_optionflags&quot;</span><span class="p">)</span>
+    <span class="n">flag_lookup_table</span> <span class="o">=</span> <span class="n">_get_flag_lookup</span><span class="p">()</span>
+    <span class="n">flag_acc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">optionflags_str</span><span class="p">:</span>
+        <span class="n">flag_acc</span> <span class="o">|=</span> <span class="n">flag_lookup_table</span><span class="p">[</span><span class="n">flag</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">flag_acc</span>
+
+
+<span class="k">def</span> <span class="nf">_get_continue_on_failure</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">continue_on_failure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getvalue</span><span class="p">(</span><span class="s2">&quot;doctest_continue_on_failure&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">continue_on_failure</span><span class="p">:</span>
+        <span class="c1"># We need to turn off this if we use pdb since we should stop at</span>
+        <span class="c1"># the first failure.</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">getvalue</span><span class="p">(</span><span class="s2">&quot;usepdb&quot;</span><span class="p">):</span>
+            <span class="n">continue_on_failure</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">continue_on_failure</span>
+
+
+<span class="k">class</span> <span class="nc">DoctestTextfile</span><span class="p">(</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">DoctestItem</span><span class="p">]:</span>
+        <span class="kn">import</span> <span class="nn">doctest</span>
+
+        <span class="c1"># Inspired by doctest.testfile; ideally we would use it directly,</span>
+        <span class="c1"># but it doesn&#39;t support passing a custom checker.</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getini</span><span class="p">(</span><span class="s2">&quot;doctest_encoding&quot;</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">globs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;__name__&quot;</span><span class="p">:</span> <span class="s2">&quot;__main__&quot;</span><span class="p">}</span>
+
+        <span class="n">optionflags</span> <span class="o">=</span> <span class="n">get_optionflags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="n">runner</span> <span class="o">=</span> <span class="n">_get_runner</span><span class="p">(</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">optionflags</span><span class="o">=</span><span class="n">optionflags</span><span class="p">,</span>
+            <span class="n">checker</span><span class="o">=</span><span class="n">_get_checker</span><span class="p">(),</span>
+            <span class="n">continue_on_failure</span><span class="o">=</span><span class="n">_get_continue_on_failure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTestParser</span><span class="p">()</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_doctest</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">globs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">test</span><span class="o">.</span><span class="n">examples</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">DoctestItem</span><span class="o">.</span><span class="n">from_parent</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">test</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">runner</span><span class="o">=</span><span class="n">runner</span><span class="p">,</span> <span class="n">dtest</span><span class="o">=</span><span class="n">test</span>
+            <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_check_all_skipped</span><span class="p">(</span><span class="n">test</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raise pytest.skip() if all examples in the given DocTest have the SKIP</span>
+<span class="sd">    option set.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="n">all_skipped</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">doctest</span><span class="o">.</span><span class="n">SKIP</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">test</span><span class="o">.</span><span class="n">examples</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">all_skipped</span><span class="p">:</span>
+        <span class="n">skip</span><span class="p">(</span><span class="s2">&quot;all tests skipped by +SKIP option&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_is_mocked</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return if an object is possibly a mock object by checking the</span>
+<span class="sd">    existence of a highly improbable attribute.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">safe_getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;pytest_mock_example_attribute_that_shouldnt_exist&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="p">)</span>
+
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">_patch_unwrap_mock_aware</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Context manager which replaces ``inspect.unwrap`` with a version</span>
+<span class="sd">    that&#39;s aware of mock objects and doesn&#39;t recurse into them.&quot;&quot;&quot;</span>
+    <span class="n">real_unwrap</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">unwrap</span>
+
+    <span class="k">def</span> <span class="nf">_mock_aware_unwrap</span><span class="p">(</span>
+        <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">stop</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stop</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">stop</span> <span class="ow">is</span> <span class="n">_is_mocked</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">real_unwrap</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">_is_mocked</span><span class="p">)</span>
+            <span class="n">_stop</span> <span class="o">=</span> <span class="n">stop</span>
+            <span class="k">return</span> <span class="n">real_unwrap</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="k">lambda</span> <span class="n">obj</span><span class="p">:</span> <span class="n">_is_mocked</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_stop</span><span class="p">(</span><span class="n">func</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Got </span><span class="si">{</span><span class="n">e</span><span class="si">!r}</span><span class="s2"> when unwrapping </span><span class="si">{</span><span class="n">func</span><span class="si">!r}</span><span class="s2">.  This is usually caused &quot;</span>
+                <span class="s2">&quot;by a violation of Python&#39;s object protocol; see e.g. &quot;</span>
+                <span class="s2">&quot;https://github.com/pytest-dev/pytest/issues/5080&quot;</span><span class="p">,</span>
+                <span class="n">PytestWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">raise</span>
+
+    <span class="n">inspect</span><span class="o">.</span><span class="n">unwrap</span> <span class="o">=</span> <span class="n">_mock_aware_unwrap</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">inspect</span><span class="o">.</span><span class="n">unwrap</span> <span class="o">=</span> <span class="n">real_unwrap</span>
+
+
+<span class="k">class</span> <span class="nc">DoctestModule</span><span class="p">(</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">DoctestItem</span><span class="p">]:</span>
+        <span class="kn">import</span> <span class="nn">doctest</span>
+
+        <span class="k">class</span> <span class="nc">MockAwareDocTestFinder</span><span class="p">(</span><span class="n">doctest</span><span class="o">.</span><span class="n">DocTestFinder</span><span class="p">):</span>
+            <span class="n">py_ver_info_minor</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">is_find_lineno_broken</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">py_ver_info_minor</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">py_ver_info_minor</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">micro</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">py_ver_info_minor</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">micro</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_find_lineno_broken</span><span class="p">:</span>
+
+                <span class="k">def</span> <span class="nf">_find_lineno</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">source_lines</span><span class="p">):</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;On older Pythons, doctest code does not take into account</span>
+<span class="sd">                    `@property`. https://github.com/python/cpython/issues/61648</span>
+
+<span class="sd">                    Moreover, wrapped Doctests need to be unwrapped so the correct</span>
+<span class="sd">                    line number is returned. #8796</span>
+<span class="sd">                    &quot;&quot;&quot;</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">property</span><span class="p">):</span>
+                        <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;fget&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;__wrapped__&quot;</span><span class="p">):</span>
+                        <span class="c1"># Get the main obj in case of it being wrapped</span>
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+                    <span class="c1"># Type ignored because this is a private function.</span>
+                    <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_find_lineno</span><span class="p">(</span>  <span class="c1"># type:ignore[misc]</span>
+                        <span class="n">obj</span><span class="p">,</span>
+                        <span class="n">source_lines</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+
+                <span class="k">def</span> <span class="nf">_find</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="n">tests</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">source_lines</span><span class="p">,</span> <span class="n">globs</span><span class="p">,</span> <span class="n">seen</span>
+                <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;Override _find to work around issue in stdlib.</span>
+
+<span class="sd">                    https://github.com/pytest-dev/pytest/issues/3456</span>
+<span class="sd">                    https://github.com/python/cpython/issues/69718</span>
+<span class="sd">                    &quot;&quot;&quot;</span>
+                    <span class="k">if</span> <span class="n">_is_mocked</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+                        <span class="k">return</span>  <span class="c1"># pragma: no cover</span>
+                    <span class="k">with</span> <span class="n">_patch_unwrap_mock_aware</span><span class="p">():</span>
+                        <span class="c1"># Type ignored because this is a private function.</span>
+                        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_find</span><span class="p">(</span>  <span class="c1"># type:ignore[misc]</span>
+                            <span class="n">tests</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">source_lines</span><span class="p">,</span> <span class="n">globs</span><span class="p">,</span> <span class="n">seen</span>
+                        <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span>
+
+                <span class="k">def</span> <span class="nf">_from_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;`cached_property` objects are never considered a part</span>
+<span class="sd">                    of the &#39;current module&#39;. As such they are skipped by doctest.</span>
+<span class="sd">                    Here we override `_from_module` to check the underlying</span>
+<span class="sd">                    function instead. https://github.com/python/cpython/issues/107995</span>
+<span class="sd">                    &quot;&quot;&quot;</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">functools</span><span class="o">.</span><span class="n">cached_property</span><span class="p">):</span>
+                        <span class="nb">object</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">func</span>
+
+                    <span class="c1"># Type ignored because this is a private function.</span>
+                    <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_from_module</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>  <span class="c1"># type: ignore[misc]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span>
+        <span class="k">except</span> <span class="n">Collector</span><span class="o">.</span><span class="n">CollectError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getvalue</span><span class="p">(</span><span class="s2">&quot;doctest_ignore_import_errors&quot;</span><span class="p">):</span>
+                <span class="n">skip</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unable to import module </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+        <span class="c1"># While doctests currently don&#39;t support fixtures directly, we still</span>
+        <span class="c1"># need to pick up autouse fixtures.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">_fixturemanager</span><span class="o">.</span><span class="n">parsefactories</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Uses internal doctest module parsing mechanism.</span>
+        <span class="n">finder</span> <span class="o">=</span> <span class="n">MockAwareDocTestFinder</span><span class="p">()</span>
+        <span class="n">optionflags</span> <span class="o">=</span> <span class="n">get_optionflags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">runner</span> <span class="o">=</span> <span class="n">_get_runner</span><span class="p">(</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">optionflags</span><span class="o">=</span><span class="n">optionflags</span><span class="p">,</span>
+            <span class="n">checker</span><span class="o">=</span><span class="n">_get_checker</span><span class="p">(),</span>
+            <span class="n">continue_on_failure</span><span class="o">=</span><span class="n">_get_continue_on_failure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">test</span><span class="o">.</span><span class="n">examples</span><span class="p">:</span>  <span class="c1"># skip empty doctests</span>
+                <span class="k">yield</span> <span class="n">DoctestItem</span><span class="o">.</span><span class="n">from_parent</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">test</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">runner</span><span class="o">=</span><span class="n">runner</span><span class="p">,</span> <span class="n">dtest</span><span class="o">=</span><span class="n">test</span>
+                <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_init_checker_class</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">doctest</span><span class="o">.</span><span class="n">OutputChecker</span><span class="p">]:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span> <span class="nn">re</span>
+
+    <span class="k">class</span> <span class="nc">LiteralsOutputChecker</span><span class="p">(</span><span class="n">doctest</span><span class="o">.</span><span class="n">OutputChecker</span><span class="p">):</span>
+        <span class="c1"># Based on doctest_nose_plugin.py from the nltk project</span>
+        <span class="c1"># (https://github.com/nltk/nltk) and on the &quot;numtest&quot; doctest extension</span>
+        <span class="c1"># by Sebastien Boisgerault (https://github.com/boisgera/numtest).</span>
+
+        <span class="n">_unicode_literal_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\W|^)[uU]([rR]?[\&#39;</span><span class="se">\&quot;</span><span class="s2">])&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">UNICODE</span><span class="p">)</span>
+        <span class="n">_bytes_literal_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\W|^)[bB]([rR]?[\&#39;</span><span class="se">\&quot;</span><span class="s2">])&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">UNICODE</span><span class="p">)</span>
+        <span class="n">_number_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="w">            </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            (?P&lt;number&gt;</span>
+<span class="sd">              (?P&lt;mantissa&gt;</span>
+<span class="sd">                (?P&lt;integer1&gt; [+-]?\d*)\.(?P&lt;fraction&gt;\d+)</span>
+<span class="sd">                |</span>
+<span class="sd">                (?P&lt;integer2&gt; [+-]?\d+)\.</span>
+<span class="sd">              )</span>
+<span class="sd">              (?:</span>
+<span class="sd">                [Ee]</span>
+<span class="sd">                (?P&lt;exponent1&gt; [+-]?\d+)</span>
+<span class="sd">              )?</span>
+<span class="sd">              |</span>
+<span class="sd">              (?P&lt;integer3&gt; [+-]?\d+)</span>
+<span class="sd">              (?:</span>
+<span class="sd">                [Ee]</span>
+<span class="sd">                (?P&lt;exponent2&gt; [+-]?\d+)</span>
+<span class="sd">              )</span>
+<span class="sd">            )</span>
+<span class="sd">            &quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">check_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">want</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">got</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">optionflags</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">want</span><span class="p">,</span> <span class="n">got</span><span class="p">,</span> <span class="n">optionflags</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+            <span class="n">allow_unicode</span> <span class="o">=</span> <span class="n">optionflags</span> <span class="o">&amp;</span> <span class="n">_get_allow_unicode_flag</span><span class="p">()</span>
+            <span class="n">allow_bytes</span> <span class="o">=</span> <span class="n">optionflags</span> <span class="o">&amp;</span> <span class="n">_get_allow_bytes_flag</span><span class="p">()</span>
+            <span class="n">allow_number</span> <span class="o">=</span> <span class="n">optionflags</span> <span class="o">&amp;</span> <span class="n">_get_number_flag</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_unicode</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">allow_bytes</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">allow_number</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">def</span> <span class="nf">remove_prefixes</span><span class="p">(</span><span class="n">regex</span><span class="p">:</span> <span class="n">Pattern</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">txt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1\2&quot;</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">allow_unicode</span><span class="p">:</span>
+                <span class="n">want</span> <span class="o">=</span> <span class="n">remove_prefixes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_unicode_literal_re</span><span class="p">,</span> <span class="n">want</span><span class="p">)</span>
+                <span class="n">got</span> <span class="o">=</span> <span class="n">remove_prefixes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_unicode_literal_re</span><span class="p">,</span> <span class="n">got</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">allow_bytes</span><span class="p">:</span>
+                <span class="n">want</span> <span class="o">=</span> <span class="n">remove_prefixes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bytes_literal_re</span><span class="p">,</span> <span class="n">want</span><span class="p">)</span>
+                <span class="n">got</span> <span class="o">=</span> <span class="n">remove_prefixes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bytes_literal_re</span><span class="p">,</span> <span class="n">got</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">allow_number</span><span class="p">:</span>
+                <span class="n">got</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_unwanted_precision</span><span class="p">(</span><span class="n">want</span><span class="p">,</span> <span class="n">got</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">want</span><span class="p">,</span> <span class="n">got</span><span class="p">,</span> <span class="n">optionflags</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_remove_unwanted_precision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">want</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">got</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">wants</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number_re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">want</span><span class="p">))</span>
+            <span class="n">gots</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number_re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">got</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wants</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gots</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">got</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">wants</span><span class="p">,</span> <span class="n">gots</span><span class="p">):</span>
+                <span class="n">fraction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;fraction&quot;</span><span class="p">)</span>
+                <span class="n">exponent</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;exponent1&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">exponent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">exponent</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;exponent2&quot;</span><span class="p">)</span>
+                <span class="n">precision</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">fraction</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">fraction</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">exponent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">precision</span> <span class="o">-=</span> <span class="nb">int</span><span class="p">(</span><span class="n">exponent</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">group</span><span class="p">())</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">group</span><span class="p">()),</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">10</span><span class="o">**-</span><span class="n">precision</span><span class="p">):</span>
+                    <span class="c1"># They&#39;re close enough. Replace the text we actually</span>
+                    <span class="c1"># got with the text we want, so that it will match when we</span>
+                    <span class="c1"># check the string literally.</span>
+                    <span class="n">got</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">got</span><span class="p">[:</span> <span class="n">g</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="n">offset</span><span class="p">]</span> <span class="o">+</span> <span class="n">w</span><span class="o">.</span><span class="n">group</span><span class="p">()</span> <span class="o">+</span> <span class="n">got</span><span class="p">[</span><span class="n">g</span><span class="o">.</span><span class="n">end</span><span class="p">()</span> <span class="o">+</span> <span class="n">offset</span> <span class="p">:]</span>
+                    <span class="p">)</span>
+                    <span class="n">offset</span> <span class="o">+=</span> <span class="n">w</span><span class="o">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="n">w</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="n">g</span><span class="o">.</span><span class="n">start</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">got</span>
+
+    <span class="k">return</span> <span class="n">LiteralsOutputChecker</span>
+
+
+<span class="k">def</span> <span class="nf">_get_checker</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">doctest</span><span class="o">.</span><span class="n">OutputChecker</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a doctest.OutputChecker subclass that supports some</span>
+<span class="sd">    additional options:</span>
+
+<span class="sd">    * ALLOW_UNICODE and ALLOW_BYTES options to ignore u&#39;&#39; and b&#39;&#39;</span>
+<span class="sd">      prefixes (respectively) in string literals. Useful when the same</span>
+<span class="sd">      doctest should run in Python 2 and Python 3.</span>
+
+<span class="sd">    * NUMBER to ignore floating-point differences smaller than the</span>
+<span class="sd">      precision of the literal number in the doctest.</span>
+
+<span class="sd">    An inner class is used to avoid importing &quot;doctest&quot; at the module</span>
+<span class="sd">    level.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">CHECKER_CLASS</span>
+    <span class="k">if</span> <span class="n">CHECKER_CLASS</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">CHECKER_CLASS</span> <span class="o">=</span> <span class="n">_init_checker_class</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">CHECKER_CLASS</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_get_allow_unicode_flag</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register and return the ALLOW_UNICODE flag.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="k">return</span> <span class="n">doctest</span><span class="o">.</span><span class="n">register_optionflag</span><span class="p">(</span><span class="s2">&quot;ALLOW_UNICODE&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_allow_bytes_flag</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register and return the ALLOW_BYTES flag.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="k">return</span> <span class="n">doctest</span><span class="o">.</span><span class="n">register_optionflag</span><span class="p">(</span><span class="s2">&quot;ALLOW_BYTES&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_number_flag</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register and return the NUMBER flag.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="k">return</span> <span class="n">doctest</span><span class="o">.</span><span class="n">register_optionflag</span><span class="p">(</span><span class="s2">&quot;NUMBER&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_report_choice</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the actual `doctest` module flag value.</span>
+
+<span class="sd">    We want to do it as late as possible to avoid importing `doctest` and all</span>
+<span class="sd">    its dependencies when parsing options, as it adds overhead and breaks tests.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="n">DOCTEST_REPORT_CHOICE_UDIFF</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">REPORT_UDIFF</span><span class="p">,</span>
+        <span class="n">DOCTEST_REPORT_CHOICE_CDIFF</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">REPORT_CDIFF</span><span class="p">,</span>
+        <span class="n">DOCTEST_REPORT_CHOICE_NDIFF</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">REPORT_NDIFF</span><span class="p">,</span>
+        <span class="n">DOCTEST_REPORT_CHOICE_ONLY_FIRST_FAILURE</span><span class="p">:</span> <span class="n">doctest</span><span class="o">.</span><span class="n">REPORT_ONLY_FIRST_FAILURE</span><span class="p">,</span>
+        <span class="n">DOCTEST_REPORT_CHOICE_NONE</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">}[</span><span class="n">key</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="doctest_namespace">
+<a class="viewcode-back" href="../../reference/reference.html#_pytest.doctest.doctest_namespace">[docs]</a>
+<span class="nd">@fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">doctest_namespace</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fixture that returns a :py:class:`dict` that will be injected into the</span>
+<span class="sd">    namespace of doctests.</span>
+
+<span class="sd">    Usually this fixture is used in conjunction with another ``autouse`` fixture:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        @pytest.fixture(autouse=True)</span>
+<span class="sd">        def add_np(doctest_namespace):</span>
+<span class="sd">            doctest_namespace[&quot;np&quot;] = numpy</span>
+
+<span class="sd">    For more details: :ref:`doctest_namespace`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span></div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
+    </body>
+</html>

@@ -1,0 +1,1252 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="search.html" /><link rel="next" title="向后兼容政策" href="backwards-compatibility.html" /><link rel="prev" title="更改日志" href="changelog.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/contributing.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>贡献 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">入门</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="how-to/index.html">操作指南</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="how-to/usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to/bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="example/index.html">示例和自定义技巧</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="example/reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example/customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">更改日志</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="contributing">
+<span id="id1"></span><h1>贡献<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h1>
+<p><strong>Contributing</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>我们非常欢迎并赞赏您的贡献。每一点帮助都很重要，所以不要犹豫！</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>我们非常欢迎并赞赏您的贡献。每一点帮助都很重要，所以不要犹豫！</p>
+</div></div>
+<section id="submitfeedback">
+<span id="id2"></span><h2>功能请求和反馈<a class="headerlink" href="#submitfeedback" title="Link to this heading">¶</a></h2>
+<p><strong>Feature requests and feedback</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>您喜欢 pytest 吗？在 Twitter 或您的博客文章中分享您的喜爱吧！</p>
+<p>我们也希望听到您的建议和主张。欢迎
+<a class="reference external" href="https://github.com/pytest-dev/pytest/issues">将它们作为问题提交</a> 并且：</p>
+<ul class="simple">
+<li><p>详细解释它们应该如何工作。</p></li>
+<li><p>尽可能缩小范围。这将使其更容易实现。</p></li>
+</ul>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>Do you like pytest?  Share some love on Twitter or in your blog posts!</p>
+<p>We’d also like to hear about your propositions and suggestions.  Feel free to
+<a class="reference external" href="https://github.com/pytest-dev/pytest/issues">submit them as issues</a> and:</p>
+<ul class="simple">
+<li><p>Explain in detail how they should work.</p></li>
+<li><p>Keep the scope as narrow as possible.  This will make it easier to implement.</p></li>
+</ul>
+</div></div>
+</section>
+<section id="reportbugs">
+<span id="id4"></span><h2>报告错误<a class="headerlink" href="#reportbugs" title="Link to this heading">¶</a></h2>
+<p><strong>Report bugs</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p>报告 pytest 的错误请在 <a class="reference external" href="https://github.com/pytest-dev/pytest/issues">issue tracker</a> 中进行。</p>
+<p>如果您要报告错误，请包括以下内容：</p>
+<ul class="simple">
+<li><p>您的操作系统名称和版本。</p></li>
+<li><p>有关您本地设置的任何详细信息，这可能有助于故障排除，特别是 Python 解释器版本、已安装的库和 pytest 版本。</p></li>
+<li><p>详细的重现错误的步骤。</p></li>
+</ul>
+<p>如果您能够编写一个当前失败但应该通过的演示测试（xfail），那也是一个非常有用的提交，即使您无法修复该错误。</p>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p>Report bugs for pytest in the <a class="reference external" href="https://github.com/pytest-dev/pytest/issues">issue tracker</a>.</p>
+<p>If you are reporting a bug, please include:</p>
+<ul class="simple">
+<li><p>Your operating system name and version.</p></li>
+<li><p>Any details about your local setup that might be helpful in troubleshooting,</p></li>
+</ul>
+<p>specifically the Python interpreter version, installed libraries, and pytest
+version.
+* Detailed steps to reproduce the bug.</p>
+<p>If you can write a demonstration test that currently fails but should pass
+(xfail), that is a very useful commit to make as well, even if you cannot
+fix the bug itself.</p>
+</div></div>
+</section>
+<section id="fixbugs">
+<span id="id6"></span><h2>修复错误<a class="headerlink" href="#fixbugs" title="Link to this heading">¶</a></h2>
+<p><strong>Fix bugs</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p>查看 <a class="reference external" href="https://github.com/pytest-dev/pytest/labels/type:%20bug">GitHub issues for bugs</a>。
+另见适合新贡献者的 <a class="reference external" href="https://github.com/pytest-dev/pytest/labels/good%20first%20issue">“good first issue” issues</a>。</p>
+<p><a class="reference internal" href="contact.html#contact"><span class="std std-ref">与开发者交谈</span></a> 以了解您如何修复特定的错误。要表明您将处理某个特定问题，请在该问题上添加相关评论。</p>
+<p>不要忘记检查您最喜欢的插件的错误追踪器！</p>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>Look through the <a class="reference external" href="https://github.com/pytest-dev/pytest/labels/type:%20bug">GitHub issues for bugs</a>.
+See also the <a class="reference external" href="https://github.com/pytest-dev/pytest/labels/good%20first%20issue">“good first issue” issues</a>
+that are friendly to new contributors.</p>
+<p><a class="reference internal" href="contact.html#contact"><span class="std std-ref">Talk</span></a> to developers to find out how you can fix specific bugs. To indicate that you are going
+to work on a particular issue, add a comment to that effect on the specific issue.</p>
+<p>Don’t forget to check the issue trackers of your favourite plugins, too!</p>
+</div></div>
+</section>
+<section id="writeplugins">
+<span id="id9"></span><h2>实现功能<a class="headerlink" href="#writeplugins" title="Link to this heading">¶</a></h2>
+<p><strong>Implement features</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>查看 <a class="reference external" href="https://github.com/pytest-dev/pytest/labels/type:%20enhancement">GitHub issues for enhancements</a>。</p>
+<p><a class="reference internal" href="contact.html#contact"><span class="std std-ref">与开发者交谈</span></a> 以了解您如何实现特定功能。</p>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><p>Look through the <a class="reference external" href="https://github.com/pytest-dev/pytest/labels/type:%20enhancement">GitHub issues for enhancements</a>.</p>
+<p><a class="reference internal" href="contact.html#contact"><span class="std std-ref">Talk</span></a> to developers to find out how you can implement specific
+features.</p>
+</div></div>
+</section>
+<section id="id11">
+<h2>编写文档<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h2>
+<p><strong>Write documentation</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><p>Pytest 总是需要更多的文档。具体需要什么呢？</p>
+<ul class="simple">
+<li><p>更多补充文档。如果您发现某些地方不清楚，请告诉我们。</p></li>
+<li><p>文档翻译。目前我们只有英语版本。</p></li>
+<li><p>文档字符串。永远不会有太多文档字符串。</p></li>
+<li><p>博客文章、论文等 – 都非常受欢迎。</p></li>
+</ul>
+<p>您也可以直接在 GitHub 网页界面编辑文档文件，而无需使用本地副本。这对于小的修复非常方便。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>使用以下命令在本地构建文档：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tox<span class="w"> </span>-e<span class="w"> </span>docs
+</pre></div>
+</div>
+<p>构建的文档应位于 <code class="docutils literal notranslate"><span class="pre">doc/en/_build/html</span></code>，
+其中 ‘en’ 指的是文档语言。</p>
+</div>
+<p>Pytest 有一个 API 参考，大部分内容是从被记录项目的文档字符串中 <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html">自动生成的</a>。Pytest 使用 <a class="reference external" href="https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html">Sphinx 文档字符串格式</a>。
+例如：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">ArgType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Foo</span><span class="p">:</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;执行重要操作。</span>
+
+<span class="sd">   这里有更详细的信息，以与主题行分开的段落形式呈现。</span>
+<span class="sd">   使用完整的句子 -- 句子以大写字母开头，以句号结尾。</span>
+
+<span class="sd">   可以包含注解文档：</span>
+
+<span class="sd">   :param short_arg: 一个决定某些内容的参数。</span>
+<span class="sd">   :param long_arg:</span>
+<span class="sd">         一个长说明，跨越多行，如此溢出。</span>
+<span class="sd">   :returns: 结果。</span>
+<span class="sd">   :raises ValueError:</span>
+<span class="sd">         发生此错误时的详细信息。</span>
+
+<span class="sd">   .. versionadded:: 6.0</span>
+
+<span class="sd">   当使用类型提示时（如本例），上面的注解中包含类型并不是必需的。</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><p>Pytest could always use more documentation.  What exactly is needed?</p>
+<ul class="simple">
+<li><p>More complementary documentation.  Have you perhaps found something unclear?</p></li>
+<li><p>Documentation translations.  We currently have only English.</p></li>
+<li><p>Docstrings.  There can never be too many of them.</p></li>
+<li><p>Blog posts, articles and such – they’re all very appreciated.</p></li>
+</ul>
+<p>You can also edit documentation files directly in the GitHub web interface,
+without using a local copy.  This can be convenient for small fixes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Build the documentation locally with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tox<span class="w"> </span>-e<span class="w"> </span>docs
+</pre></div>
+</div>
+<p>The built documentation should be available in <code class="docutils literal notranslate"><span class="pre">doc/en/_build/html</span></code>,
+where ‘en’ refers to the documentation language.</p>
+</div>
+<p>Pytest has an API reference which in large part is
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html">generated automatically</a>
+from the docstrings of the documented items. Pytest uses the
+<a class="reference external" href="https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html">Sphinx docstring format</a>.
+For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">ArgType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Foo</span><span class="p">:</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;Do important stuff.</span>
+
+<span class="sd">   More detailed info here, in separate paragraphs from the subject line.</span>
+<span class="sd">   Use proper sentences -- start sentences with capital letters and end</span>
+<span class="sd">   with periods.</span>
+
+<span class="sd">   Can include annotated documentation:</span>
+
+<span class="sd">   :param short_arg: An argument which determines stuff.</span>
+<span class="sd">   :param long_arg:</span>
+<span class="sd">         A long explanation which spans multiple lines, overflows</span>
+<span class="sd">         like this.</span>
+<span class="sd">   :returns: The result.</span>
+<span class="sd">   :raises ValueError:</span>
+<span class="sd">         Detailed information when this can happen.</span>
+
+<span class="sd">   .. versionadded:: 6.0</span>
+
+<span class="sd">   Including types into the annotations above is not necessary when</span>
+<span class="sd">   type-hinting is being used (as in this example).</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="pytest-dev">
+<span id="submitplugin"></span><h2>向 pytest-dev 提交插件<a class="headerlink" href="#pytest-dev" title="Link to this heading">¶</a></h2>
+<p><strong>Submitting Plugins to pytest-dev</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><p>pytest 核心、支持代码和一些插件的开发在 <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> 组织下的仓库中进行：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pytest-dev">pytest-dev on GitHub</a></p></li>
+</ul>
+<p>所有 pytest-dev 贡献者团队成员对所有包含的仓库具有写入访问权限。pytest 核心和插件通常使用 <a class="reference internal" href="#pull-requests">pull requests</a> 向相应的仓库进行开发。</p>
+<p><code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> 组织的目标是：</p>
+<ul class="simple">
+<li><p>为流行的 pytest 插件提供一个中央位置</p></li>
+<li><p>分担一些维护责任（以防维护者不再希望维护某个插件）</p></li>
+</ul>
+<p>您可以通过订阅 <a class="reference external" href="https://mail.python.org/mailman/listinfo/pytest-dev">pytest-dev 邮件列表</a> 并发送一封邮件，指向您现有的 pytest 插件仓库来提交您的插件，该仓库必须具有以下内容：</p>
+<ul class="simple">
+<li><p>在 PyPI 上存在，并带有包含 <code class="docutils literal notranslate"><span class="pre">pytest-</span></code> 前缀的名称、版本号、作者、简短和详细描述的打包元数据。</p></li>
+<li><p>一个 <a class="reference external" href="https://tox.readthedocs.io/en/latest/config.html#configuration-discovery">tox 配置</a>，用于使用 <a class="reference external" href="https://tox.readthedocs.io">tox</a> 运行测试。</p></li>
+<li><p>一个 <code class="docutils literal notranslate"><span class="pre">README</span></code>，描述如何使用插件以及其运行的平台。</p></li>
+<li><p>一个 <code class="docutils literal notranslate"><span class="pre">LICENSE</span></code> 文件，包含许可信息，并在其打包元数据中有相应的信息。</p></li>
+<li><p>一个用于错误报告和增强请求的问题跟踪器。</p></li>
+<li><p>一个 <a class="reference external" href="https://keepachangelog.com/">changelog</a>。</p></li>
+</ul>
+<p>如果没有贡献者强烈反对且有两人同意，则可以将该仓库转移到 <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> 组织。</p>
+<p>以下是仓库转移通常的流程（以名为 <code class="docutils literal notranslate"><span class="pre">joedoe/pytest-xyz</span></code> 的仓库为例）：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">joedoe</span></code> 将仓库所有权转移给 <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> 管理员 <code class="docutils literal notranslate"><span class="pre">calvin</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calvin</span></code> 创建 <code class="docutils literal notranslate"><span class="pre">pytest-xyz-admin</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pytest-xyz-developers</span></code> 团队，邀请 <code class="docutils literal notranslate"><span class="pre">joedoe</span></code> 作为 <strong>维护者</strong> 加入两个团队。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calvin</span></code> 将仓库转移到 <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> 并配置团队访问权限：</p></li>
+</ul>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest-xyz-admin</span></code> <strong>管理员</strong> 访问权限；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest-xyz-developers</span></code> <strong>写入</strong> 访问权限；</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">pytest-dev/Contributors</span></code> 团队对所有项目具有写入访问权限，且每个项目管理员都在其中。我们建议每个插件至少有三个人具有发布到 PyPI 的权限。</p>
+<p>仓库所有者可以放心，任何 <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> 管理员都不会发布您的仓库或以任何方式取得所有权，除非在极少数情况下，某人在数月的联系尝试后变得没有响应。如前所述，目标是共享维护，避免“插件放弃”。</p>
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><p>Development of the pytest core, support code, and some plugins happens
+in repositories living under the <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> organisations:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pytest-dev">pytest-dev on GitHub</a></p></li>
+</ul>
+<p>All pytest-dev Contributors team members have write access to all contained
+repositories.  Pytest core and plugins are generally developed
+using <a class="reference internal" href="#pull-requests">pull requests</a> to respective repositories.</p>
+<p>The objectives of the <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> organisation are:</p>
+<ul class="simple">
+<li><p>Having a central location for popular pytest plugins</p></li>
+<li><p>Sharing some of the maintenance responsibility (in case a maintainer no</p></li>
+</ul>
+<p>longer wishes to maintain a plugin)</p>
+<p>You can submit your plugin by subscribing to the <a class="reference external" href="https://mail.python.org/mailman/listinfo/pytest-dev">pytest-dev mail list</a> and writing a
+mail pointing to your existing pytest plugin repository which must have
+the following:</p>
+<ul class="simple">
+<li><p>PyPI presence with packaging metadata that contains a <code class="docutils literal notranslate"><span class="pre">pytest-</span></code></p></li>
+</ul>
+<p>prefixed name, version number, authors, short and long description.</p>
+<ul class="simple">
+<li><p>a  <a class="reference external" href="https://tox.readthedocs.io/en/latest/config.html#configuration-discovery">tox configuration</a></p></li>
+</ul>
+<p>for running tests using <a class="reference external" href="https://tox.readthedocs.io">tox</a>.</p>
+<ul class="simple">
+<li><p>a <code class="docutils literal notranslate"><span class="pre">README</span></code> describing how to use the plugin and on which</p></li>
+</ul>
+<p>platforms it runs.</p>
+<ul class="simple">
+<li><p>a <code class="docutils literal notranslate"><span class="pre">LICENSE</span></code> file containing the licensing information, with</p></li>
+</ul>
+<p>matching info in its packaging metadata.</p>
+<ul class="simple">
+<li><p>an issue tracker for bug reports and enhancement requests.</p></li>
+<li><p>a <a class="reference external" href="https://keepachangelog.com/">changelog</a>.</p></li>
+</ul>
+<p>If no contributor strongly objects and two agree, the repository can then be
+transferred to the <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> organisation.</p>
+<p>Here’s a rundown of how a repository transfer usually proceeds
+(using a repository named <code class="docutils literal notranslate"><span class="pre">joedoe/pytest-xyz</span></code> as example):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">joedoe</span></code> transfers repository ownership to <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> administrator <code class="docutils literal notranslate"><span class="pre">calvin</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calvin</span></code> creates <code class="docutils literal notranslate"><span class="pre">pytest-xyz-admin</span></code> and <code class="docutils literal notranslate"><span class="pre">pytest-xyz-developers</span></code> teams, inviting <code class="docutils literal notranslate"><span class="pre">joedoe</span></code> to both as <strong>maintainer</strong>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calvin</span></code> transfers repository to <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> and configures team access:</p></li>
+</ul>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest-xyz-admin</span></code> <strong>admin</strong> access;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest-xyz-developers</span></code> <strong>write</strong> access;</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">pytest-dev/Contributors</span></code> team has write access to all projects, and
+every project administrator is in it. We recommend that each plugin has at least three
+people who have the right to release to PyPI.</p>
+<p>Repository owners can rest assured that no <code class="docutils literal notranslate"><span class="pre">pytest-dev</span></code> administrator will ever make
+releases of your repository or take ownership in any way, except in rare cases
+where someone becomes unresponsive after months of contact attempts.
+As stated, the objective is to share maintenance and avoid “plugin-abandon”.</p>
+</div></div>
+</section>
+<section id="id18">
+<span id="pull-requests"></span><span id="id19"></span><h2>准备拉取请求<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h2>
+<p><strong>Preparing Pull Requests</strong></p>
+<section id="id20">
+<h3>简短版本<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h3>
+<p><strong>Short version</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-7-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-7-7-0" name="7-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-7-7-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-1" name="7-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-7-7-0" class="sphinx-tabs-panel" id="panel-7-7-0" name="7-0" role="tabpanel" tabindex="0"><ol class="arabic">
+<li><p>Fork 该仓库。</p></li>
+<li><p>如有必要，从上游获取标签（如果仅克隆了主分支 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span> <span class="pre">--tags</span> <span class="pre">https://github.com/pytest-dev/pytest</span></code>）。</p></li>
+<li><p>启用并安装 <a class="reference external" href="https://pre-commit.com">pre-commit</a> 以确保遵循风格指南和代码检查。</p></li>
+<li><p>遵循 <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP-8</a> 进行命名。</p></li>
+<li><p>测试使用 <code class="docutils literal notranslate"><span class="pre">tox</span></code> 运行:</p>
+<p>tox -e linting,py39</p>
+<p>上述测试环境通常足以覆盖大多数本地情况。</p>
+</li>
+<li><p>编写一个 <code class="docutils literal notranslate"><span class="pre">changelog</span></code> 条目：<code class="docutils literal notranslate"><span class="pre">changelog/2574.bugfix.rst</span></code>，使用问题 ID 号
+和 <code class="docutils literal notranslate"><span class="pre">feature</span></code>、<code class="docutils literal notranslate"><span class="pre">improvement</span></code>、<code class="docutils literal notranslate"><span class="pre">bugfix</span></code>、<code class="docutils literal notranslate"><span class="pre">doc</span></code>、<code class="docutils literal notranslate"><span class="pre">deprecation</span></code>、
+<code class="docutils literal notranslate"><span class="pre">breaking</span></code>、<code class="docutils literal notranslate"><span class="pre">vendor</span></code> 或 <code class="docutils literal notranslate"><span class="pre">trivial</span></code> 中的一个作为问题类型。</p></li>
+<li><p>除非您的更改是微不足道或文档修复（例如，拼写错误或小部分的重述），请将自己添加到 <code class="docutils literal notranslate"><span class="pre">AUTHORS</span></code> 文件中，按字母顺序排列。</p></li>
+</ol>
+</div><div aria-labelledby="tab-7-7-1" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-1" name="7-1" role="tabpanel" tabindex="0"><ol class="arabic">
+<li><p>Fork the repository.</p></li>
+<li><p>Fetch tags from upstream if necessary (if you cloned only main <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span> <span class="pre">--tags</span> <span class="pre">https://github.com/pytest-dev/pytest</span></code>).</p></li>
+<li><p>Enable and install <a class="reference external" href="https://pre-commit.com">pre-commit</a> to ensure style-guides and code checks are followed.</p></li>
+<li><p>Follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP-8</a> for naming.</p></li>
+<li><p>Tests are run using <code class="docutils literal notranslate"><span class="pre">tox</span></code>:</p>
+<p>tox -e linting,py39</p>
+<p>The test environments above are usually enough to cover most cases locally.</p>
+</li>
+<li><p>Write a <code class="docutils literal notranslate"><span class="pre">changelog</span></code> entry: <code class="docutils literal notranslate"><span class="pre">changelog/2574.bugfix.rst</span></code>, use issue id number
+and one of <code class="docutils literal notranslate"><span class="pre">feature</span></code>, <code class="docutils literal notranslate"><span class="pre">improvement</span></code>, <code class="docutils literal notranslate"><span class="pre">bugfix</span></code>, <code class="docutils literal notranslate"><span class="pre">doc</span></code>, <code class="docutils literal notranslate"><span class="pre">deprecation</span></code>,
+<code class="docutils literal notranslate"><span class="pre">breaking</span></code>, <code class="docutils literal notranslate"><span class="pre">vendor</span></code> or <code class="docutils literal notranslate"><span class="pre">trivial</span></code> for the issue type.</p></li>
+<li><p>Unless your change is a trivial or a documentation fix (e.g., a typo or reword of a small section) please
+add yourself to the <code class="docutils literal notranslate"><span class="pre">AUTHORS</span></code> file, in alphabetical order.</p></li>
+</ol>
+</div></div>
+</section>
+<section id="id23">
+<h3>完整版本<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h3>
+<p><strong>Long version</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-8-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-8-8-0" name="8-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-8-8-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-8-8-1" name="8-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-8-8-0" class="sphinx-tabs-panel" id="panel-8-8-0" name="8-0" role="tabpanel" tabindex="0"><p>什么是“拉取请求”？它通知项目的核心开发者您希望审核和合并的更改。拉取请求存储在 <a class="reference external" href="https://github.com/pytest-dev/pytest/pulls">GitHub 服务器</a> 上。一旦您发送了拉取请求，我们可以讨论其潜在的修改，甚至稍后添加更多的提交。在 <a class="reference external" href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">GitHub 帮助中心</a> 中有一个优秀的教程，介绍了拉取请求的工作原理。</p>
+<p>以下是简单的概述，包含 pytest 特定的内容：</p>
+<ol class="arabic">
+<li><p>Fork 该 <a class="reference external" href="https://github.com/pytest-dev/pytest">pytest GitHub 仓库</a>。可以使用 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 作为您的 fork 仓库名称，因为它将存放在您的用户名下。</p></li>
+<li><p>使用 <a class="reference external" href="https://git-scm.com/">git</a> 在本地克隆您的 fork 并创建一个分支:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:YOUR_GITHUB_USERNAME/pytest.git
+$ cd pytest
+$ git fetch --tags https://github.com/pytest-dev/pytest
+</pre></div>
+</div>
+<p># 现在，从“main”创建自己的分支：</p>
+<blockquote>
+<div><p>$ git checkout -b your-bugfix-branch-name main</p>
+</div></blockquote>
+<p>由于我们使用“major.minor.micro”版本号，bug 修复通常会在微版本中发布，而特性会在小版本中发布，不兼容的更改则会在大版本中发布。</p>
+<p>您将需要标签来进行本地测试，因此请确保从主仓库获取标签。如果您怀疑没有获取到，请将主仓库设置为 upstream 并获取标签:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git remote add upstream https://github.com/pytest-dev/pytest
+$ git fetch upstream --tags
+</pre></div>
+</div>
+<p>如果您需要 Git 的帮助，请遵循此快速入门指南： <a class="reference external" href="https://git.wiki.kernel.org/index.php/QuickStart">https://git.wiki.kernel.org/index.php/QuickStart</a></p>
+</li>
+<li><p>安装 <a class="reference external" href="https://pre-commit.com">pre-commit</a> 及其钩子到 pytest 仓库:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install --user pre-commit
+$ pre-commit install
+</pre></div>
+</div>
+<p>之后，<code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> 将在您提交时运行。</p>
+<p><a class="reference external" href="https://pre-commit.com/">https://pre-commit.com/</a> 是一个管理和维护多语言预提交钩子的框架，以确保代码风格和格式一致。</p>
+</li>
+<li><p>安装 tox</p>
+<p>Tox 用于运行所有测试，并将自动设置虚拟环境以运行测试。
+（将隐式使用 <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">https://virtualenv.pypa.io/en/latest/</a>）:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install tox
+</pre></div>
+</div>
+</li>
+<li><p>运行所有测试</p>
+<p>您的系统需要有 Python 3.8 或更高版本。现在，运行测试只需发出以下命令:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tox -e linting,py39
+</pre></div>
+</div>
+<p>该命令将通过“tox”工具在 Python 3.9 上运行测试，并进行“lint”编码风格检查。</p>
+</li>
+<li><p>现在，您可以编辑本地工作副本，并根据需要再次运行测试。请遵循 <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP-8</a> 进行命名。</p>
+<p>您可以向 <code class="docutils literal notranslate"><span class="pre">tox</span></code> 传递不同的选项。例如，要在 Python 3.9 上运行测试并向 pytest 传递选项（例如在失败时进入 pdb），您可以这样做:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tox -e py39 -- --pdb
+</pre></div>
+</div>
+<p>或者仅在 Python 3.9 上运行特定测试模块中的测试:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tox -e py39 -- testing/test_config.py
+</pre></div>
+</div>
+<p>提交时，如果需要，<code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> 将重新格式化文件。</p>
+</li>
+<li><p>如果您更喜欢直接运行测试，而不是使用 <code class="docutils literal notranslate"><span class="pre">tox</span></code>，我们建议创建一个虚拟环境并使用带有 <code class="docutils literal notranslate"><span class="pre">dev</span></code> 扩展的可编辑安装:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 -m venv .venv
+$ source .venv/bin/activate  # Linux
+$ .venv/Scripts/activate.bat  # Windows
+$ pip install -e &quot;.[dev]&quot;
+</pre></div>
+</div>
+<p>之后，您可以编辑文件并正常运行 pytest:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pytest testing/test_config.py
+</pre></div>
+</div>
+</li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">changelog</span></code> 中创建一个新的变更日志条目。文件应命名为 <code class="docutils literal notranslate"><span class="pre">&lt;issueid&gt;.&lt;type&gt;.rst</span></code>，
+其中 <em>issueid</em> 是与更改相关的问题编号，<em>type</em> 是以下之一：
+<code class="docutils literal notranslate"><span class="pre">feature</span></code>、<code class="docutils literal notranslate"><span class="pre">improvement</span></code>、<code class="docutils literal notranslate"><span class="pre">bugfix</span></code>、<code class="docutils literal notranslate"><span class="pre">doc</span></code>、<code class="docutils literal notranslate"><span class="pre">deprecation</span></code>、<code class="docutils literal notranslate"><span class="pre">breaking</span></code>、<code class="docutils literal notranslate"><span class="pre">vendor</span></code> 或 <code class="docutils literal notranslate"><span class="pre">trivial</span></code>。 如果更改不影响 pytest 的文档行为，您可以跳过创建变更日志条目。</p></li>
+<li><p>如果您还没有在 <code class="docutils literal notranslate"><span class="pre">AUTHORS</span></code> 文件中，请按字母顺序添加自己。</p></li>
+<li><p>一旦您的测试通过并且对更改感到满意，请提交和推送:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git commit -a -m &quot;&lt;commit message&gt;&quot;
+$ git push -u
+</pre></div>
+</div>
+</li>
+<li><p>最后，通过 GitHub 网站提交拉取请求，使用以下数据:</p>
+<p>head-fork: YOUR_GITHUB_USERNAME/pytest
+compare: your-branch-name</p>
+<p>base-fork: pytest-dev/pytest
+base: main</p>
+</li>
+</ol>
+</div><div aria-labelledby="tab-8-8-1" class="sphinx-tabs-panel" hidden="true" id="panel-8-8-1" name="8-1" role="tabpanel" tabindex="0"><p>What is a “pull request”?  It informs the project’s core developers about the
+changes you want to review and merge.  Pull requests are stored on
+<a class="reference external" href="https://github.com/pytest-dev/pytest/pulls">GitHub servers</a>.
+Once you send a pull request, we can discuss its potential modifications and
+even add more commits to it later on. There’s an excellent tutorial on how Pull
+Requests work in the
+<a class="reference external" href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">GitHub Help Center</a>.</p>
+<p>Here is a simple overview, with pytest-specific bits:</p>
+<ol class="arabic">
+<li><p>Fork the
+<a class="reference external" href="https://github.com/pytest-dev/pytest">pytest GitHub repository</a>.  It’s
+fine to use <code class="docutils literal notranslate"><span class="pre">pytest</span></code> as your fork repository name because it will live
+under your user.</p></li>
+<li><p>Clone your fork locally using <a class="reference external" href="https://git-scm.com/">git</a> and create a branch:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:YOUR_GITHUB_USERNAME/pytest.git
+$ cd pytest
+$ git fetch --tags https://github.com/pytest-dev/pytest
+</pre></div>
+</div>
+<p># now, create your own branch off “main”:</p>
+<blockquote>
+<div><p>$ git checkout -b your-bugfix-branch-name main</p>
+</div></blockquote>
+<p>Given we have “major.minor.micro” version numbers, bug fixes will usually
+be released in micro releases whereas features will be released in
+minor releases and incompatible changes in major releases.</p>
+<p>You will need the tags to test locally, so be sure you have the tags from the main repository. If you suspect you don’t, set the main repository as upstream and fetch the tags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git remote add upstream https://github.com/pytest-dev/pytest
+$ git fetch upstream --tags
+</pre></div>
+</div>
+<p>If you need some help with Git, follow this quick start
+guide: <a class="reference external" href="https://git.wiki.kernel.org/index.php/QuickStart">https://git.wiki.kernel.org/index.php/QuickStart</a></p>
+</li>
+<li><p>Install <a class="reference external" href="https://pre-commit.com">pre-commit</a> and its hook on the pytest repo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install --user pre-commit
+$ pre-commit install
+</pre></div>
+</div>
+<p>Afterwards <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> will run whenever you commit.</p>
+<p><a class="reference external" href="https://pre-commit.com/">https://pre-commit.com/</a> is a framework for managing and maintaining multi-language pre-commit hooks
+to ensure code-style and code formatting is consistent.</p>
+</li>
+<li><p>Install tox</p>
+<p>Tox is used to run all the tests and will automatically setup virtualenvs
+to run the tests in.
+(will implicitly use <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">https://virtualenv.pypa.io/en/latest/</a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install tox
+</pre></div>
+</div>
+</li>
+<li><p>Run all the tests</p>
+<p>You need to have Python 3.8 or later available in your system.  Now
+running tests is as simple as issuing this command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tox -e linting,py39
+</pre></div>
+</div>
+<p>This command will run tests via the “tox” tool against Python 3.9
+and also perform “lint” coding-style checks.</p>
+</li>
+<li><p>You can now edit your local working copy and run the tests again as necessary. Please follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP-8</a> for naming.</p>
+<p>You can pass different options to <code class="docutils literal notranslate"><span class="pre">tox</span></code>. For example, to run tests on Python 3.9 and pass options to pytest
+(e.g. enter pdb on failure) to pytest you can do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tox -e py39 -- --pdb
+</pre></div>
+</div>
+<p>Or to only run tests in a particular test module on Python 3.9:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tox -e py39 -- testing/test_config.py
+</pre></div>
+</div>
+<p>When committing, <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> will re-format the files if necessary.</p>
+</li>
+<li><p>If instead of using <code class="docutils literal notranslate"><span class="pre">tox</span></code> you prefer to run the tests directly, then we suggest to create a virtual environment and use
+an editable install with the <code class="docutils literal notranslate"><span class="pre">dev</span></code> extra:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 -m venv .venv
+$ source .venv/bin/activate  # Linux
+$ .venv/Scripts/activate.bat  # Windows
+$ pip install -e &quot;.[dev]&quot;
+</pre></div>
+</div>
+<p>Afterwards, you can edit the files and run pytest normally:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pytest testing/test_config.py
+</pre></div>
+</div>
+</li>
+<li><p>Create a new changelog entry in <code class="docutils literal notranslate"><span class="pre">changelog</span></code>. The file should be named <code class="docutils literal notranslate"><span class="pre">&lt;issueid&gt;.&lt;type&gt;.rst</span></code>,
+where <em>issueid</em> is the number of the issue related to the change and <em>type</em> is one of
+<code class="docutils literal notranslate"><span class="pre">feature</span></code>, <code class="docutils literal notranslate"><span class="pre">improvement</span></code>, <code class="docutils literal notranslate"><span class="pre">bugfix</span></code>, <code class="docutils literal notranslate"><span class="pre">doc</span></code>, <code class="docutils literal notranslate"><span class="pre">deprecation</span></code>, <code class="docutils literal notranslate"><span class="pre">breaking</span></code>, <code class="docutils literal notranslate"><span class="pre">vendor</span></code>
+or <code class="docutils literal notranslate"><span class="pre">trivial</span></code>. You may skip creating the changelog entry if the change doesn’t affect the
+documented behaviour of pytest.</p></li>
+<li><p>Add yourself to <code class="docutils literal notranslate"><span class="pre">AUTHORS</span></code> file if not there yet, in alphabetical order.</p></li>
+<li><p>Commit and push once your tests pass and you are happy with your change(s):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git commit -a -m &quot;&lt;commit message&gt;&quot;
+$ git push -u
+</pre></div>
+</div>
+</li>
+<li><p>Finally, submit a pull request through the GitHub website using this data:</p>
+<p>head-fork: YOUR_GITHUB_USERNAME/pytest
+compare: your-branch-name</p>
+<p>base-fork: pytest-dev/pytest
+base: main</p>
+</li>
+</ol>
+</div></div>
+</section>
+<section id="id30">
+<h3>编写测试<a class="headerlink" href="#id30" title="Link to this heading">¶</a></h3>
+<p><strong>Writing Tests</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-9-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-9-9-0" name="9-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-9-9-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-9-9-1" name="9-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-9-9-0" class="sphinx-tabs-panel" id="panel-9-9-0" name="9-0" role="tabpanel" tabindex="0"><p>为插件或 pytest 本身编写测试通常使用 <a class="reference external" href="https://docs.pytest.org/en/stable/reference/reference.html#pytester">pytester fixture</a>，作为“黑盒”测试。</p>
+<p>例如，为确保简单测试通过，您可以编写：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_true_assertion</span><span class="p">(</span><span class="n">pytester</span><span class="p">):</span>
+   <span class="n">pytester</span><span class="o">.</span><span class="n">makepyfile</span><span class="p">(</span>
+<span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         def test_foo():</span>
+<span class="sd">            assert True</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+   <span class="p">)</span>
+   <span class="n">result</span> <span class="o">=</span> <span class="n">pytester</span><span class="o">.</span><span class="n">runpytest</span><span class="p">()</span>
+   <span class="n">result</span><span class="o">.</span><span class="n">assert_outcomes</span><span class="p">(</span><span class="n">failed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">passed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>另外，您可以使用 <em>glob-like</em> 表达式根据实际输出进行检查：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_true_assertion</span><span class="p">(</span><span class="n">pytester</span><span class="p">):</span>
+   <span class="n">pytester</span><span class="o">.</span><span class="n">makepyfile</span><span class="p">(</span>
+<span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         def test_foo():</span>
+<span class="sd">            assert False</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+   <span class="p">)</span>
+   <span class="n">result</span> <span class="o">=</span> <span class="n">pytester</span><span class="o">.</span><span class="n">runpytest</span><span class="p">()</span>
+   <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fnmatch_lines</span><span class="p">([</span><span class="s2">&quot;*assert False*&quot;</span><span class="p">,</span> <span class="s2">&quot;*1 failed*&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>在选择文件以编写新测试时，请查看现有文件，看看是否有一个文件看起来很合适。例如，关于 <code class="docutils literal notranslate"><span class="pre">--lf</span></code> 选项的回归测试应该放在 <code class="docutils literal notranslate"><span class="pre">test_cacheprovider.py</span></code> 中，因为该选项是在 <code class="docutils literal notranslate"><span class="pre">cacheprovider.py</span></code> 中实现的。如果不确定，可以打开一个 PR，提出您的最佳猜测，我们可以在代码中讨论这个问题。</p>
+</div><div aria-labelledby="tab-9-9-1" class="sphinx-tabs-panel" hidden="true" id="panel-9-9-1" name="9-1" role="tabpanel" tabindex="0"><p>Writing tests for plugins or for pytest itself is often done using the <a class="reference external" href="https://docs.pytest.org/en/stable/reference/reference.html#pytester">pytester fixture</a>, as a “black-box” test.</p>
+<p>For example, to ensure a simple test passes you can write:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_true_assertion</span><span class="p">(</span><span class="n">pytester</span><span class="p">):</span>
+   <span class="n">pytester</span><span class="o">.</span><span class="n">makepyfile</span><span class="p">(</span>
+<span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         def test_foo():</span>
+<span class="sd">            assert True</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+   <span class="p">)</span>
+   <span class="n">result</span> <span class="o">=</span> <span class="n">pytester</span><span class="o">.</span><span class="n">runpytest</span><span class="p">()</span>
+   <span class="n">result</span><span class="o">.</span><span class="n">assert_outcomes</span><span class="p">(</span><span class="n">failed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">passed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, it is possible to make checks based on the actual output of the termal using
+<em>glob-like</em> expressions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_true_assertion</span><span class="p">(</span><span class="n">pytester</span><span class="p">):</span>
+   <span class="n">pytester</span><span class="o">.</span><span class="n">makepyfile</span><span class="p">(</span>
+<span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         def test_foo():</span>
+<span class="sd">            assert False</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+   <span class="p">)</span>
+   <span class="n">result</span> <span class="o">=</span> <span class="n">pytester</span><span class="o">.</span><span class="n">runpytest</span><span class="p">()</span>
+   <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">fnmatch_lines</span><span class="p">([</span><span class="s2">&quot;*assert False*&quot;</span><span class="p">,</span> <span class="s2">&quot;*1 failed*&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>When choosing a file where to write a new test, take a look at the existing files and see if there’s
+one file which looks like a good fit. For example, a regression test about a bug in the <code class="docutils literal notranslate"><span class="pre">--lf</span></code> option
+should go into <code class="docutils literal notranslate"><span class="pre">test_cacheprovider.py</span></code>, given that this option is implemented in <code class="docutils literal notranslate"><span class="pre">cacheprovider.py</span></code>.
+If in doubt, go ahead and open a PR with your best guess and we can discuss this over the code.</p>
+</div></div>
+</section>
+</section>
+<section id="id32">
+<h2>加入开发团队<a class="headerlink" href="#id32" title="Link to this heading">¶</a></h2>
+<p><strong>Joining the Development Team</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-10-10-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-10-10-0" name="10-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-10-10-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-1" name="10-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-10-10-0" class="sphinx-tabs-panel" id="panel-10-10-0" name="10-0" role="tabpanel" tabindex="0"><p>任何成功完成了一个不需要开发团队额外工作即可合并的拉取请求的人，若愿意，可以获得提交访问权限（如果我们忘记询问，请友好地提醒我们）。这并不意味着您的贡献工作流程有所改变：每个人都要经过相同的拉取请求和审核流程，没有人会在未经批准的情况下合并自己的拉取请求。不过，这确实意味着您可以更全面地参与开发过程，因为您可以在审核其他贡献者的拉取请求后自己合并它们。</p>
+</div><div aria-labelledby="tab-10-10-1" class="sphinx-tabs-panel" hidden="true" id="panel-10-10-1" name="10-1" role="tabpanel" tabindex="0"><p>Anyone who has successfully seen through a pull request which did not
+require any extra work from the development team to merge will
+themselves gain commit access if they so wish (if we forget to ask please send a friendly
+reminder).  This does not mean there is any change in your contribution workflow:
+everyone goes through the same pull-request-and-review process and
+no-one merges their own pull requests unless already approved.  It does however mean you can
+participate in the development process more fully since you can merge
+pull requests from other contributors yourself after having reviewed
+them.</p>
+</div></div>
+</section>
+<section id="id33">
+<h2>合并/压缩指南<a class="headerlink" href="#id33" title="Link to this heading">¶</a></h2>
+<p><strong>Merge/squash guidelines</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-11-11-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-11-11-0" name="11-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-11-11-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-11-11-1" name="11-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-11-11-0" class="sphinx-tabs-panel" id="panel-11-11-0" name="11-0" role="tabpanel" tabindex="0"><p>当一个拉取请求被批准并准备合并到 <code class="docutils literal notranslate"><span class="pre">main</span></code> 分支时，可以选择 <em>合并(merge)</em> 提交而不改变，或 <em>压缩(squash)</em> 所有提交为一个单一的提交。</p>
+<p>以下是关于如何进行的指南，基于单个拉取请求提交历史的示例：</p>
+<ol class="arabic">
+<li><p>杂项提交：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Implement</span> <span class="pre">X</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Fix</span> <span class="pre">test_a</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">myself</span> <span class="pre">to</span> <span class="pre">AUTHORS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fixup!</span> <span class="pre">Fix</span> <span class="pre">test_a</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Update</span> <span class="pre">tests/test_integration.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Merge</span> <span class="pre">origin/main</span> <span class="pre">into</span> <span class="pre">PR</span> <span class="pre">branch</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Update</span> <span class="pre">tests/test_integration.py</span></code></p></li>
+</ul>
+<p>在这种情况下，建议使用**Squash**合并策略：提交历史有点杂乱（并不是贬义，通常人们只是因为知道更改最终会被压缩在一起而进行提交），因此将所有内容压缩为一个提交是最佳选择。您必须清理提交信息，确保其包含有用的细节。</p>
+</li>
+<li><p>与同一主题相关的独立提交：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Implement</span> <span class="pre">X</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">myself</span> <span class="pre">to</span> <span class="pre">AUTHORS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Update</span> <span class="pre">CHANGELOG</span> <span class="pre">for</span> <span class="pre">X</span></code></p></li>
+</ul>
+<p>在这种情况下，建议使用 <strong>Squash</strong> 合并策略：虽然提交历史不像上述示例那样“杂乱”，但单个提交总体上并没有太多价值，特别是在几个月/几年后查看更改时。</p>
+</li>
+<li><p>每个提交都有自己的主题（重构、重命名等），但仍有一个更大的主题/目的。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Refactor</span> <span class="pre">class</span> <span class="pre">X</span> <span class="pre">in</span> <span class="pre">preparation</span> <span class="pre">for</span> <span class="pre">feature</span> <span class="pre">Y</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Remove</span> <span class="pre">unused</span> <span class="pre">method</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Implement</span> <span class="pre">feature</span> <span class="pre">Y</span></code></p></li>
+</ul>
+<p>在这种情况下，建议使用**Merge**策略：每个提交本身都是有价值的，即使它们整体上服务于一个共同的主题。稍后查看历史时，单独将未使用方法的删除记录在其提交中是有用的，并且可以提供更多信息（例如，它最初是如何变得未使用的）。</p>
+</li>
+<li><p>每个提交都有自己的主题，但除了改进代码库（使用更现代的技术、改进类型、去除杂乱等）之外没有更大的主题/目的。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Improve</span> <span class="pre">internal</span> <span class="pre">names</span> <span class="pre">in</span> <span class="pre">X</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">type</span> <span class="pre">annotations</span> <span class="pre">to</span> <span class="pre">Y</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Remove</span> <span class="pre">unnecessary</span> <span class="pre">dict</span> <span class="pre">access</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Remove</span> <span class="pre">unreachable</span> <span class="pre">code</span> <span class="pre">due</span> <span class="pre">to</span> <span class="pre">EOL</span> <span class="pre">Python</span></code></p></li>
+</ul>
+<p>在这种情况下，建议使用 <strong>Merge</strong> 策略：每个提交本身都是有价值的，每个提交中的信息在长期内都是有价值的。</p>
+</li>
+</ol>
+<p>正如所提到的，这些是总体指南，而不是刻在石头上的规则。此主题在 <a class="reference external" href="https://github.com/pytest-dev/pytest/discussions/12633">#12633</a> 中进行了讨论。</p>
+<p><em>回退拉取请求</em> （如从 <code class="docutils literal notranslate"><span class="pre">backport</span></code> 标签自动创建的请求）应始终 <strong>压缩</strong> ，因为它们保留了原始拉取请求的作者。</p>
+</div><div aria-labelledby="tab-11-11-1" class="sphinx-tabs-panel" hidden="true" id="panel-11-11-1" name="11-1" role="tabpanel" tabindex="0"><p>When a PR is approved and ready to be integrated to the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch, one has the option to <em>merge</em> the commits unchanged, or <em>squash</em> all the commits into a single commit.</p>
+<p>Here are some guidelines on how to proceed, based on examples of a single PR commit history:</p>
+<ol class="arabic">
+<li><p>Miscellaneous commits:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Implement</span> <span class="pre">X</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Fix</span> <span class="pre">test_a</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">myself</span> <span class="pre">to</span> <span class="pre">AUTHORS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fixup!</span> <span class="pre">Fix</span> <span class="pre">test_a</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Update</span> <span class="pre">tests/test_integration.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Merge</span> <span class="pre">origin/main</span> <span class="pre">into</span> <span class="pre">PR</span> <span class="pre">branch</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Update</span> <span class="pre">tests/test_integration.py</span></code></p></li>
+</ul>
+<p>In this case, prefer to use the <strong>Squash</strong> merge strategy: the commit history is a bit messy (not in a derogatory way, often one just commits changes because they know the changes will eventually be squashed together), so squashing everything into a single commit is best. You must clean up the commit message, making sure it contains useful details.</p>
+</li>
+<li><p>Separate commits related to the same topic:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Implement</span> <span class="pre">X</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">myself</span> <span class="pre">to</span> <span class="pre">AUTHORS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Update</span> <span class="pre">CHANGELOG</span> <span class="pre">for</span> <span class="pre">X</span></code></p></li>
+</ul>
+<p>In this case, prefer to use the <strong>Squash</strong> merge strategy: while the commit history is not “messy” as in the example above, the individual commits do not bring much value overall, specially when looking at the changes a few months/years down the line.</p>
+</li>
+<li><p>Separate commits, each with their own topic (refactorings, renames, etc), but still have a larger topic/purpose.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Refactor</span> <span class="pre">class</span> <span class="pre">X</span> <span class="pre">in</span> <span class="pre">preparation</span> <span class="pre">for</span> <span class="pre">feature</span> <span class="pre">Y</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Remove</span> <span class="pre">unused</span> <span class="pre">method</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Implement</span> <span class="pre">feature</span> <span class="pre">Y</span></code></p></li>
+</ul>
+<p>In this case, prefer to use the <strong>Merge</strong> strategy: each commit is valuable on its own, even if they serve a common topic overall. Looking at the history later, it is useful to have the removal of the unused method separately on its own commit, along with more information (such as how it became unused in the first place).</p>
+</li>
+<li><p>Separate commits, each with their own topic, but without a larger topic/purpose other than improve the code base (using more modern techniques, improve typing, removing clutter, etc).</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Improve</span> <span class="pre">internal</span> <span class="pre">names</span> <span class="pre">in</span> <span class="pre">X</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">type</span> <span class="pre">annotations</span> <span class="pre">to</span> <span class="pre">Y</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Remove</span> <span class="pre">unnecessary</span> <span class="pre">dict</span> <span class="pre">access</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Remove</span> <span class="pre">unreachable</span> <span class="pre">code</span> <span class="pre">due</span> <span class="pre">to</span> <span class="pre">EOL</span> <span class="pre">Python</span></code></p></li>
+</ul>
+<p>In this case, prefer to use the <strong>Merge</strong> strategy: each commit is valuable on its own, and the information on each is valuable in the long term.</p>
+</li>
+</ol>
+<p>As mentioned, those are overall guidelines, not rules cast in stone. This topic was discussed in <a class="reference external" href="https://github.com/pytest-dev/pytest/discussions/12633">#12633</a>.</p>
+<p><em>Backport PRs</em> (as those created automatically from a <code class="docutils literal notranslate"><span class="pre">backport</span></code> label) should always be <strong>squashed</strong>, as they preserve the original PR author.</p>
+</div></div>
+</section>
+<section id="id36">
+<h2>为下一个补丁版本反向移植错误修复<a class="headerlink" href="#id36" title="Link to this heading">¶</a></h2>
+<p><strong>Backporting bug fixes for the next patch release</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-12-12-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-12-12-0" name="12-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-12-12-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-12-12-1" name="12-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-12-12-0" class="sphinx-tabs-panel" id="panel-12-12-0" name="12-0" role="tabpanel" tabindex="0"><p>Pytest 每隔几周或几个月会发布一次功能版本。在这之间，会对之前的功能版本进行补丁发布，仅包含错误修复。错误修复通常是修复回归，但也可能是任何应该在下一个功能版本之前达到用户的更改。</p>
+<p>假设最新的发布版本是 1.2.3，而您想在 1.2.4 中包含一个错误修复（请查看 <a class="reference external" href="https://github.com/pytest-dev/pytest/releases">https://github.com/pytest-dev/pytest/releases</a> 以获取实际的最新发布）。这个过程如下：</p>
+<ol class="arabic simple">
+<li><p>首先，确保在 <code class="docutils literal notranslate"><span class="pre">main</span></code> 分支中修复了该错误，使用常规的拉取请求，如上所述。如果错误修复不再适用于 <code class="docutils literal notranslate"><span class="pre">main</span></code>，则此步骤不适用。</p></li>
+</ol>
+<p>自动方法：</p>
+<p>在您想要回退的拉取请求上添加 <code class="docutils literal notranslate"><span class="pre">backport</span> <span class="pre">1.2.x</span></code> 标签。这将创建一个针对 <code class="docutils literal notranslate"><span class="pre">1.2.x</span></code> 分支的回退拉取请求。</p>
+<p>手动方法：</p>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">origin/1.2.x</span> <span class="pre">-b</span> <span class="pre">backport-XXXX</span></code> # 在这里使用主要拉取请求编号</p></li>
+<li><p>在拉取请求的 <em>merged</em> 消息中找到合并提交，例如：</p>
+<p>nicoddemus merged commit 0f8b462 into pytest-dev:main</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">cherry-pick</span> <span class="pre">-x</span> <span class="pre">-m1</span> <span class="pre">REVISION</span></code> # 使用您在上面找到的修订版（<code class="docutils literal notranslate"><span class="pre">0f8b462</span></code>）。</p></li>
+<li><p>打开一个目标为 <code class="docutils literal notranslate"><span class="pre">1.2.x</span></code> 的拉取请求：</p>
+<ul class="simple">
+<li><p>用 <code class="docutils literal notranslate"><span class="pre">[1.2.x]</span></code> 前缀消息。</p></li>
+<li><p>删除拉取请求正文，它通常包含重复的提交信息。</p></li>
+</ul>
+</li>
+</ol>
+</div><div aria-labelledby="tab-12-12-1" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-1" name="12-1" role="tabpanel" tabindex="0"><p>Pytest makes a feature release every few weeks or months. In between, patch releases
+are made to the previous feature release, containing bug fixes only. The bug fixes
+usually fix regressions, but may be any change that should reach users before the
+next feature release.</p>
+<p>Suppose for example that the latest release was 1.2.3, and you want to include
+a bug fix in 1.2.4 (check <a class="reference external" href="https://github.com/pytest-dev/pytest/releases">https://github.com/pytest-dev/pytest/releases</a> for the
+actual latest release). The procedure for this is:</p>
+<ol class="arabic simple">
+<li><p>First, make sure the bug is fixed in the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch, with a regular pull
+request, as described above. An exception to this is if the bug fix is not
+applicable to <code class="docutils literal notranslate"><span class="pre">main</span></code> anymore.</p></li>
+</ol>
+<p>Automatic method:</p>
+<p>Add a <code class="docutils literal notranslate"><span class="pre">backport</span> <span class="pre">1.2.x</span></code> label to the PR you want to backport. This will create
+a backport PR against the <code class="docutils literal notranslate"><span class="pre">1.2.x</span></code> branch.</p>
+<p>Manual method:</p>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">origin/1.2.x</span> <span class="pre">-b</span> <span class="pre">backport-XXXX</span></code> # use the main PR number here</p></li>
+<li><p>Locate the merge commit on the PR, in the <em>merged</em> message, for example:</p>
+<p>nicoddemus merged commit 0f8b462 into pytest-dev:main</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">cherry-pick</span> <span class="pre">-x</span> <span class="pre">-m1</span> <span class="pre">REVISION</span></code> # use the revision you found above (<code class="docutils literal notranslate"><span class="pre">0f8b462</span></code>).</p></li>
+<li><p>Open a PR targeting <code class="docutils literal notranslate"><span class="pre">1.2.x</span></code>:</p>
+<ul class="simple">
+<li><p>Prefix the message with <code class="docutils literal notranslate"><span class="pre">[1.2.x]</span></code>.</p></li>
+<li><p>Delete the PR body, it usually contains a duplicate commit message.</p></li>
+</ul>
+</li>
+</ol>
+</div></div>
+<section id="id37">
+<h3>谁负责反向移植<a class="headerlink" href="#id37" title="Link to this heading">¶</a></h3>
+<p><strong>Who does the backporting</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-13-13-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-13-13-0" name="13-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-13-13-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-13-13-1" name="13-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-13-13-0" class="sphinx-tabs-panel" id="panel-13-13-0" name="13-0" role="tabpanel" tabindex="0"><p>如上所述，错误应首先在 <code class="docutils literal notranslate"><span class="pre">main</span></code> 上修复（除非在极少数情况下错误仅发生在以前的版本）。那么，谁应该执行上述回退程序呢？</p>
+<ol class="arabic simple">
+<li><p>如果错误是由核心开发者修复的，那么该核心开发者有主要责任进行回退。</p></li>
+<li><p>然而，合并通常是由其他维护者完成的，在这种情况下，如果他们有时间，进行回退程序是很友好的。</p></li>
+<li><p>对于由非维护者提交的错误，通常预计核心开发者会进行回退，通常是合并了 <code class="docutils literal notranslate"><span class="pre">main</span></code> 上的拉取请求的那位开发者。</p></li>
+<li><p>如果非维护者注意到在 <code class="docutils literal notranslate"><span class="pre">main</span></code> 上修复的错误但尚未回退（由于维护者忘记应用 <em>needs backport</em> 标签，或者单纯遗漏），他们也可以打开一个带有回退的拉取请求。这个过程简单，并且确实有助于项目的维护。</p></li>
+</ol>
+<p>上述所有内容并不是规则，而只是关于我们应期待回退的一些指导方针/建议。</p>
+<p>回退应 <strong>被压缩(squashed)</strong> （而不是 <strong>合并(merged)</strong> ），因为这样可以正确保留原始拉取请求的作者。</p>
+</div><div aria-labelledby="tab-13-13-1" class="sphinx-tabs-panel" hidden="true" id="panel-13-13-1" name="13-1" role="tabpanel" tabindex="0"><p>As mentioned above, bugs should first be fixed on <code class="docutils literal notranslate"><span class="pre">main</span></code> (except in rare occasions
+that a bug only happens in a previous release). So, who should do the backport procedure described
+above?</p>
+<ol class="arabic simple">
+<li><p>If the bug was fixed by a core developer, it is the main responsibility of that core developer
+to do the backport.</p></li>
+<li><p>However, often the merge is done by another maintainer, in which case it is nice of them to
+do the backport procedure if they have the time.</p></li>
+<li><p>For bugs submitted by non-maintainers, it is expected that a core developer will to do
+the backport, normally the one that merged the PR on <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p></li>
+<li><p>If a non-maintainers notices a bug which is fixed on <code class="docutils literal notranslate"><span class="pre">main</span></code> but has not been backported
+(due to maintainers forgetting to apply the <em>needs backport</em> label, or just plain missing it),
+they are also welcome to open a PR with the backport. The procedure is simple and really
+helps with the maintenance of the project.</p></li>
+</ol>
+<p>All the above are not rules, but merely some guidelines/suggestions on what we should expect
+about backports.</p>
+<p>Backports should be <strong>squashed</strong> (rather than <strong>merged</strong>), as doing so preserves the original PR author correctly.</p>
+</div></div>
+</section>
+</section>
+<section id="pr">
+<h2>处理过时的问题/PR<a class="headerlink" href="#pr" title="Link to this heading">¶</a></h2>
+<p><strong>Handling stale issues/PRs</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-14-14-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-14-14-0" name="14-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-14-14-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-14-14-1" name="14-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-14-14-0" class="sphinx-tabs-panel" id="panel-14-14-0" name="14-0" role="tabpanel" tabindex="0"><p>过时的问题/拉取请求是指pytest贡献者询问了问题/变更，但作者在相对较长的时间内没有回应/实施，或者讨论因人们似乎失去兴趣而停止。</p>
+<p>人们不回答问题或实施请求变更的原因有很多：他们可能忙碌、失去兴趣或只是忘记了，但事实是这在开源软件中非常常见。</p>
+<p>pytest团队非常重视每一个问题和拉取请求，但由于这是一个高流量项目，每天都会提交许多问题和拉取请求，我们试图通过定期关闭它们来减少过时的问题和拉取请求。当以这种方式关闭问题/拉取请求时，这绝不是对该问题/拉取请求所涉及主题的否定，而只是我们清理队列、使维护者的工作更易管理的一种方式。提交者如果认为合适，始终可以在稍后重新打开问题/拉取请求。</p>
+</div><div aria-labelledby="tab-14-14-1" class="sphinx-tabs-panel" hidden="true" id="panel-14-14-1" name="14-1" role="tabpanel" tabindex="0"><p>Stale issues/PRs are those where pytest contributors have asked for questions/changes
+and the authors didn’t get around to answer/implement them yet after a somewhat long time, or
+the discussion simply died because people seemed to lose interest.</p>
+<p>There are many reasons why people don’t answer questions or implement requested changes:
+they might get busy, lose interest, or just forget about it,
+but the fact is that this is very common in open source software.</p>
+<p>The pytest team really appreciates every issue and pull request, but being a high-volume project
+with many issues and pull requests being submitted daily, we try to reduce the number of stale
+issues and PRs by regularly closing them. When an issue/pull request is closed in this manner,
+it is by no means a dismissal of the topic being tackled by the issue/pull request, but it
+is just a way for us to clear up the queue and make the maintainers’ work more manageable. Submitters
+can always reopen the issue/pull request in their own time later if it makes sense.</p>
+</div></div>
+<section id="id38">
+<h3>何时关闭<a class="headerlink" href="#id38" title="Link to this heading">¶</a></h3>
+<p><strong>When to close</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-15-15-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-15-15-0" name="15-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-15-15-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-15-15-1" name="15-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-15-15-0" class="sphinx-tabs-panel" id="panel-15-15-0" name="15-0" role="tabpanel" tabindex="0"><p>以下是维护者在决定何时因缺乏活动而关闭问题/拉取请求时使用的一些一般规则：</p>
+<ul class="simple">
+<li><p>标记为 <code class="docutils literal notranslate"><span class="pre">question</span></code> 或 <code class="docutils literal notranslate"><span class="pre">needs</span> <span class="pre">information</span></code> 的问题：在14天无活动后关闭。</p></li>
+<li><p>标记为 <code class="docutils literal notranslate"><span class="pre">proposal</span></code> 的问题：在六个月无活动后关闭。</p></li>
+<li><p>拉取请求：一个月后，考虑提醒作者、更新关联问题或考虑关闭。对于几乎完成的拉取请求，团队应考虑完成并合并它。</p></li>
+</ul>
+<p>上述内容 <strong>不是硬性规则</strong> ，而仅仅是 <strong>指导方针</strong> ，可以根据具体情况（且通常会）逐案审查。</p>
+</div><div aria-labelledby="tab-15-15-1" class="sphinx-tabs-panel" hidden="true" id="panel-15-15-1" name="15-1" role="tabpanel" tabindex="0"><p>Here are a few general rules the maintainers use deciding when to close issues/PRs because
+of lack of inactivity:</p>
+<ul class="simple">
+<li><p>Issues labeled <code class="docutils literal notranslate"><span class="pre">question</span></code> or <code class="docutils literal notranslate"><span class="pre">needs</span> <span class="pre">information</span></code>: closed after 14 days inactive.</p></li>
+<li><p>Issues labeled <code class="docutils literal notranslate"><span class="pre">proposal</span></code>: closed after six months inactive.</p></li>
+<li><p>Pull requests: after one month, consider pinging the author, update linked issue, or consider closing. For pull requests which are nearly finished, the team should consider finishing it up and merging it.</p></li>
+</ul>
+<p>The above are <strong>not hard rules</strong>, but merely <strong>guidelines</strong>, and can be (and often are!) reviewed on a case-by-case basis.</p>
+</div></div>
+</section>
+<section id="id39">
+<h3>关闭拉取请求<a class="headerlink" href="#id39" title="Link to this heading">¶</a></h3>
+<p><strong>Closing pull requests</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-16-16-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-16-16-0" name="16-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-16-16-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-16-16-1" name="16-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-16-16-0" class="sphinx-tabs-panel" id="panel-16-16-0" name="16-0" role="tabpanel" tabindex="0"><p>在关闭拉取请求时，需要承认提交者所展现出的时间、努力和兴趣。正如之前提到的，团队并不想完全拒绝一个停滞的拉取请求，而只是想清理我们的队列，因此在关闭一个变得无效的拉取请求时，像下面这样的消息是适当的：</p>
+<blockquote>
+<div><p>Hi &lt;contributor&gt;,</p>
+<p>首先，我们要感谢你在此项目上投入的时间和努力，pytest团队对此深表感激。</p>
+<p>然而，我们注意到你已经有一段时间没有更新这个PR了。pytest是一个活跃的项目，每天都有许多问题和PR被打开，因此我们这些维护者很难追踪哪些PR准备合并，哪些需要审查，或者哪些需要更多关注。</p>
+<p>所以出于这些原因，我们认为现在最好关闭这个PR，但这仅仅是为了清理我们的队列，并不是对你修改的拒绝。我们仍然鼓励你在准备好时重新打开这个PR（这只需轻点一下按钮）。</p>
+<p>再次感谢你在此项目上的努力，希望你在未来能再次关注这个问题！</p>
+<p>&lt;bye&gt;</p>
+</div></blockquote>
+</div><div aria-labelledby="tab-16-16-1" class="sphinx-tabs-panel" hidden="true" id="panel-16-16-1" name="16-1" role="tabpanel" tabindex="0"><p>When closing a Pull Request, it needs to be acknowledging the time, effort, and interest demonstrated by the person which submitted it. As mentioned previously, it is not the intent of the team to dismiss a stalled pull request entirely but to merely to clear up our queue, so a message like the one below is warranted when closing a pull request that went stale:</p>
+<blockquote>
+<div><p>Hi &lt;contributor&gt;,</p>
+<p>First of all, we would like to thank you for your time and effort on working on this, the pytest team deeply appreciates it.</p>
+<p>We noticed it has been awhile since you have updated this PR, however. pytest is a high activity project, with many issues/PRs being opened daily, so it is hard for us maintainers to track which PRs are ready for merging, for review, or need more attention.</p>
+<p>So for those reasons we, think it is best to close the PR for now, but with the only intention to clean up our queue, it is by no means a rejection of your changes. We still encourage you to re-open this PR (it is just a click of a button away) when you are ready to get back to it.</p>
+<p>Again we appreciate your time for working on this, and hope you might get back to this at a later time!</p>
+<p>&lt;bye&gt;</p>
+</div></blockquote>
+</div></div>
+</section>
+</section>
+<section id="id40">
+<h2>关闭问题<a class="headerlink" href="#id40" title="Link to this heading">¶</a></h2>
+<p><strong>Closing issues</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-17-17-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-17-17-0" name="17-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-17-17-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-17-17-1" name="17-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-17-17-0" class="sphinx-tabs-panel" id="panel-17-17-0" name="17-0" role="tabpanel" tabindex="0"><p>当提交拉取请求以修复某个问题时，请在PR描述和/或提交中添加类似 <code class="docutils literal notranslate"><span class="pre">closes</span> <span class="pre">#XYZW</span></code> 的文本（其中 <code class="docutils literal notranslate"><span class="pre">XYZW</span></code> 是问题编号）。有关更多信息，请参见 <a class="reference external" href="https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword">GitHub文档</a>。</p>
+<p>当问题是由于用户错误（例如对功能的误解）引起时，请礼貌地向用户解释所提出的问题实际上并不是问题，并请他们在没有进一步问题时关闭该问题。如果原始请求者没有回复，则将按照上面“处理无效问题/PR”_部分中所述进行处理。</p>
+</div><div aria-labelledby="tab-17-17-1" class="sphinx-tabs-panel" hidden="true" id="panel-17-17-1" name="17-1" role="tabpanel" tabindex="0"><p>When a pull request is submitted to fix an issue, add text like <code class="docutils literal notranslate"><span class="pre">closes</span> <span class="pre">#XYZW</span></code> to the PR description and/or commits (where <code class="docutils literal notranslate"><span class="pre">XYZW</span></code> is the issue number). See the <a class="reference external" href="https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword">GitHub docs</a> for more information.</p>
+<p>When an issue is due to user error (e.g. misunderstanding of a functionality), please politely explain to the user why the issue raised is really a non-issue and ask them to close the issue if they have no further questions. If the original requester is unresponsive, the issue will be handled as described in the section <a href="#id42"><span class="problematic" id="id43">`Handling stale issues/PRs`_</span></a> above.</p>
+</div></div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="backwards-compatibility.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">向后兼容政策</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="changelog.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">更改日志</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">贡献</a><ul>
+<li><a class="reference internal" href="#submitfeedback">功能请求和反馈</a></li>
+<li><a class="reference internal" href="#reportbugs">报告错误</a></li>
+<li><a class="reference internal" href="#fixbugs">修复错误</a></li>
+<li><a class="reference internal" href="#writeplugins">实现功能</a></li>
+<li><a class="reference internal" href="#id11">编写文档</a></li>
+<li><a class="reference internal" href="#pytest-dev">向 pytest-dev 提交插件</a></li>
+<li><a class="reference internal" href="#id18">准备拉取请求</a><ul>
+<li><a class="reference internal" href="#id20">简短版本</a></li>
+<li><a class="reference internal" href="#id23">完整版本</a></li>
+<li><a class="reference internal" href="#id30">编写测试</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id32">加入开发团队</a></li>
+<li><a class="reference internal" href="#id33">合并/压缩指南</a></li>
+<li><a class="reference internal" href="#id36">为下一个补丁版本反向移植错误修复</a><ul>
+<li><a class="reference internal" href="#id37">谁负责反向移植</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pr">处理过时的问题/PR</a><ul>
+<li><a class="reference internal" href="#id38">何时关闭</a></li>
+<li><a class="reference internal" href="#id39">关闭拉取请求</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id40">关闭问题</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

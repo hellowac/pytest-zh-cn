@@ -1,0 +1,1653 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="可以查看所有收集到的测试的会话fixture" href="special.html" /><link rel="prev" title="参数化测试" href="parametrize.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/example/markers.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>使用自定义标记 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">入门</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how-to/index.html">操作指南</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">示例和自定义技巧</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reportingdemo.html">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametrize.html">参数化测试</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="mark-examples">
+<span id="id1"></span><h1>使用自定义标记<a class="headerlink" href="#mark-examples" title="Link to this heading">¶</a></h1>
+<p><strong>Working with custom markers</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>以下是一些使用 <a class="reference internal" href="../how-to/mark.html#mark"><span class="std std-ref">如何用属性标记测试函数</span></a> 机制的示例。</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>Here are some examples using the <a class="reference internal" href="../how-to/mark.html#mark"><span class="std std-ref">如何用属性标记测试函数</span></a> mechanism.</p>
+</div></div>
+<section id="mark-run">
+<span id="id2"></span><h2>标记测试函数并选择它们进行运行<a class="headerlink" href="#mark-run" title="Link to this heading">¶</a></h2>
+<p><strong>Marking test functions and selecting them for a run</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>您可以像这样为测试函数标记自定义元数据：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_server.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">webtest</span>
+<span class="k">def</span> <span class="nf">test_send_http</span><span class="p">():</span>
+    <span class="k">pass</span>  <span class="c1"># 执行一些针对您的应用程序的 webtest 测试</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">serial</span><span class="o">=</span><span class="s2">&quot;123&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_something_quick</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">serial</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_another</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">test_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>然后，您可以限制测试运行，仅运行带有 <code class="docutils literal notranslate"><span class="pre">webtest</span></code> 标记的测试：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v -m webtest
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 3 deselected / 1 selected
+
+test_server.py::test_send_http <span class=" -Color -Color-Green">PASSED</span>                                <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span>, <span class=" -Color -Color-Yellow">3 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>或者反向运行，运行所有测试，除了 webtest 测试：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v -m &quot;not webtest&quot;
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 1 deselected / 3 selected
+
+test_server.py::test_something_quick <span class=" -Color -Color-Green">PASSED</span>                          <span class=" -Color -Color-Green">[ 33%]</span>
+test_server.py::test_another <span class=" -Color -Color-Green">PASSED</span>                                  <span class=" -Color -Color-Green">[ 66%]</span>
+test_server.py::TestClass::test_method <span class=" -Color -Color-Green">PASSED</span>                        <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">3 passed</span>, <span class=" -Color -Color-Yellow">1 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p id="marker-keyword-expression-example">此外，您可以限制测试运行，仅运行匹配一个或多个标记关键字参数的测试，例如，仅运行标记为 <code class="docutils literal notranslate"><span class="pre">device</span></code> 且具体为 <code class="docutils literal notranslate"><span class="pre">serial=&quot;123&quot;</span></code> 的测试：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v -m &quot;device(serial=&#39;123&#39;)&quot;
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 3 deselected / 1 selected
+
+test_server.py::test_something_quick <span class=" -Color -Color-Green">PASSED</span>                          <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span>, <span class=" -Color -Color-Yellow">3 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>仅支持关键字参数匹配的标记表达式。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>仅支持 <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>、(未转义的) <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>、<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> 和 <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code></a> 值在标记表达式中。</p>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>You can “mark” a test function with custom metadata like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_server.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">webtest</span>
+<span class="k">def</span> <span class="nf">test_send_http</span><span class="p">():</span>
+    <span class="k">pass</span>  <span class="c1"># perform some webtest test for your app</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">serial</span><span class="o">=</span><span class="s2">&quot;123&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_something_quick</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">serial</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_another</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">test_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>You can then restrict a test run to only run tests marked with <code class="docutils literal notranslate"><span class="pre">webtest</span></code>:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v -m webtest
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 3 deselected / 1 selected
+
+test_server.py::test_send_http <span class=" -Color -Color-Green">PASSED</span>                                <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span>, <span class=" -Color -Color-Yellow">3 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>Or the inverse, running all tests except the webtest ones:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v -m &quot;not webtest&quot;
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 1 deselected / 3 selected
+
+test_server.py::test_something_quick <span class=" -Color -Color-Green">PASSED</span>                          <span class=" -Color -Color-Green">[ 33%]</span>
+test_server.py::test_another <span class=" -Color -Color-Green">PASSED</span>                                  <span class=" -Color -Color-Green">[ 66%]</span>
+test_server.py::TestClass::test_method <span class=" -Color -Color-Green">PASSED</span>                        <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">3 passed</span>, <span class=" -Color -Color-Yellow">1 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p id="id3">Additionally, you can restrict a test run to only run tests matching one or multiple marker
+keyword arguments, e.g. to run only tests marked with <code class="docutils literal notranslate"><span class="pre">device</span></code> and the specific <code class="docutils literal notranslate"><span class="pre">serial=&quot;123&quot;</span></code>:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v -m &quot;device(serial=&#39;123&#39;)&quot;
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 3 deselected / 1 selected
+
+test_server.py::test_something_quick <span class=" -Color -Color-Green">PASSED</span>                          <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span>, <span class=" -Color -Color-Yellow">3 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only keyword argument matching is supported in marker expressions.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, (unescaped) <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> &amp; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">None</span></code></a> values are supported in marker expressions.</p>
+</div>
+</div></div>
+</section>
+<section id="id">
+<h2>根据节点 ID 选择测试<a class="headerlink" href="#id" title="Link to this heading">¶</a></h2>
+<p><strong>Selecting tests based on their node ID</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p>您可以提供一个或多个 <span class="xref std std-ref">节点 ID</span> 作为位置参数，仅选择指定的测试。这使得基于模块、类、方法或函数名称轻松选择测试：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v test_server.py::TestClass::test_method
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 1 item
+
+test_server.py::TestClass::test_method <span class=" -Color -Color-Green">PASSED</span>                        <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p>您还可以根据类进行选择：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v test_server.py::TestClass
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 1 item
+
+test_server.py::TestClass::test_method <span class=" -Color -Color-Green">PASSED</span>                        <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p>或者选择多个节点：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v test_server.py::TestClass test_server.py::test_send_http
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 2 items
+
+test_server.py::TestClass::test_method <span class=" -Color -Color-Green">PASSED</span>                        <span class=" -Color -Color-Green">[ 50%]</span>
+test_server.py::test_send_http <span class=" -Color -Color-Green">PASSED</span>                                <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<div class="admonition note" id="node-id">
+<p class="admonition-title">Note</p>
+<p>节点 ID 的格式为 <code class="docutils literal notranslate"><span class="pre">module.py::class::method</span></code> 或
+<code class="docutils literal notranslate"><span class="pre">module.py::function</span></code>。节点 ID 控制哪些测试被收集，因此 <code class="docutils literal notranslate"><span class="pre">module.py::class</span></code> 将选择该类上的所有测试方法。
+每个参数化 fixture 或测试的每个参数也会创建节点，因此选择参数化测试必须包括参数值，例如
+<code class="docutils literal notranslate"><span class="pre">module.py::function[param]</span></code>。</p>
+<p>当使用 <code class="docutils literal notranslate"><span class="pre">-rf</span></code> 选项运行 pytest 时，失败测试的节点 ID 将显示在测试摘要信息中。您还可以从 <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--collect-only</span></code> 的输出构建节点 ID。</p>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p>You can provide one or more <span class="xref std std-ref">node IDs</span> as positional
+arguments to select only specified tests. This makes it easy to select
+tests based on their module, class, method, or function name:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v test_server.py::TestClass::test_method
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 1 item
+
+test_server.py::TestClass::test_method <span class=" -Color -Color-Green">PASSED</span>                        <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p>You can also select on the class:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v test_server.py::TestClass
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 1 item
+
+test_server.py::TestClass::test_method <span class=" -Color -Color-Green">PASSED</span>                        <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p>Or select multiple nodes:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v test_server.py::TestClass test_server.py::test_send_http
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 2 items
+
+test_server.py::TestClass::test_method <span class=" -Color -Color-Green">PASSED</span>                        <span class=" -Color -Color-Green">[ 50%]</span>
+test_server.py::test_send_http <span class=" -Color -Color-Green">PASSED</span>                                <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<div class="admonition note" id="id4">
+<p class="admonition-title">Note</p>
+<p>Node IDs are of the form <code class="docutils literal notranslate"><span class="pre">module.py::class::method</span></code> or
+<code class="docutils literal notranslate"><span class="pre">module.py::function</span></code>.  Node IDs control which tests are
+collected, so <code class="docutils literal notranslate"><span class="pre">module.py::class</span></code> will select all test methods
+on the class.  Nodes are also created for each parameter of a
+parametrized fixture or test, so selecting a parametrized test
+must include the parameter value, e.g.
+<code class="docutils literal notranslate"><span class="pre">module.py::function[param]</span></code>.</p>
+<p>Node IDs for failing tests are displayed in the test summary info
+when running pytest with the <code class="docutils literal notranslate"><span class="pre">-rf</span></code> option.  You can also
+construct Node IDs from the output of <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--collect-only</span></code>.</p>
+</div>
+</div></div>
+</section>
+<section id="k-expr">
+<h2>使用 <code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">expr</span></code> 根据名称选择测试<a class="headerlink" href="#k-expr" title="Link to this heading">¶</a></h2>
+<p><strong>Using ``-k expr`` to select tests based on their name</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.0/2.3.4.</span></p>
+</div>
+<p>您可以使用 <code class="docutils literal notranslate"><span class="pre">-k</span></code> 命令行选项指定一个表达式，该表达式对测试名称执行子字符串匹配，而不是 <code class="docutils literal notranslate"><span class="pre">-m</span></code> 提供的确切匹配。这使得根据测试名称轻松选择测试：</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 5.4.</span></p>
+</div>
+<p>表达式匹配现在是大小写不敏感的。</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v -k http  # 使用上述定义的示例模块运行
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 3 deselected / 1 selected
+
+test_server.py::test_send_http <span class=" -Color -Color-Green">PASSED</span>                                <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span>, <span class=" -Color -Color-Yellow">3 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>您还可以运行所有测试，除了与关键字匹配的测试：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -k &quot;not send_http&quot; -v
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 1 deselected / 3 selected
+
+test_server.py::test_something_quick <span class=" -Color -Color-Green">PASSED</span>                          <span class=" -Color -Color-Green">[ 33%]</span>
+test_server.py::test_another <span class=" -Color -Color-Green">PASSED</span>                                  <span class=" -Color -Color-Green">[ 66%]</span>
+test_server.py::TestClass::test_method <span class=" -Color -Color-Green">PASSED</span>                        <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">3 passed</span>, <span class=" -Color -Color-Yellow">1 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>或者选择 “http” 和 “quick” 测试：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -k &quot;http or quick&quot; -v
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 2 deselected / 2 selected
+
+test_server.py::test_send_http <span class=" -Color -Color-Green">PASSED</span>                                <span class=" -Color -Color-Green">[ 50%]</span>
+test_server.py::test_something_quick <span class=" -Color -Color-Green">PASSED</span>                          <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span>, <span class=" -Color -Color-Yellow">2 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>您可以使用 <code class="docutils literal notranslate"><span class="pre">and</span></code>、<code class="docutils literal notranslate"><span class="pre">or</span></code>、<code class="docutils literal notranslate"><span class="pre">not</span></code> 和括号。</p>
+<p>除了测试名称，<code class="docutils literal notranslate"><span class="pre">-k</span></code> 还会匹配测试父级的名称（通常是它所在文件和类的名称）、设置在测试函数上的属性、应用于它或其父级的标记，以及显式添加到它或其父级的任何 <a class="reference internal" href="../reference/reference.html#pytest.nodes.Node.extra_keyword_matches" title="_pytest.nodes.Node.extra_keyword_matches"><code class="xref py py-attr docutils literal notranslate"><span class="pre">extra</span> <span class="pre">keywords</span></code></a>。</p>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.0/2.3.4.</span></p>
+</div>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">-k</span></code> command line option to specify an expression
+which implements a substring match on the test names instead of the
+exact match on markers that <code class="docutils literal notranslate"><span class="pre">-m</span></code> provides.  This makes it easy to
+select tests based on their names:</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 5.4.</span></p>
+</div>
+<p>The expression matching is now case-insensitive.</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -v -k http  # running with the above defined example module
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 3 deselected / 1 selected
+
+test_server.py::test_send_http <span class=" -Color -Color-Green">PASSED</span>                                <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span>, <span class=" -Color -Color-Yellow">3 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>And you can also run all tests except the ones that match the keyword:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -k &quot;not send_http&quot; -v
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 1 deselected / 3 selected
+
+test_server.py::test_something_quick <span class=" -Color -Color-Green">PASSED</span>                          <span class=" -Color -Color-Green">[ 33%]</span>
+test_server.py::test_another <span class=" -Color -Color-Green">PASSED</span>                                  <span class=" -Color -Color-Green">[ 66%]</span>
+test_server.py::TestClass::test_method <span class=" -Color -Color-Green">PASSED</span>                        <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">3 passed</span>, <span class=" -Color -Color-Yellow">1 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>Or to select “http” and “quick” tests:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -k &quot;http or quick&quot; -v
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y -- $PYTHON_PREFIX/bin/python
+cachedir: .pytest_cache
+rootdir: /home/sweet/project
+<span class=" -Color -Color-Bold">collecting ...</span> collected 4 items / 2 deselected / 2 selected
+
+test_server.py::test_send_http <span class=" -Color -Color-Green">PASSED</span>                                <span class=" -Color -Color-Green">[ 50%]</span>
+test_server.py::test_something_quick <span class=" -Color -Color-Green">PASSED</span>                          <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span>, <span class=" -Color -Color-Yellow">2 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">and</span></code>, <code class="docutils literal notranslate"><span class="pre">or</span></code>, <code class="docutils literal notranslate"><span class="pre">not</span></code> and parentheses.</p>
+<p>In addition to the test’s name, <code class="docutils literal notranslate"><span class="pre">-k</span></code> also matches the names of the test’s parents (usually, the name of the file and class it’s in),
+attributes set on the test function, markers applied to it or its parents and any <a class="reference internal" href="../reference/reference.html#pytest.nodes.Node.extra_keyword_matches" title="_pytest.nodes.Node.extra_keyword_matches"><code class="xref py py-attr docutils literal notranslate"><span class="pre">extra</span> <span class="pre">keywords</span></code></a>
+explicitly added to it or its parents.</p>
+</div></div>
+</section>
+<section id="id5">
+<h2>注册标记<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<p><strong>Registering markers</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>注册测试套件的标记非常简单：</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of pytest.ini</span>
+<span class="k">[pytest]</span>
+<span class="na">markers</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">webtest</span><span class="o">:</span><span class="w"> </span><span class="s">将测试标记为 webtest。</span>
+<span class="w">    </span><span class="na">slow</span><span class="o">:</span><span class="w"> </span><span class="s">将测试标记为慢速。</span>
+</pre></div>
+</div>
+<p>可以通过在每一行中定义每个标记来注册多个自定义标记，如上例所示。</p>
+<p>您可以查看测试套件中有哪些标记 - 列表包括我们刚定义的 <code class="docutils literal notranslate"><span class="pre">webtest</span></code> 和 <code class="docutils literal notranslate"><span class="pre">slow</span></code> 标记：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --markers
+@pytest.mark.webtest: 将测试标记为 webtest。
+
+@pytest.mark.slow: 将测试标记为慢速。
+
+@pytest.mark.filterwarnings(warning): 为给定测试添加警告过滤器。请参见 https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
+
+@pytest.mark.skip(reason=None): 跳过给定的测试函数，带有可选原因。示例：skip(reason=&quot;no way of currently testing this&quot;) 将跳过该测试。
+
+@pytest.mark.skipif(condition, ..., *, reason=...): 如果任何条件评估为 True，则跳过给定的测试函数。示例：skipif(sys.platform == &#39;win32&#39;) 如果我们在 win32 平台上，则跳过该测试。请参见 https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif
+
+@pytest.mark.xfail(condition, ..., *, reason=..., run=True, raises=None, strict=xfail_strict): 如果任何条件评估为 True，则将测试函数标记为预期失败。可选择指定原因以便更好地报告，并在不想执行测试函数时设置 run=False。如果仅期望特定异常，您可以将它们列在 raises 中，如果测试以其他方式失败，则将其报告为真实失败。请参见 https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
+
+@pytest.mark.parametrize(argnames, argvalues): 多次调用测试函数，并依次传递不同的参数。如果 argnames 仅指定一个名称，则 argvalues 通常需要是一个值的列表；如果 argnames 指定多个名称，则需要是一个值的元组列表。示例：@parametrize(&#39;arg1&#39;, [1,2]) 将导致对装饰的测试函数进行两次调用，一次 arg1=1，另一次 arg1=2。请参见 https://docs.pytest.org/en/stable/how-to/parametrize.html 获取更多信息和示例。
+
+@pytest.mark.usefixtures(fixturename1, fixturename2, ...): 将测试标记为需要所有指定的夹具。请参见 https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
+
+@pytest.mark.tryfirst: 将钩子实现函数标记为插件机制将尽早尝试调用它。已弃用，请改用 @pytest.hookimpl(tryfirst=True)。
+
+@pytest.mark.trylast: 将钩子实现函数标记为插件机制将尽晚尝试调用它。已弃用，请改用 @pytest.hookimpl(trylast=True)。
+</pre></div>
+</div>
+<p>有关如何从插件添加和使用标记的示例，请参见 <a class="reference internal" href="#adding-a-custom-marker-from-a-plugin"><span class="std std-ref">自定义标记和命令行选项来控制测试运行</span></a>。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>建议显式注册标记，以便：</p>
+<ul class="simple">
+<li><p>在您的测试套件中有一个定义标记的地方</p></li>
+<li><p>通过 <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--markers</span></code> 查询现有标记时输出良好</p></li>
+<li><p>如果您使用 <code class="docutils literal notranslate"><span class="pre">--strict-markers</span></code> 选项，则标记中的拼写错误会被视为错误。</p></li>
+</ul>
+</div>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><p>Registering markers for your test suite is simple:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of pytest.ini</span>
+<span class="k">[pytest]</span>
+<span class="na">markers</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">webtest</span><span class="o">:</span><span class="w"> </span><span class="s">mark a test as a webtest.</span>
+<span class="w">    </span><span class="na">slow</span><span class="o">:</span><span class="w"> </span><span class="s">mark test as slow.</span>
+</pre></div>
+</div>
+<p>Multiple custom markers can be registered, by defining each one in its own line, as shown in above example.</p>
+<p>You can ask which markers exist for your test suite - the list includes our just defined <code class="docutils literal notranslate"><span class="pre">webtest</span></code> and <code class="docutils literal notranslate"><span class="pre">slow</span></code> markers:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --markers
+@pytest.mark.webtest: mark a test as a webtest.
+
+@pytest.mark.slow: mark test as slow.
+
+@pytest.mark.filterwarnings(warning): add a warning filter to the given test. see https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
+
+@pytest.mark.skip(reason=None): skip the given test function with an optional reason. Example: skip(reason=&quot;no way of currently testing this&quot;) skips the test.
+
+@pytest.mark.skipif(condition, ..., *, reason=...): skip the given test function if any of the conditions evaluate to True. Example: skipif(sys.platform == &#39;win32&#39;) skips the test if we are on the win32 platform. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif
+
+@pytest.mark.xfail(condition, ..., *, reason=..., run=True, raises=None, strict=xfail_strict): mark the test function as an expected failure if any of the conditions evaluate to True. Optionally specify a reason for better reporting and run=False if you don&#39;t even want to execute the test function. If only specific exception(s) are expected, you can list them in raises, and if the test fails in other ways, it will be reported as a true failure. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
+
+@pytest.mark.parametrize(argnames, argvalues): call a test function multiple times passing in different arguments in turn. argvalues generally needs to be a list of values if argnames specifies only one name or a list of tuples of values if argnames specifies multiple names. Example: @parametrize(&#39;arg1&#39;, [1,2]) would lead to two calls of the decorated test function, one with arg1=1 and another with arg1=2.see https://docs.pytest.org/en/stable/how-to/parametrize.html for more info and examples.
+
+@pytest.mark.usefixtures(fixturename1, fixturename2, ...): mark tests as needing all of the specified fixtures. see https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
+
+@pytest.mark.tryfirst: mark a hook implementation function such that the plugin machinery will try to call it first/as early as possible. DEPRECATED, use @pytest.hookimpl(tryfirst=True) instead.
+
+@pytest.mark.trylast: mark a hook implementation function such that the plugin machinery will try to call it last/as late as possible. DEPRECATED, use @pytest.hookimpl(trylast=True) instead.
+</pre></div>
+</div>
+<p>For an example on how to add and work with markers from a plugin, see
+<a class="reference internal" href="#adding-a-custom-marker-from-a-plugin"><span class="std std-ref">自定义标记和命令行选项来控制测试运行</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is recommended to explicitly register markers so that:</p>
+<ul class="simple">
+<li><p>There is one place in your test suite defining your markers</p></li>
+<li><p>Asking for existing markers via <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--markers</span></code> gives good output</p></li>
+<li><p>Typos in function markers are treated as an error if you use</p></li>
+</ul>
+<p>the <code class="docutils literal notranslate"><span class="pre">--strict-markers</span></code> option.</p>
+</div>
+</div></div>
+</section>
+<section id="scoped-marking">
+<span id="id6"></span><h2>标记整个类或模块<a class="headerlink" href="#scoped-marking" title="Link to this heading">¶</a></h2>
+<p><strong>Marking whole classes or modules</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><p>您可以使用 <code class="docutils literal notranslate"><span class="pre">pytest.mark</span></code> 装饰器与类结合，以将标记应用于其所有测试方法：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_mark_classlevel.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">webtest</span>
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">test_startup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">test_startup_and_more</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>这相当于直接将装饰器应用于这两个测试函数。</p>
+<p>要在模块级别应用标记，请使用 <a class="reference internal" href="../reference/reference.html#globalvar-3"><code class="xref std std-globalvar docutils literal notranslate"><span class="pre">pytestmark</span></code></a> 全局变量：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">webtest</span>
+</pre></div>
+</div>
+<p>或者多个标记：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pytestmark</span> <span class="o">=</span> <span class="p">[</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">webtest</span><span class="p">,</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">slowtest</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>由于历史原因，在引入类装饰器之前，可以像这样在测试类上设置 <a class="reference internal" href="../reference/reference.html#globalvar-3"><code class="xref std std-globalvar docutils literal notranslate"><span class="pre">pytestmark</span></code></a> 属性：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">webtest</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><p>You may use <code class="docutils literal notranslate"><span class="pre">pytest.mark</span></code> decorators with classes to apply markers to all of
+its test methods:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_mark_classlevel.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">webtest</span>
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">test_startup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">test_startup_and_more</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>This is equivalent to directly applying the decorator to the
+two test functions.</p>
+<p>To apply marks at the module level, use the <a class="reference internal" href="../reference/reference.html#globalvar-3"><code class="xref std std-globalvar docutils literal notranslate"><span class="pre">pytestmark</span></code></a> global variable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">webtest</span>
+</pre></div>
+</div>
+<p>or multiple markers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytestmark</span> <span class="o">=</span> <span class="p">[</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">webtest</span><span class="p">,</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">slowtest</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Due to legacy reasons, before class decorators were introduced, it is possible to set the
+<a class="reference internal" href="../reference/reference.html#globalvar-3"><code class="xref std std-globalvar docutils literal notranslate"><span class="pre">pytestmark</span></code></a> attribute on a test class like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">webtest</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="marking-individual-tests-when-using-parametrize">
+<span id="id7"></span><h2>使用参数化时标记单个测试<a class="headerlink" href="#marking-individual-tests-when-using-parametrize" title="Link to this heading">¶</a></h2>
+<p><strong>Marking individual tests when using parametrize</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><p>当使用 <code class="docutils literal notranslate"><span class="pre">parametrize</span></code> 时，应用标记将使其作用于每个单独的测试。然而，也可以将标记应用于单个测试实例：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">foo</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;expected&quot;</span><span class="p">),</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">marks</span><span class="o">=</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">bar</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_increment</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">expected</span>
+</pre></div>
+</div>
+<p>在这个例子中，标记 “foo” 将应用于三个测试中的每一个，而 “bar” 标记仅应用于第二个测试。跳过（Skip）和预期失败（xfail）标记也可以以这种方式应用，参见 <a class="reference internal" href="../how-to/skipping.html#skip-xfail-with-parametrize"><span class="std std-ref">使用 parametrize 跳过/xfail</span></a>。</p>
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><p>When using parametrize, applying a mark will make it apply
+to each individual test. However it is also possible to
+apply a marker to an individual test instance:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">foo</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;expected&quot;</span><span class="p">),</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">pytest</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">marks</span><span class="o">=</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">bar</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_increment</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">expected</span>
+</pre></div>
+</div>
+<p>In this example the mark “foo” will apply to each of the three
+tests, whereas the “bar” mark is only applied to the second test.
+Skip and xfail marks can also be applied in this way, see <a class="reference internal" href="../how-to/skipping.html#skip-xfail-with-parametrize"><span class="std std-ref">使用 parametrize 跳过/xfail</span></a>.</p>
+</div></div>
+</section>
+<section id="adding-a-custom-marker-from-a-plugin">
+<span id="id8"></span><h2>自定义标记和命令行选项来控制测试运行<a class="headerlink" href="#adding-a-custom-marker-from-a-plugin" title="Link to this heading">¶</a></h2>
+<p><strong>Custom marker and command line option to control test runs</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-7-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-7-7-0" name="7-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-7-7-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-1" name="7-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-7-7-0" class="sphinx-tabs-panel" id="panel-7-7-0" name="7-0" role="tabpanel" tabindex="0"><p>插件可以提供自定义标记，并根据它实现特定的行为。这是一个自包含的示例，添加了一个命令行选项和一个参数化测试函数标记，以便根据命名环境运行指定的测试：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_addoption</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span>
+        <span class="s2">&quot;-E&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;只运行与环境 NAME 匹配的测试。&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_configure</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="c1"># 注册一个额外的标记</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">addinivalue_line</span><span class="p">(</span>
+        <span class="s2">&quot;markers&quot;</span><span class="p">,</span> <span class="s2">&quot;env(name): 标记测试仅在命名环境中运行&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_runtest_setup</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">envnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">mark</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">mark</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;env&quot;</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">envnames</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;-E&quot;</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">envnames</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;测试需要在 </span><span class="si">{</span><span class="n">envnames</span><span class="si">!r}</span><span class="s2"> 中的环境&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>使用此本地插件的测试文件：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_someenv.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;stage1&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_basic_db_operation</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>以及指定与测试需求不同环境的示例调用：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -E stage2
+=========================== 测试会话开始 ============================
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 1 item
+
+test_someenv.py <span class=" -Color -Color-Yellow">s</span>                                                    <span class=" -Color -Color-Yellow">[100%]</span>
+
+============================ 1 个测试被跳过，耗时 0.12s ============================
+</pre></div>
+</div>
+<p>这是一个指定确切所需环境的示例：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -E stage1
+=========================== 测试会话开始 ============================
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 1 item
+
+test_someenv.py <span class=" -Color -Color-Green">.</span>                                                    <span class=" -Color -Color-Green">[100%]</span>
+
+============================ 1 个测试通过，耗时 0.12s =============================
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--markers</span></code> 选项始终会为你提供可用标记的列表：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --markers
+@pytest.mark.env(name): 标记测试仅在命名环境中运行
+
+@pytest.mark.filterwarnings(warning): 为给定测试添加警告过滤器。参见 https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
+
+@pytest.mark.skip(reason=None): 跳过给定的测试函数，附加可选理由。例如：skip(reason=&quot;目前无法测试此&quot;) 跳过该测试。
+
+@pytest.mark.skipif(condition, ..., *, reason=...): 如果任何条件评估为 True，则跳过给定的测试函数。例如：skipif(sys.platform == &#39;win32&#39;) 如果我们在 win32 平台上，则跳过测试。参见 https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif
+
+@pytest.mark.xfail(condition, ..., *, reason=..., run=True, raises=None, strict=xfail_strict): 如果任何条件评估为 True，则标记测试函数为预期失败。可选地指定理由以便更好的报告，设置 run=False 如果你甚至不想执行测试函数。如果仅期望特定异常，可以在 raises 中列出它们，如果测试以其他方式失败，将被报告为真正的失败。参见 https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
+
+@pytest.mark.parametrize(argnames, argvalues): 多次调用测试函数，逐次传入不同参数。如果 argnames 仅指定一个名称，则 argvalues 通常需要是值的列表；如果 argnames 指定多个名称，则需要是值的元组列表。例如：@parametrize(&#39;arg1&#39;, [1,2]) 将导致装饰的测试函数被调用两次，一次 arg1=1，另一次 arg1=2。有关更多信息和示例，请参见 https://docs.pytest.org/en/stable/how-to/parametrize.html。
+
+@pytest.mark.usefixtures(fixturename1, fixturename2, ...): 将测试标记为需要所有指定的夹具。参见 https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
+
+@pytest.mark.tryfirst: 标记一个钩子实现函数，以便插件机制尽可能早地调用它。已弃用，请改用 @pytest.hookimpl(tryfirst=True)。
+
+@pytest.mark.trylast: 标记一个钩子实现函数，以便插件机制尽可能晚地调用它。已弃用，请改用 @pytest.hookimpl(trylast=True)。
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-7-7-1" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-1" name="7-1" role="tabpanel" tabindex="0"><p>Plugins can provide custom markers and implement specific behaviour
+based on it. This is a self-contained example which adds a command
+line option and a parametrized test function marker to run tests
+specified via named environments:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_addoption</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span>
+        <span class="s2">&quot;-E&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;only run tests matching the environment NAME.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_configure</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="c1"># register an additional marker</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">addinivalue_line</span><span class="p">(</span>
+        <span class="s2">&quot;markers&quot;</span><span class="p">,</span> <span class="s2">&quot;env(name): mark test to run only on named environment&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_runtest_setup</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">envnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">mark</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">mark</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;env&quot;</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">envnames</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;-E&quot;</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">envnames</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;test requires env in </span><span class="si">{</span><span class="n">envnames</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A test file using this local plugin:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_someenv.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;stage1&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_basic_db_operation</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>and an example invocations specifying a different environment than what
+the test needs:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -E stage2
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 1 item
+
+test_someenv.py <span class=" -Color -Color-Yellow">s</span>                                                    <span class=" -Color -Color-Yellow">[100%]</span>
+
+<span class=" -Color -Color-Yellow">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Yellow">1 skipped</span><span class=" -Color -Color-Yellow"> in 0.12s ============================</span>
+</pre></div>
+</div>
+<p>and here is one that specifies exactly the environment needed:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -E stage1
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 1 item
+
+test_someenv.py <span class=" -Color -Color-Green">.</span>                                                    <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s =============================</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--markers</span></code> option always gives you a list of available markers:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest --markers
+@pytest.mark.env(name): mark test to run only on named environment
+
+@pytest.mark.filterwarnings(warning): add a warning filter to the given test. see https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
+
+@pytest.mark.skip(reason=None): skip the given test function with an optional reason. Example: skip(reason=&quot;no way of currently testing this&quot;) skips the test.
+
+@pytest.mark.skipif(condition, ..., *, reason=...): skip the given test function if any of the conditions evaluate to True. Example: skipif(sys.platform == &#39;win32&#39;) skips the test if we are on the win32 platform. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif
+
+@pytest.mark.xfail(condition, ..., *, reason=..., run=True, raises=None, strict=xfail_strict): mark the test function as an expected failure if any of the conditions evaluate to True. Optionally specify a reason for better reporting and run=False if you don&#39;t even want to execute the test function. If only specific exception(s) are expected, you can list them in raises, and if the test fails in other ways, it will be reported as a true failure. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
+
+@pytest.mark.parametrize(argnames, argvalues): call a test function multiple times passing in different arguments in turn. argvalues generally needs to be a list of values if argnames specifies only one name or a list of tuples of values if argnames specifies multiple names. Example: @parametrize(&#39;arg1&#39;, [1,2]) would lead to two calls of the decorated test function, one with arg1=1 and another with arg1=2.see https://docs.pytest.org/en/stable/how-to/parametrize.html for more info and examples.
+
+@pytest.mark.usefixtures(fixturename1, fixturename2, ...): mark tests as needing all of the specified fixtures. see https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
+
+@pytest.mark.tryfirst: mark a hook implementation function such that the plugin machinery will try to call it first/as early as possible. DEPRECATED, use @pytest.hookimpl(tryfirst=True) instead.
+
+@pytest.mark.trylast: mark a hook implementation function such that the plugin machinery will try to call it last/as late as possible. DEPRECATED, use @pytest.hookimpl(trylast=True) instead.
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="passing-callables-to-custom-markers">
+<span id="id9"></span><h2>将可调用函数传递给自定义标记<a class="headerlink" href="#passing-callables-to-custom-markers" title="Link to this heading">¶</a></h2>
+<p><strong>Passing a callable to custom markers</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-8-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-8-8-0" name="8-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-8-8-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-8-8-1" name="8-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-8-8-0" class="sphinx-tabs-panel" id="panel-8-8-0" name="8-0" role="tabpanel" tabindex="0"><p>以下是将在下一个示例中使用的配置文件：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_runtest_setup</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_marker&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">marker</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>自定义标记可以设置其参数，即 <code class="docutils literal notranslate"><span class="pre">args</span></code> 和 <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> 属性，可以通过将其作为可调用对象调用或使用 <code class="docutils literal notranslate"><span class="pre">pytest.mark.MARKER_NAME.with_args</span></code> 来定义。这两种方法在大多数情况下实现相同的效果。</p>
+<p>然而，如果有一个可调用对象作为唯一的位置参数且没有关键字参数，使用 <code class="docutils literal notranslate"><span class="pre">pytest.mark.MARKER_NAME(c)</span></code> 将不会将 <code class="docutils literal notranslate"><span class="pre">c</span></code> 作为位置参数传递，而是用自定义标记装饰 <code class="docutils literal notranslate"><span class="pre">c``（参见</span> <span class="pre">:ref:`MarkDecorator</span> <span class="pre">&lt;mark&gt;`）。幸运的是，``pytest.mark.MARKER_NAME.with_args</span></code> 可以解决这个问题：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_custom_marker.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">hello_world</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;Hello World&quot;</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">my_marker</span><span class="o">.</span><span class="n">with_args</span><span class="p">(</span><span class="n">hello_world</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_with_args</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>输出如下：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q -s
+Mark(name=&#39;my_marker&#39;, args=(&lt;function hello_world at 0xdeadbeef0001&gt;,), kwargs={})
+.
+<span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s</span>
+</pre></div>
+</div>
+<p>我们可以看到，自定义标记的参数设置已扩展为函数 <code class="docutils literal notranslate"><span class="pre">hello_world</span></code>。这是创建自定义标记作为可调用对象的关键区别，该过程在幕后调用 <code class="docutils literal notranslate"><span class="pre">__call__</span></code>，而使用 <code class="docutils literal notranslate"><span class="pre">with_args</span></code> 则不会。</p>
+</div><div aria-labelledby="tab-8-8-1" class="sphinx-tabs-panel" hidden="true" id="panel-8-8-1" name="8-1" role="tabpanel" tabindex="0"><p>Below is the config file that will be used in the next examples:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_runtest_setup</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_marker&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">marker</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A custom marker can have its argument set, i.e. <code class="docutils literal notranslate"><span class="pre">args</span></code> and <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> properties, defined by either invoking it as a callable or using <code class="docutils literal notranslate"><span class="pre">pytest.mark.MARKER_NAME.with_args</span></code>. These two methods achieve the same effect most of the time.</p>
+<p>However, if there is a callable as the single positional argument with no keyword arguments, using the <code class="docutils literal notranslate"><span class="pre">pytest.mark.MARKER_NAME(c)</span></code> will not pass <code class="docutils literal notranslate"><span class="pre">c</span></code> as a positional argument but decorate <code class="docutils literal notranslate"><span class="pre">c</span></code> with the custom marker (see <a class="reference internal" href="../how-to/mark.html#mark"><span class="std std-ref">MarkDecorator</span></a>). Fortunately, <code class="docutils literal notranslate"><span class="pre">pytest.mark.MARKER_NAME.with_args</span></code> comes to the rescue:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_custom_marker.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">hello_world</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;Hello World&quot;</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">my_marker</span><span class="o">.</span><span class="n">with_args</span><span class="p">(</span><span class="n">hello_world</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_with_args</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The output is as follows:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q -s
+Mark(name=&#39;my_marker&#39;, args=(&lt;function hello_world at 0xdeadbeef0001&gt;,), kwargs={})
+.
+<span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s</span>
+</pre></div>
+</div>
+<p>We can see that the custom marker has its argument set extended with the function <code class="docutils literal notranslate"><span class="pre">hello_world</span></code>. This is the key difference between creating a custom marker as a callable, which invokes <code class="docutils literal notranslate"><span class="pre">__call__</span></code> behind the scenes, and using <code class="docutils literal notranslate"><span class="pre">with_args</span></code>.</p>
+</div></div>
+</section>
+<section id="id10">
+<h2>读取从多个位置设置的标记<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h2>
+<p><strong>Reading markers which were set from multiple places</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-9-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-9-9-0" name="9-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-9-9-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-9-9-1" name="9-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-9-9-0" class="sphinx-tabs-panel" id="panel-9-9-0" name="9-0" role="tabpanel" tabindex="0"><p>如果你在测试套件中大量使用标记，你可能会遇到同一个测试函数上应用多个标记的情况。通过插件代码，你可以读取所有这样的设置。示例：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_mark_three_times.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;function&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>在这里，我们将标记 “glob” 应用三次于同一个测试函数。从 conftest 文件中，我们可以这样读取：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_runtest_setup</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">mark</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;glob&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;glob args=</span><span class="si">{</span><span class="n">mark</span><span class="o">.</span><span class="n">args</span><span class="si">}</span><span class="s2"> kwargs=</span><span class="si">{</span><span class="n">mark</span><span class="o">.</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>让我们在不捕获输出的情况下运行这个，看看我们得到什么：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q -s
+glob args=(&#39;function&#39;,) kwargs={&#39;x&#39;: 3}
+glob args=(&#39;class&#39;,) kwargs={&#39;x&#39;: 2}
+glob args=(&#39;module&#39;,) kwargs={&#39;x&#39;: 1}
+.
+<span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-9-9-1" class="sphinx-tabs-panel" hidden="true" id="panel-9-9-1" name="9-1" role="tabpanel" tabindex="0"><p>If you are heavily using markers in your test suite you may encounter the case where a marker is applied several times to a test function.  From plugin
+code you can read over all such settings.  Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_mark_three_times.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">:</span>
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;function&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Here we have the marker “glob” applied three times to the same
+test function.  From a conftest file we can read it like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_runtest_setup</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">mark</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;glob&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;glob args=</span><span class="si">{</span><span class="n">mark</span><span class="o">.</span><span class="n">args</span><span class="si">}</span><span class="s2"> kwargs=</span><span class="si">{</span><span class="n">mark</span><span class="o">.</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Let’s run this without capturing output and see what we get:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -q -s
+glob args=(&#39;function&#39;,) kwargs={&#39;x&#39;: 3}
+glob args=(&#39;class&#39;,) kwargs={&#39;x&#39;: 2}
+glob args=(&#39;module&#39;,) kwargs={&#39;x&#39;: 1}
+.
+<span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.12s</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="pytest">
+<h2>使用 pytest 标记特定于平台的测试<a class="headerlink" href="#pytest" title="Link to this heading">¶</a></h2>
+<p><strong>Marking platform specific tests with pytest</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-10-10-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-10-10-0" name="10-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-10-10-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-1" name="10-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-10-10-0" class="sphinx-tabs-panel" id="panel-10-10-0" name="10-0" role="tabpanel" tabindex="0"><p>考虑你有一个测试套件，用于标记特定平台的测试，例如 <code class="docutils literal notranslate"><span class="pre">pytest.mark.darwin</span></code>、<code class="docutils literal notranslate"><span class="pre">pytest.mark.win32</span></code> 等，并且还有一些在所有平台上运行且没有特定标记的测试。如果你现在想要仅运行特定平台的测试，可以使用以下插件：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="n">ALL</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s2">&quot;darwin linux win32&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_runtest_setup</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">supported_platforms</span> <span class="o">=</span> <span class="n">ALL</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">mark</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">mark</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">())</span>
+    <span class="n">plat</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span>
+    <span class="k">if</span> <span class="n">supported_platforms</span> <span class="ow">and</span> <span class="n">plat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_platforms</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;无法在平台 </span><span class="si">{</span><span class="n">plat</span><span class="si">}</span><span class="s2"> 上运行&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这样，如果测试为其他平台指定，则会被跳过。让我们做一个小测试文件，展示这是什么样子：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_plat.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">darwin</span>
+<span class="k">def</span> <span class="nf">test_if_apple_is_evil</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">linux</span>
+<span class="k">def</span> <span class="nf">test_if_linux_works</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">win32</span>
+<span class="k">def</span> <span class="nf">test_if_win32_crashes</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">test_runs_everywhere</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>然后你会看到两个测试被跳过，两个测试按预期执行：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -rs # 此选项报告跳过的原因
+=========================== 测试会话开始 ============================
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items
+
+test_plat.py <span class=" -Color -Color-Yellow">s</span><span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Yellow">s</span><span class=" -Color -Color-Green">.</span>                                                    <span class=" -Color -Color-Yellow">[100%]</span>
+
+========================= 简短测试摘要信息 ==========================
+SKIPPED [2] conftest.py:13: 无法在平台 linux 上运行
+======================= 2 个通过，2 个跳过，耗时 0.12s =======================
+</pre></div>
+</div>
+<p>请注意，如果你通过标记命令行选项指定平台，如下所示：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -m linux
+=========================== 测试会话开始 ============================
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items / 3 被排除 / 1 被选择
+
+test_plat.py <span class=" -Color -Color-Green">.</span>                                                       <span class=" -Color -Color-Green">[100%]</span>
+
+===================== 1 个通过，3 个被排除，耗时 0.12s ======================
+</pre></div>
+</div>
+<p>那么未标记的测试将不会运行。因此，这是一种将运行限制为特定测试的方法。</p>
+</div><div aria-labelledby="tab-10-10-1" class="sphinx-tabs-panel" hidden="true" id="panel-10-10-1" name="10-1" role="tabpanel" tabindex="0"><p>Consider you have a test suite which marks tests for particular platforms,
+namely <code class="docutils literal notranslate"><span class="pre">pytest.mark.darwin</span></code>, <code class="docutils literal notranslate"><span class="pre">pytest.mark.win32</span></code> etc. and you
+also have tests that run on all platforms and have no specific
+marker.  If you now want to have a way to only run the tests
+for your particular platform, you could use the following plugin:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="n">ALL</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s2">&quot;darwin linux win32&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_runtest_setup</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">supported_platforms</span> <span class="o">=</span> <span class="n">ALL</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">mark</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">mark</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">())</span>
+    <span class="n">plat</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span>
+    <span class="k">if</span> <span class="n">supported_platforms</span> <span class="ow">and</span> <span class="n">plat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_platforms</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cannot run on platform </span><span class="si">{</span><span class="n">plat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>then tests will be skipped if they were specified for a different platform.
+Let’s do a little test file to show how this looks like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_plat.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">darwin</span>
+<span class="k">def</span> <span class="nf">test_if_apple_is_evil</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">linux</span>
+<span class="k">def</span> <span class="nf">test_if_linux_works</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">win32</span>
+<span class="k">def</span> <span class="nf">test_if_win32_crashes</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">test_runs_everywhere</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>then you will see two tests skipped and two executed tests as expected:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -rs # this option reports skip reasons
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items
+
+test_plat.py <span class=" -Color -Color-Yellow">s</span><span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Yellow">s</span><span class=" -Color -Color-Green">.</span>                                                    <span class=" -Color -Color-Yellow">[100%]</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Yellow">SKIPPED</span> [2] conftest.py:13: cannot run on platform linux
+<span class=" -Color -Color-Yellow">======================= </span><span class=" -Color -Color-Green">2 passed</span>, <span class=" -Color -Color-Bold -Color-Bold-Yellow">2 skipped</span><span class=" -Color -Color-Yellow"> in 0.12s =======================</span>
+</pre></div>
+</div>
+<p>Note that if you specify a platform via the marker-command line option like this:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -m linux
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items / 3 deselected / 1 selected
+
+test_plat.py <span class=" -Color -Color-Green">.</span>                                                       <span class=" -Color -Color-Green">[100%]</span>
+
+<span class=" -Color -Color-Green">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span>, <span class=" -Color -Color-Yellow">3 deselected</span><span class=" -Color -Color-Green"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>then the unmarked-tests will not be run.  It is thus a way to restrict the run to the specific tests.</p>
+</div></div>
+</section>
+<section id="id11">
+<h2>根据测试名称自动添加标记<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h2>
+<p><strong>Automatically adding markers based on test names</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-11-11-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-11-11-0" name="11-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-11-11-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-11-11-1" name="11-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-11-11-0" class="sphinx-tabs-panel" id="panel-11-11-0" name="11-0" role="tabpanel" tabindex="0"><p>如果你有一个测试套件，其中测试函数名称指示某种类型的测试，你可以实现一个钩子，自动定义标记，以便你可以使用 <code class="docutils literal notranslate"><span class="pre">-m</span></code> 选项。让我们来看一下这个测试模块：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_module.py</span>
+
+
+<span class="k">def</span> <span class="nf">test_interface_simple</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">test_interface_complex</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">test_event_simple</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">test_something_else</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>我们想要动态定义两个标记，可以在 <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> 插件中做到这一点：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_collection_modifyitems</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;interface&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">nodeid</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">add_marker</span><span class="p">(</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;event&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">nodeid</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">add_marker</span><span class="p">(</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">event</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>现在我们可以使用 <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">option</span></code> 选择一组测试：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -m interface --tb=short
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items / 2 deselected / 2 selected
+
+test_module.py <span class=" -Color -Color-Red">FF</span>                                                    <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ test_interface_simple ___________________________</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_module.py</span>:4: in test_interface_simple
+    assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   assert 0</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ test_interface_complex __________________________</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_module.py</span>:8: in test_interface_complex
+    assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   assert 0</span>
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_module.py::<span class=" -Color -Color-Bold">test_interface_simple</span> - assert 0
+<span class=" -Color -Color-Red">FAILED</span> test_module.py::<span class=" -Color -Color-Bold">test_interface_complex</span> - assert 0
+<span class=" -Color -Color-Red">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Red">2 failed</span>, <span class=" -Color -Color-Yellow">2 deselected</span><span class=" -Color -Color-Red"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>或者选择“event”和“interface”测试：</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -m &quot;interface or event&quot; --tb=short
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items / 1 deselected / 3 selected
+
+test_module.py <span class=" -Color -Color-Red">FFF</span>                                                   <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ test_interface_simple ___________________________</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_module.py</span>:4: in test_interface_simple
+    assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   assert 0</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ test_interface_complex __________________________</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_module.py</span>:8: in test_interface_complex
+    assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   assert 0</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________________ test_event_simple _____________________________</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_module.py</span>:12: in test_event_simple
+    assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   assert 0</span>
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_module.py::<span class=" -Color -Color-Bold">test_interface_simple</span> - assert 0
+<span class=" -Color -Color-Red">FAILED</span> test_module.py::<span class=" -Color -Color-Bold">test_interface_complex</span> - assert 0
+<span class=" -Color -Color-Red">FAILED</span> test_module.py::<span class=" -Color -Color-Bold">test_event_simple</span> - assert 0
+<span class=" -Color -Color-Red">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Red">3 failed</span>, <span class=" -Color -Color-Yellow">1 deselected</span><span class=" -Color -Color-Red"> in 0.12s ======================</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-11-11-1" class="sphinx-tabs-panel" hidden="true" id="panel-11-11-1" name="11-1" role="tabpanel" tabindex="0"><p>If you have a test suite where test function names indicate a certain
+type of test, you can implement a hook that automatically defines
+markers so that you can use the <code class="docutils literal notranslate"><span class="pre">-m</span></code> option with it. Let’s look
+at this test module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of test_module.py</span>
+
+
+<span class="k">def</span> <span class="nf">test_interface_simple</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">test_interface_complex</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">test_event_simple</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">test_something_else</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>We want to dynamically define two markers and can do it in a
+<code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> plugin:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># content of conftest.py</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">pytest_collection_modifyitems</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;interface&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">nodeid</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">add_marker</span><span class="p">(</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;event&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">nodeid</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">add_marker</span><span class="p">(</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">event</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can now use the <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">option</span></code> to select one set:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -m interface --tb=short
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items / 2 deselected / 2 selected
+
+test_module.py <span class=" -Color -Color-Red">FF</span>                                                    <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ test_interface_simple ___________________________</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_module.py</span>:4: in test_interface_simple
+    assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   assert 0</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ test_interface_complex __________________________</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_module.py</span>:8: in test_interface_complex
+    assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   assert 0</span>
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_module.py::<span class=" -Color -Color-Bold">test_interface_simple</span> - assert 0
+<span class=" -Color -Color-Red">FAILED</span> test_module.py::<span class=" -Color -Color-Bold">test_interface_complex</span> - assert 0
+<span class=" -Color -Color-Red">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Red">2 failed</span>, <span class=" -Color -Color-Yellow">2 deselected</span><span class=" -Color -Color-Red"> in 0.12s ======================</span>
+</pre></div>
+</div>
+<p>or to select both “event” and “interface” tests:</p>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>$ pytest -m &quot;interface or event&quot; --tb=short
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project
+collected 4 items / 1 deselected / 3 selected
+
+test_module.py <span class=" -Color -Color-Red">FFF</span>                                                   <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ test_interface_simple ___________________________</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_module.py</span>:4: in test_interface_simple
+    assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   assert 0</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ test_interface_complex __________________________</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_module.py</span>:8: in test_interface_complex
+    assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   assert 0</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________________ test_event_simple _____________________________</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_module.py</span>:12: in test_event_simple
+    assert 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   assert 0</span>
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_module.py::<span class=" -Color -Color-Bold">test_interface_simple</span> - assert 0
+<span class=" -Color -Color-Red">FAILED</span> test_module.py::<span class=" -Color -Color-Bold">test_interface_complex</span> - assert 0
+<span class=" -Color -Color-Red">FAILED</span> test_module.py::<span class=" -Color -Color-Bold">test_event_simple</span> - assert 0
+<span class=" -Color -Color-Red">===================== </span><span class=" -Color -Color-Bold -Color-Bold-Red">3 failed</span>, <span class=" -Color -Color-Yellow">1 deselected</span><span class=" -Color -Color-Red"> in 0.12s ======================</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="special.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">可以查看所有收集到的测试的会话fixture</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="parametrize.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">参数化测试</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">使用自定义标记</a><ul>
+<li><a class="reference internal" href="#mark-run">标记测试函数并选择它们进行运行</a></li>
+<li><a class="reference internal" href="#id">根据节点 ID 选择测试</a></li>
+<li><a class="reference internal" href="#k-expr">使用 <code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">expr</span></code> 根据名称选择测试</a></li>
+<li><a class="reference internal" href="#id5">注册标记</a></li>
+<li><a class="reference internal" href="#scoped-marking">标记整个类或模块</a></li>
+<li><a class="reference internal" href="#marking-individual-tests-when-using-parametrize">使用参数化时标记单个测试</a></li>
+<li><a class="reference internal" href="#adding-a-custom-marker-from-a-plugin">自定义标记和命令行选项来控制测试运行</a></li>
+<li><a class="reference internal" href="#passing-callables-to-custom-markers">将可调用函数传递给自定义标记</a></li>
+<li><a class="reference internal" href="#id10">读取从多个位置设置的标记</a></li>
+<li><a class="reference internal" href="#pytest">使用 pytest 标记特定于平台的测试</a></li>
+<li><a class="reference internal" href="#id11">根据测试名称自动添加标记</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>

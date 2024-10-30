@@ -1,0 +1,1092 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="基本模式和示例" href="simple.html" /><link rel="prev" title="示例和自定义技巧" href="index.html" />
+        <link rel="canonical" href="https://docs.pytest.org/en/stable/example/reportingdemo.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>使用 pytest 的 Python 故障报告演示 - pytest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments_pytest.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/pytest-custom.css?v=eb7c59a4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pytest documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/pytest1.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">入门</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how-to/index.html">操作指南</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 操作指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/usage.html">如何调用 pytest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/assert.html">如何在测试中编写和报告断言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/fixtures.html">如何使用 fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/mark.html">如何用属性标记测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/parametrize.html">如何参数化fixtures和测试函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/tmp_path.html">如何在测试中使用临时目录和文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/monkeypatch.html">如何使用 猴子补丁/mock 模块和环境</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/doctest.html">如何运行文档测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/cache.html">如何重新运行失败的测试并在测试运行之间保持状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/failures.html">如何处理测试失败</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/output.html">管理 pytest 的输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/logging.html">如何管理日志记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-stdout-stderr.html">如何捕获 stdout/stderr 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/capture-warnings.html">如何捕获警告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/skipping.html">如何使用 skip 和 xfail 处理无法成功的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/plugins.html">如何安装和使用插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_plugins.html">编写插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/writing_hook_functions.html">编写钩子函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/existingtestsuite.html">如何将 pytest 与现有测试套件结合使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/unittest.html">如何在 pytest 中使用基于 unittest 的测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/xunit_setup.html">如何实现 xunit 样式的设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/bash-completion.html">如何设置 bash 补全</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考指南</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 参考指南</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/reference.html">API 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/fixtures.html">Fixtures 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/customize.html">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/exit-codes.html">退出码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/plugin_list.html">Pytest 插件列表</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../explanation/index.html">解答</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 解答</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/anatomy.html">测试剖析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/fixtures.html">关于 fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/goodpractices.html">良好的集成实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/pythonpath.html">pytest 导入机制和 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> / <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/ci.html">CI Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../explanation/flaky.html">不稳定的测试</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">示例和自定义技巧</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 示例和自定义技巧</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">使用 pytest 的 Python 故障报告演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple.html">基本模式和示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametrize.html">参数化测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markers.html">使用自定义标记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="special.html">可以查看所有收集到的测试的会话fixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pythoncollection.html">改变标准 (Python) 测试的发现机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nonpython.html">使用非 Python 测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customdirectory.html">使用自定义目录收集器</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">关于项目</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">更改日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html">向后兼容政策</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#id2">历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backwards-compatibility.html#python">Python版本支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsor.html">赞助</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidelift.html">pytest 企业版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">许可</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">联系渠道</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">游泳的链接</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="pytest-python">
+<span id="tbreportdemo"></span><h1>使用 pytest 的 Python 故障报告演示<a class="headerlink" href="#pytest-python" title="Link to this heading">¶</a></h1>
+<p><strong>Demo of Python failure reports with pytest</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">中文</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">英文</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>下面是几次失败的运行以及 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 的呈现方式：</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>Here is a nice run of several failures and how <code class="docutils literal notranslate"><span class="pre">pytest</span></code> presents things:</p>
+</div></div>
+<div class="highlight-pytest notranslate"><div class="highlight"><pre><span></span>assertion $ pytest failure_demo.py
+<span class=" -Color -Color-Bold">=========================== test session starts ============================</span>
+platform linux -- Python 3.x.y, pytest-8.x.y, pluggy-1.x.y
+rootdir: /home/sweet/project/assertion
+collected 44 items
+
+failure_demo.py <span class=" -Color -Color-Red">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</span>         <span class=" -Color -Color-Red">[100%]</span>
+
+================================= FAILURES =================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ test_generative[3-6] ___________________________</span>
+
+param1 = 3, param2 = 6
+
+    @pytest.mark.parametrize(&quot;param1, param2&quot;, [(3, 6)])
+    def test_generative(param1, param2):
+&gt;       assert param1 * 2 &lt; param2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert (3 * 2) &lt; 6</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:21: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________________________ TestFailing.test_simple __________________________</span>
+
+self = &lt;failure_demo.TestFailing object at 0xdeadbeef0001&gt;
+
+    def test_simple(self):
+        def f():
+            return 42
+
+        def g():
+            return 43
+
+&gt;       assert f() == g()
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 42 == 43</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 42 = &lt;function TestFailing.test_simple.&lt;locals&gt;.f at 0xdeadbeef0002&gt;()</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  and   43 = &lt;function TestFailing.test_simple.&lt;locals&gt;.g at 0xdeadbeef0003&gt;()</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:32: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________ TestFailing.test_simple_multiline _____________________</span>
+
+self = &lt;failure_demo.TestFailing object at 0xdeadbeef0004&gt;
+
+    def test_simple_multiline(self):
+&gt;       otherfunc_multi(42, 6 * 9)
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:35:
+<span class=" -Color -Color-Bold -Color-Bold-Red">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</span>
+
+a = 42, b = 54
+
+    def otherfunc_multi(a, b):
+&gt;       assert a == b
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 42 == 54</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:16: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________________ TestFailing.test_not ___________________________</span>
+
+self = &lt;failure_demo.TestFailing object at 0xdeadbeef0005&gt;
+
+    def test_not(self):
+        def f():
+            return 42
+
+&gt;       assert not f()
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert not 42</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 42 = &lt;function TestFailing.test_not.&lt;locals&gt;.f at 0xdeadbeef0006&gt;()</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:41: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________________ TestSpecialisedExplanations.test_eq_text _________________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0007&gt;
+
+    def test_eq_text(self):
+&gt;       assert &quot;spam&quot; == &quot;eggs&quot;
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;spam&#39; == &#39;eggs&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         - eggs</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         + spam</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:46: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________ TestSpecialisedExplanations.test_eq_similar_text _____________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0008&gt;
+
+    def test_eq_similar_text(self):
+&gt;       assert &quot;foo 1 bar&quot; == &quot;foo 2 bar&quot;
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;foo 1 bar&#39; == &#39;foo 2 bar&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         - foo 2 bar</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?     ^</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         + foo 1 bar</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?     ^</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:49: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________ TestSpecialisedExplanations.test_eq_multiline_text ____________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0009&gt;
+
+    def test_eq_multiline_text(self):
+&gt;       assert &quot;foo\nspam\nbar&quot; == &quot;foo\neggs\nbar&quot;
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;foo\nspam\nbar&#39; == &#39;foo\neggs\nbar&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           foo</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         - eggs</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         + spam</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           bar</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:52: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">______________ TestSpecialisedExplanations.test_eq_long_text _______________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef000a&gt;
+
+    def test_eq_long_text(self):
+        a = &quot;1&quot; * 100 + &quot;a&quot; + &quot;2&quot; * 100
+        b = &quot;1&quot; * 100 + &quot;b&quot; + &quot;2&quot; * 100
+&gt;       assert a == b
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;111111111111...2222222222222&#39; == &#39;111111111111...2222222222222&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Skipping 90 identical leading characters in diff, use -v to show</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Skipping 91 identical trailing characters in diff, use -v to show</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         - 1111111111b222222222</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?           ^</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         + 1111111111a222222222</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?           ^</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:57: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________ TestSpecialisedExplanations.test_eq_long_text_multiline __________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef000b&gt;
+
+    def test_eq_long_text_multiline(self):
+        a = &quot;1\n&quot; * 100 + &quot;a&quot; + &quot;2\n&quot; * 100
+        b = &quot;1\n&quot; * 100 + &quot;b&quot; + &quot;2\n&quot; * 100
+&gt;       assert a == b
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;1\n1\n1\n1\n...n2\n2\n2\n2\n&#39; == &#39;1\n1\n1\n1\n...n2\n2\n2\n2\n&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Skipping 190 identical leading characters in diff, use -v to show</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Skipping 191 identical trailing characters in diff, use -v to show</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           1</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           1</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           1</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           1...</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ...Full output truncated (7 lines hidden), use &#39;-vv&#39; to show</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:62: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________________ TestSpecialisedExplanations.test_eq_list _________________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef000c&gt;
+
+    def test_eq_list(self):
+&gt;       assert [0, 1, 2] == [0, 1, 3]
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert [0, 1, 2] == [0, 1, 3]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         At index 2 diff: 2 != 3</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Use -v to get more diff</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:65: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">______________ TestSpecialisedExplanations.test_eq_list_long _______________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef000d&gt;
+
+    def test_eq_list_long(self):
+        a = [0] * 100 + [1] + [3] * 100
+        b = [0] * 100 + [2] + [3] * 100
+&gt;       assert a == b
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert [0, 0, 0, 0, 0, 0, ...] == [0, 0, 0, 0, 0, 0, ...]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         At index 100 diff: 1 != 2</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Use -v to get more diff</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:70: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________________ TestSpecialisedExplanations.test_eq_dict _________________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef000e&gt;
+
+    def test_eq_dict(self):
+&gt;       assert {&quot;a&quot;: 0, &quot;b&quot;: 1, &quot;c&quot;: 0} == {&quot;a&quot;: 0, &quot;b&quot;: 2, &quot;d&quot;: 0}
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert {&#39;a&#39;: 0, &#39;b&#39;: 1, &#39;c&#39;: 0} == {&#39;a&#39;: 0, &#39;b&#39;: 2, &#39;d&#39;: 0}</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Omitting 1 identical items, use -vv to show</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Differing items:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;b&#39;: 1} != {&#39;b&#39;: 2}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Left contains 1 more item:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;c&#39;: 0}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Right contains 1 more item:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {&#39;d&#39;: 0}</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Use -v to get more diff</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:73: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________________ TestSpecialisedExplanations.test_eq_set __________________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef000f&gt;
+
+    def test_eq_set(self):
+&gt;       assert {0, 10, 11, 12} == {0, 20, 21}
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert {0, 10, 11, 12} == {0, 20, 21}</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Extra items in the left set:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         10</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         11</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         12</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Extra items in the right set:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         20</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         21</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Use -v to get more diff</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:76: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________ TestSpecialisedExplanations.test_eq_longer_list ______________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0010&gt;
+
+    def test_eq_longer_list(self):
+&gt;       assert [1, 2] == [1, 2, 3]
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert [1, 2] == [1, 2, 3]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Right contains one more item: 3</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Use -v to get more diff</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:79: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________________ TestSpecialisedExplanations.test_in_list _________________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0011&gt;
+
+    def test_in_list(self):
+&gt;       assert 1 in [0, 2, 3, 4, 5]
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 1 in [0, 2, 3, 4, 5]</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:82: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________ TestSpecialisedExplanations.test_not_in_text_multiline __________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0012&gt;
+
+    def test_not_in_text_multiline(self):
+        text = &quot;some multiline\ntext\nwhich\nincludes foo\nand a\ntail&quot;
+&gt;       assert &quot;foo&quot; not in text
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;foo&#39; not in &#39;some multil...nand a\ntail&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         &#39;foo&#39; is contained here:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           some multiline</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           text</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           which</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           includes foo</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?          +++</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           and a</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           tail</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:86: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________ TestSpecialisedExplanations.test_not_in_text_single ____________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0013&gt;
+
+    def test_not_in_text_single(self):
+        text = &quot;single foo line&quot;
+&gt;       assert &quot;foo&quot; not in text
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;foo&#39; not in &#39;single foo line&#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         &#39;foo&#39; is contained here:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           single foo line</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?        +++</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:90: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________ TestSpecialisedExplanations.test_not_in_text_single_long _________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0014&gt;
+
+    def test_not_in_text_single_long(self):
+        text = &quot;head &quot; * 50 + &quot;foo &quot; + &quot;tail &quot; * 20
+&gt;       assert &quot;foo&quot; not in text
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;foo&#39; not in &#39;head head h...l tail tail &#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         &#39;foo&#39; is contained here:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           head head foo tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?           +++</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:94: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">______ TestSpecialisedExplanations.test_not_in_text_single_long_term _______</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0015&gt;
+
+    def test_not_in_text_single_long_term(self):
+        text = &quot;head &quot; * 50 + &quot;f&quot; * 70 + &quot;tail &quot; * 20
+&gt;       assert &quot;f&quot; * 70 not in text
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert &#39;fffffffffff...ffffffffffff&#39; not in &#39;head head h...l tail tail &#39;</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         &#39;ffffffffffffffffff...fffffffffffffffffff&#39; is contained here:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           head head fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffftail tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail tail</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         ?           ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:98: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">______________ TestSpecialisedExplanations.test_eq_dataclass _______________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0016&gt;
+
+    def test_eq_dataclass(self):
+        from dataclasses import dataclass
+
+        @dataclass
+        class Foo:
+            a: int
+            b: str
+
+        left = Foo(1, &quot;b&quot;)
+        right = Foo(1, &quot;c&quot;)
+&gt;       assert left == right
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert TestSpecialis...oo(a=1, b=&#39;b&#39;) == TestSpecialis...oo(a=1, b=&#39;c&#39;)</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Omitting 1 identical items, use -vv to show</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Differing attributes:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         [&#39;b&#39;]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Drill down into differing attribute b:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           b: &#39;b&#39; != &#39;c&#39;</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           - c</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           + b</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:110: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________ TestSpecialisedExplanations.test_eq_attrs _________________</span>
+
+self = &lt;failure_demo.TestSpecialisedExplanations object at 0xdeadbeef0017&gt;
+
+    def test_eq_attrs(self):
+        import attr
+
+        @attr.s
+        class Foo:
+            a = attr.ib()
+            b = attr.ib()
+
+        left = Foo(1, &quot;b&quot;)
+        right = Foo(1, &quot;c&quot;)
+&gt;       assert left == right
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert Foo(a=1, b=&#39;b&#39;) == Foo(a=1, b=&#39;c&#39;)</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Omitting 1 identical items, use -vv to show</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Differing attributes:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         [&#39;b&#39;]</span>
+E
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         Drill down into differing attribute b:</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           b: &#39;b&#39; != &#39;c&#39;</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           - c</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           + b</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:122: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">______________________________ test_attribute ______________________________</span>
+
+    def test_attribute():
+        class Foo:
+            b = 1
+
+        i = Foo()
+&gt;       assert i.b == 2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 1 == 2</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 1 = &lt;failure_demo.test_attribute.&lt;locals&gt;.Foo object at 0xdeadbeef0018&gt;.b</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:130: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________________________ test_attribute_instance __________________________</span>
+
+    def test_attribute_instance():
+        class Foo:
+            b = 1
+
+&gt;       assert Foo().b == 2
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert 1 == 2</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 1 = &lt;failure_demo.test_attribute_instance.&lt;locals&gt;.Foo object at 0xdeadbeef0019&gt;.b</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +    where &lt;failure_demo.test_attribute_instance.&lt;locals&gt;.Foo object at 0xdeadbeef0019&gt; = &lt;class &#39;failure_demo.test_attribute_instance.&lt;locals&gt;.Foo&#39;&gt;()</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:137: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ test_attribute_failure __________________________</span>
+
+    def test_attribute_failure():
+        class Foo:
+            def _get_b(self):
+                raise Exception(&quot;Failed to get attrib&quot;)
+
+            b = property(_get_b)
+
+        i = Foo()
+&gt;       assert i.b == 2
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:148:
+<span class=" -Color -Color-Bold -Color-Bold-Red">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</span>
+
+self = &lt;failure_demo.test_attribute_failure.&lt;locals&gt;.Foo object at 0xdeadbeef001a&gt;
+
+    def _get_b(self):
+&gt;       raise Exception(&quot;Failed to get attrib&quot;)
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       Exception: Failed to get attrib</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:143: Exception
+<span class=" -Color -Color-Bold -Color-Bold-Red">_________________________ test_attribute_multiple __________________________</span>
+
+    def test_attribute_multiple():
+        class Foo:
+            b = 1
+
+        class Bar:
+            b = 2
+
+&gt;       assert Foo().b == Bar().b
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert 1 == 2</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 1 = &lt;failure_demo.test_attribute_multiple.&lt;locals&gt;.Foo object at 0xdeadbeef001b&gt;.b</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +    where &lt;failure_demo.test_attribute_multiple.&lt;locals&gt;.Foo object at 0xdeadbeef001b&gt; = &lt;class &#39;failure_demo.test_attribute_multiple.&lt;locals&gt;.Foo&#39;&gt;()</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  and   2 = &lt;failure_demo.test_attribute_multiple.&lt;locals&gt;.Bar object at 0xdeadbeef001c&gt;.b</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +    where &lt;failure_demo.test_attribute_multiple.&lt;locals&gt;.Bar object at 0xdeadbeef001c&gt; = &lt;class &#39;failure_demo.test_attribute_multiple.&lt;locals&gt;.Bar&#39;&gt;()</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:158: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ TestRaises.test_raises __________________________</span>
+
+self = &lt;failure_demo.TestRaises object at 0xdeadbeef001d&gt;
+
+    def test_raises(self):
+        s = &quot;qwe&quot;
+&gt;       raises(TypeError, int, s)
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       ValueError: invalid literal for int() with base 10: &#39;qwe&#39;</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:168: ValueError
+<span class=" -Color -Color-Bold -Color-Bold-Red">______________________ TestRaises.test_raises_doesnt _______________________</span>
+
+self = &lt;failure_demo.TestRaises object at 0xdeadbeef001e&gt;
+
+    def test_raises_doesnt(self):
+&gt;       raises(OSError, int, &quot;3&quot;)
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       Failed: DID NOT RAISE &lt;class &#39;OSError&#39;&gt;</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:171: Failed
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________ TestRaises.test_raise ___________________________</span>
+
+self = &lt;failure_demo.TestRaises object at 0xdeadbeef001f&gt;
+
+    def test_raise(self):
+&gt;       raise ValueError(&quot;demo error&quot;)
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       ValueError: demo error</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:174: ValueError
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________________ TestRaises.test_tupleerror ________________________</span>
+
+self = &lt;failure_demo.TestRaises object at 0xdeadbeef0020&gt;
+
+    def test_tupleerror(self):
+&gt;       a, b = [1]  # noqa: F841
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       ValueError: not enough values to unpack (expected 2, got 1)</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:177: ValueError
+<span class=" -Color -Color-Bold -Color-Bold-Red">______ TestRaises.test_reinterpret_fails_with_print_for_the_fun_of_it ______</span>
+
+self = &lt;failure_demo.TestRaises object at 0xdeadbeef0021&gt;
+
+    def test_reinterpret_fails_with_print_for_the_fun_of_it(self):
+        items = [1, 2, 3]
+        print(f&quot;items is {items!r}&quot;)
+&gt;       a, b = items.pop()
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       TypeError: cannot unpack non-iterable int object</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:182: TypeError
+--------------------------- Captured stdout call ---------------------------
+items is [1, 2, 3]
+<span class=" -Color -Color-Bold -Color-Bold-Red">________________________ TestRaises.test_some_error ________________________</span>
+
+self = &lt;failure_demo.TestRaises object at 0xdeadbeef0022&gt;
+
+    def test_some_error(self):
+&gt;       if namenotexi:  # noqa: F821
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       NameError: name &#39;namenotexi&#39; is not defined</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:185: NameError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________ test_dynamic_compile_shows_nicely _____________________</span>
+
+    def test_dynamic_compile_shows_nicely():
+        import importlib.util
+        import sys
+
+        src = &quot;def foo():\n assert 1 == 0\n&quot;
+        name = &quot;abc-123&quot;
+        spec = importlib.util.spec_from_loader(name, loader=None)
+        module = importlib.util.module_from_spec(spec)
+        code = compile(src, name, &quot;exec&quot;)
+        exec(code, module.__dict__)
+        sys.modules[name] = module
+&gt;       module.foo()
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:204:
+<span class=" -Color -Color-Bold -Color-Bold-Red">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</span>
+
+&gt;   ???
+<span class=" -Color -Color-Bold -Color-Bold-Red">E   AssertionError</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">abc-123</span>:2: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________ TestMoreErrors.test_complex_error _____________________</span>
+
+self = &lt;failure_demo.TestMoreErrors object at 0xdeadbeef0023&gt;
+
+    def test_complex_error(self):
+        def f():
+            return 44
+
+        def g():
+            return 43
+
+&gt;       somefunc(f(), g())
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:215:
+<span class=" -Color -Color-Bold -Color-Bold-Red">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:12: in somefunc
+    otherfunc(x, y)
+<span class=" -Color -Color-Bold -Color-Bold-Red">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</span>
+
+a = 44, b = 43
+
+    def otherfunc(a, b):
+&gt;       assert a == b
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 44 == 43</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:8: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________ TestMoreErrors.test_z1_unpack_error ____________________</span>
+
+self = &lt;failure_demo.TestMoreErrors object at 0xdeadbeef0024&gt;
+
+    def test_z1_unpack_error(self):
+        items = []
+&gt;       a, b = items
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       ValueError: not enough values to unpack (expected 2, got 0)</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:219: ValueError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________ TestMoreErrors.test_z2_type_error _____________________</span>
+
+self = &lt;failure_demo.TestMoreErrors object at 0xdeadbeef0025&gt;
+
+    def test_z2_type_error(self):
+        items = 3
+&gt;       a, b = items
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       TypeError: cannot unpack non-iterable int object</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:223: TypeError
+<span class=" -Color -Color-Bold -Color-Bold-Red">______________________ TestMoreErrors.test_startswith ______________________</span>
+
+self = &lt;failure_demo.TestMoreErrors object at 0xdeadbeef0026&gt;
+
+    def test_startswith(self):
+        s = &quot;123&quot;
+        g = &quot;456&quot;
+&gt;       assert s.startswith(g)
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert False</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where False = &lt;built-in method startswith of str object at 0xdeadbeef0027&gt;(&#39;456&#39;)</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +    where &lt;built-in method startswith of str object at 0xdeadbeef0027&gt; = &#39;123&#39;.startswith</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:228: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________ TestMoreErrors.test_startswith_nested ___________________</span>
+
+self = &lt;failure_demo.TestMoreErrors object at 0xdeadbeef0028&gt;
+
+    def test_startswith_nested(self):
+        def f():
+            return &quot;123&quot;
+
+        def g():
+            return &quot;456&quot;
+
+&gt;       assert f().startswith(g())
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: assert False</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where False = &lt;built-in method startswith of str object at 0xdeadbeef0027&gt;(&#39;456&#39;)</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +    where &lt;built-in method startswith of str object at 0xdeadbeef0027&gt; = &#39;123&#39;.startswith</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +      where &#39;123&#39; = &lt;function TestMoreErrors.test_startswith_nested.&lt;locals&gt;.f at 0xdeadbeef0029&gt;()</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +    and   &#39;456&#39; = &lt;function TestMoreErrors.test_startswith_nested.&lt;locals&gt;.g at 0xdeadbeef002a&gt;()</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:237: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________ TestMoreErrors.test_global_func ______________________</span>
+
+self = &lt;failure_demo.TestMoreErrors object at 0xdeadbeef002b&gt;
+
+    def test_global_func(self):
+&gt;       assert isinstance(globf(42), float)
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert False</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where False = isinstance(43, float)</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +    where 43 = globf(42)</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:240: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_______________________ TestMoreErrors.test_instance _______________________</span>
+
+self = &lt;failure_demo.TestMoreErrors object at 0xdeadbeef002c&gt;
+
+    def test_instance(self):
+        self.x = 6 * 7
+&gt;       assert self.x != 42
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 42 != 42</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 42 = &lt;failure_demo.TestMoreErrors object at 0xdeadbeef002c&gt;.x</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:244: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_______________________ TestMoreErrors.test_compare ________________________</span>
+
+self = &lt;failure_demo.TestMoreErrors object at 0xdeadbeef002d&gt;
+
+    def test_compare(self):
+&gt;       assert globf(10) &lt; 5
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 11 &lt; 5</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 11 = globf(10)</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:247: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">_____________________ TestMoreErrors.test_try_finally ______________________</span>
+
+self = &lt;failure_demo.TestMoreErrors object at 0xdeadbeef002e&gt;
+
+    def test_try_finally(self):
+        x = 1
+        try:
+&gt;           assert x == 0
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           assert 1 == 0</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:252: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________ TestCustomAssertMsg.test_single_line ___________________</span>
+
+self = &lt;failure_demo.TestCustomAssertMsg object at 0xdeadbeef002f&gt;
+
+    def test_single_line(self):
+        class A:
+            a = 1
+
+        b = 2
+&gt;       assert A.a == b, &quot;A.a appears not to be b&quot;
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: A.a appears not to be b</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 1 == 2</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 1 = &lt;class &#39;failure_demo.TestCustomAssertMsg.test_single_line.&lt;locals&gt;.A&#39;&gt;.a</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:263: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">____________________ TestCustomAssertMsg.test_multiline ____________________</span>
+
+self = &lt;failure_demo.TestCustomAssertMsg object at 0xdeadbeef0030&gt;
+
+    def test_multiline(self):
+        class A:
+            a = 1
+
+        b = 2
+&gt;       assert (
+            A.a == b
+        ), &quot;A.a appears not to be b\nor does not appear to be b\none of those&quot;
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: A.a appears not to be b</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         or does not appear to be b</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         one of those</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 1 == 2</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 1 = &lt;class &#39;failure_demo.TestCustomAssertMsg.test_multiline.&lt;locals&gt;.A&#39;&gt;.a</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:270: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Red">___________________ TestCustomAssertMsg.test_custom_repr ___________________</span>
+
+self = &lt;failure_demo.TestCustomAssertMsg object at 0xdeadbeef0031&gt;
+
+    def test_custom_repr(self):
+        class JSON:
+            a = 1
+
+            def __repr__(self):
+                return &quot;This is JSON\n{\n  &#39;foo&#39;: &#39;bar&#39;\n}&quot;
+
+        a = JSON()
+        b = 2
+&gt;       assert a.a == b, a
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       AssertionError: This is JSON</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         {</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E           &#39;foo&#39;: &#39;bar&#39;</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E         }</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert 1 == 2</span>
+<span class=" -Color -Color-Bold -Color-Bold-Red">E        +  where 1 = This is JSON\n{\n  &#39;foo&#39;: &#39;bar&#39;\n}.a</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">failure_demo.py</span>:283: AssertionError
+<span class=" -Color -Color-Bold -Color-Bold-Cyan">========================= short test summary info ==========================</span>
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">test_generative[3-6]</span> - assert (3 * 2) &lt; 6
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestFailing::test_simple</span> - assert 42 == 43
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestFailing::test_simple_multiline</span> - assert 42 == 54
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestFailing::test_not</span> - assert not 42
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestSpecialisedExplanations::test_eq_text</span> - Asser...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::TestSpecialisedExplanations::test_eq_similar_text
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::TestSpecialisedExplanations::test_eq_multiline_text
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestSpecialisedExplanations::test_eq_long_text</span> - ...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::TestSpecialisedExplanations::test_eq_long_text_multiline
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestSpecialisedExplanations::test_eq_list</span> - asser...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestSpecialisedExplanations::test_eq_list_long</span> - ...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestSpecialisedExplanations::test_eq_dict</span> - Asser...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestSpecialisedExplanations::test_eq_set</span> - assert...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::TestSpecialisedExplanations::test_eq_longer_list
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestSpecialisedExplanations::test_in_list</span> - asser...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::TestSpecialisedExplanations::test_not_in_text_multiline
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::TestSpecialisedExplanations::test_not_in_text_single
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::TestSpecialisedExplanations::test_not_in_text_single_long
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::TestSpecialisedExplanations::test_not_in_text_single_long_term
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestSpecialisedExplanations::test_eq_dataclass</span> - ...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestSpecialisedExplanations::test_eq_attrs</span> - Asse...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">test_attribute</span> - assert 1 == 2
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">test_attribute_instance</span> - AssertionError: assert ...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">test_attribute_failure</span> - Exception: Failed to get...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">test_attribute_multiple</span> - AssertionError: assert ...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestRaises::test_raises</span> - ValueError: invalid lit...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestRaises::test_raises_doesnt</span> - Failed: DID NOT ...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestRaises::test_raise</span> - ValueError: demo error
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestRaises::test_tupleerror</span> - ValueError: not eno...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::TestRaises::test_reinterpret_fails_with_print_for_the_fun_of_it
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestRaises::test_some_error</span> - NameError: name &#39;na...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">test_dynamic_compile_shows_nicely</span> - AssertionError
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestMoreErrors::test_complex_error</span> - assert 44 == 43
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestMoreErrors::test_z1_unpack_error</span> - ValueError...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestMoreErrors::test_z2_type_error</span> - TypeError: c...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestMoreErrors::test_startswith</span> - AssertionError:...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestMoreErrors::test_startswith_nested</span> - Assertio...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestMoreErrors::test_global_func</span> - assert False
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestMoreErrors::test_instance</span> - assert 42 != 42
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestMoreErrors::test_compare</span> - assert 11 &lt; 5
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestMoreErrors::test_try_finally</span> - assert 1 == 0
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestCustomAssertMsg::test_single_line</span> - Assertion...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestCustomAssertMsg::test_multiline</span> - AssertionEr...
+<span class=" -Color -Color-Red">FAILED</span> failure_demo.py::<span class=" -Color -Color-Bold">TestCustomAssertMsg::test_custom_repr</span> - Assertion...
+<span class=" -Color -Color-Red">============================ </span><span class=" -Color -Color-Bold -Color-Bold-Red">44 failed</span><span class=" -Color -Color-Red"> in 0.12s ============================</span>
+</pre></div>
+</div>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="simple.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">基本模式和示例</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">示例和自定义技巧</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2015, holger krekel and pytest-dev team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/tabs.js?v=3030b3cb"></script>
+    </body>
+</html>
